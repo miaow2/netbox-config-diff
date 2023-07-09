@@ -1,11 +1,11 @@
 from netbox.search import SearchIndex, register_search
 
-from .models import PlatformSetting
+from . import models
 
 
 @register_search
 class PlatformSettingIndex(SearchIndex):
-    model = PlatformSetting
+    model = models.PlatformSetting
     fields = (
         ("driver", 100),
         ("command", 500),

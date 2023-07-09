@@ -1,7 +1,7 @@
 import django_tables2 as tables
 from netbox.tables import NetBoxTable, columns
 
-from .models import PlatformSetting
+from . import models
 
 
 class PlatformSettingTable(NetBoxTable):
@@ -16,6 +16,6 @@ class PlatformSettingTable(NetBoxTable):
     )
 
     class Meta(NetBoxTable.Meta):
-        model = PlatformSetting
+        model = models.PlatformSetting
         fields = ("driver", "platform", "command", "description", "exclude_regex", "tags", "created", "last_updated")
         default_columns = ("driver", "platform", "command", "description", "exclude_regex")

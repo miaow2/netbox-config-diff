@@ -7,7 +7,7 @@ from utilities.forms.fields import (
     TagFilterField,
 )
 
-from .models import PlatformSetting
+from . import models
 
 
 class PlatformSettingForm(NetBoxModelForm):
@@ -16,7 +16,7 @@ class PlatformSettingForm(NetBoxModelForm):
     )
 
     class Meta:
-        model = PlatformSetting
+        model = models.PlatformSetting
         fields = ("platform", "driver", "description", "command", "exclude_regex", "tags")
         widgets = {
             "exclude_regex": forms.Textarea(
@@ -29,7 +29,7 @@ class PlatformSettingForm(NetBoxModelForm):
 
 
 class PlatformSettingFilterForm(NetBoxModelFilterSetForm):
-    model = PlatformSetting
+    model = models.PlatformSetting
     fieldsets = ((None, ("q", "platform_id", "tag")),)
     platform_id = DynamicModelMultipleChoiceField(
         queryset=Platform.objects.all(),
@@ -56,6 +56,6 @@ class PlatformSettingBulkEditForm(NetBoxModelBulkEditForm):
         widget=forms.Textarea(),
     )
 
-    model = PlatformSetting
+    model = models.PlatformSetting
     fieldsets = ((None, ("driver", "command", "description", "exclude_regex")),)
     nullable_fields = ("description", "exclude_regex")

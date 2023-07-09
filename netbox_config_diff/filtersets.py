@@ -3,7 +3,7 @@ from dcim.models import Platform
 from django.db.models import Q
 from netbox.filtersets import NetBoxModelFilterSet
 
-from .models import PlatformSetting
+from . import models
 
 
 class PlatformSettingFilterSet(NetBoxModelFilterSet):
@@ -17,7 +17,7 @@ class PlatformSettingFilterSet(NetBoxModelFilterSet):
     )
 
     class Meta:
-        model = PlatformSetting
+        model = models.PlatformSetting
         fields = ["id", "driver", "command", "description", "exclude_regex"]
 
     def search(self, queryset, name, value):

@@ -2,7 +2,7 @@ from dcim.api.serializers import NestedPlatformSerializer
 from netbox.api.serializers import NetBoxModelSerializer
 from rest_framework import serializers
 
-from netbox_config_diff.models import PlatformSetting
+from netbox_config_diff import models
 
 
 class PlatformSettingSerializer(NetBoxModelSerializer):
@@ -10,7 +10,7 @@ class PlatformSettingSerializer(NetBoxModelSerializer):
     platform = NestedPlatformSerializer()
 
     class Meta:
-        model = PlatformSetting
+        model = models.PlatformSetting
         fields = (
             "id",
             "url",
