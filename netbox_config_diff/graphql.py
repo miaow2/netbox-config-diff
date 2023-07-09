@@ -9,7 +9,7 @@ class PlatformSettingType(NetBoxObjectType):
     class Meta:
         model = models.PlatformSetting
         fields = "__all__"
-        filterset_class = filtersets.PlatformSetting
+        filterset_class = filtersets.PlatformSettingFilterSet
 
 
 class Query(ObjectType):
