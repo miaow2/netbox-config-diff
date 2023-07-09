@@ -15,7 +15,7 @@ The features the plugin provides should be listed here.
 
 | NetBox Version | Plugin Version |
 |----------------|----------------|
-|     3.4        |      0.1.0     |
+|     3.5        |      0.1.0     |
 
 ## Installing
 
@@ -39,11 +39,11 @@ Enable the plugin in `/opt/netbox/netbox/netbox/configuration.py`,
 
 ```python
 PLUGINS = [
-    'Config Diff'
+    'netbox_config_diff'
 ]
 
 PLUGINS_CONFIG = {
-    "Config Diff": {},
+    "netbox_config_diff": {},
 }
 ```
 
