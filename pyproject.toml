@@ -18,7 +18,7 @@ keywords = [
   "configuration-compliance",
 ]
 requires-python = ">=3.10"
-classifiers=[
+classifiers = [
   "Development Status :: 2 - Pre-Alpha",
   "Operating System :: POSIX :: Linux",
   "Natural Language :: English",

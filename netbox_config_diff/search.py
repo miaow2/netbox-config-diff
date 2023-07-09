@@ -1,4 +1,5 @@
 from netbox.search import SearchIndex, register_search
+
 from .models import PlatformSetting
 
 

@@ -1,11 +1,11 @@
 from graphene import ObjectType
-from netbox.graphql.types import NetBoxObjectType
 from netbox.graphql.fields import ObjectField, ObjectListField
+from netbox.graphql.types import NetBoxObjectType
+
 from . import filtersets, models
 
 
 class PlatformSettingType(NetBoxObjectType):
-
     class Meta:
         model = models.PlatformSetting
         fields = "__all__"
