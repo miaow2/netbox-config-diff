@@ -1,0 +1,69 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools",
+  "wheel",
+]
+
+[project]
+name = "netbox-config-diff"
+description = "Find diff between the intended device configuration and actual."
+readme = "README.md"
+keywords = [
+  "netbox",
+  "netbox-plugin",
+  "automation",
+  "network",
+  "network-automation",
+  "configuration-compliance",
+]
+requires-python = ">=3.10"
+classifiers=[
+  "Development Status :: 2 - Pre-Alpha",
+  "Operating System :: POSIX :: Linux",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+],
+license = { file = "LICENSE" }
+authors = [
+  {email = "miaow2@yandex.ru"},
+  {name = "Artem Kotik"}
+]
+dynamic = [
+  "dependencies",
+  "optional-dependencies",
+  "version",
+]
+
+[project.urls]
+repository = "https://github.com/miaow2/netbox-config-dif"
+
+[tool.setuptools.packages]
+find = {}
+
+[tool.setuptools.dynamic]
+version = { attr = "netbox_config_diff.__version__" }
+dependencies = {file = ["requirements/base.txt"]}
+optional-dependencies.dev = { file = ["requirements/dev.txt"] }
+
+[tool.black]
+line-length = 120
+skip-string-normalization = true
+exclude = '''
+(
+  /(
+      migrations
+  )/
+)
+'''
+
+[tool.ruff]
+exclude = ["migrations", "__pycache__"]
+select = ["C", "E", "F", "I"]
+ignore = ["C901"]
+line-length = 120
+target-version = "py310"
