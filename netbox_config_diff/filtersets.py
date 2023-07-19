@@ -1,9 +1,32 @@
 import django_filters
-from dcim.models import Platform
+from dcim.models import Device, Platform
 from django.db.models import Q
-from netbox.filtersets import NetBoxModelFilterSet
+from netbox.filtersets import ChangeLoggedModelFilterSet, NetBoxModelFilterSet
 
-from . import models
+from .choices import ConfigComplianceStatusChoices
+from .models import ConfigCompliance, PlatformSetting
+
+
+class ConfigComplianceFilterSet(ChangeLoggedModelFilterSet):
+    device_id = django_filters.ModelMultipleChoiceFilter(
+        queryset=Device.objects.all(),
+    )
+    device = django_filters.ModelMultipleChoiceFilter(
+        field_name="device__name",
+        queryset=Device.objects.all(),
+        to_field_name="name",
+    )
+    status = django_filters.MultipleChoiceFilter(
+        choices=ConfigComplianceStatusChoices,
+        null_value=None,
+    )
+
+    class Meta:
+        model = ConfigCompliance
+        fields = ["id"]
+
+    def search(self, queryset, name, value):
+        return queryset.filter(diff__icontains=value) if value.strip() else queryset
 
 
 class PlatformSettingFilterSet(NetBoxModelFilterSet):
@@ -17,7 +40,7 @@ class PlatformSettingFilterSet(NetBoxModelFilterSet):
     )
 
     class Meta:
-        model = models.PlatformSetting
+        model = PlatformSetting
         fields = ["id", "driver", "command", "description", "exclude_regex"]
 
     def search(self, queryset, name, value):

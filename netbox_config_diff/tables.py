@@ -1,7 +1,22 @@
 import django_tables2 as tables
 from netbox.tables import NetBoxTable, columns
 
-from . import models
+from .models import ConfigCompliance, PlatformSetting
+
+
+class ConfigComplianceTable(NetBoxTable):
+    device = tables.Column(
+        linkify=True,
+    )
+    status = columns.ChoiceFieldColumn()
+    actions = columns.ActionsColumn(
+        actions=("delete", "changelog"),
+    )
+
+    class Meta(NetBoxTable.Meta):
+        model = ConfigCompliance
+        fields = ("id", "device", "status", "created", "last_updated")
+        default_columns = fields
 
 
 class PlatformSettingTable(NetBoxTable):
@@ -16,6 +31,6 @@ class PlatformSettingTable(NetBoxTable):
     )
 
     class Meta(NetBoxTable.Meta):
-        model = models.PlatformSetting
-        fields = ("driver", "platform", "command", "description", "exclude_regex", "tags", "created", "last_updated")
-        default_columns = ("driver", "platform", "command", "description", "exclude_regex")
+        model = PlatformSetting
+        fields = ("driver", "platform", "command", "exclude_regex", "description", "tags", "created", "last_updated")
+        default_columns = ("driver", "platform", "command", "exclude_regex", "description")

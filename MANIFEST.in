@@ -8,3 +8,4 @@ recursive-exclude * *.py[co]
 
 recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif
 recursive-include netbox_config_diff/templates *
+recursive-include netbox_config_diff/static *

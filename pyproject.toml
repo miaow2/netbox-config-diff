@@ -19,9 +19,7 @@ keywords = [
 ]
 requires-python = ">=3.10"
 classifiers = [
-  "Development Status :: 2 - Pre-Alpha",
-  "Operating System :: POSIX :: Linux",
-  "Natural Language :: English",
+  "Framework :: Django",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.10",

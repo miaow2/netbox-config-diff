@@ -11,6 +11,8 @@ class ConfigDiffConfig(PluginConfig):
     email = "miaow2@yandex.ru"
     version = __version__
     base_url = "config-diff"
+    required_settings = ["USERNAME", "PASSWORD"]
+    min_version = "3.5.0"
 
 
 config = ConfigDiffConfig

@@ -1,2 +1,2 @@
-scrapli==2023.01.30
+scrapli[asyncssh]==2023.01.30
 scrapli-community==2023.01.30
