@@ -50,6 +50,12 @@ PLUGINS_CONFIG = {
 }
 ```
 
+Run database migrations:
+
+```bash
+python manage.py migrate
+
+```
 Collect static from the plugin:
 
 ```bash
