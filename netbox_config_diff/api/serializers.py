@@ -22,6 +22,8 @@ class ConfigComplianceSerializer(NetBoxModelSerializer):
             "status",
             "error",
             "diff",
+            "rendered_config",
+            "actual_config",
             "created",
             "last_updated",
         )

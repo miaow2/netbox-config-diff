@@ -7,7 +7,7 @@ from extras.querysets import ConfigContextQuerySet
 from jinja2.exceptions import TemplateError
 
 from .models import DeviceDataClass
-from .utils import get_unified_diff
+from .utils import exclude_lines, get_unified_diff
 
 
 class ConfigDiffBase:
@@ -48,4 +48,6 @@ class ConfigDiffBase:
         for device in devices:
             if device.error is not None:
                 continue
-            device.diff = get_unified_diff(device.rendered_config, device.actual_config, device.name)
+            device.diff = get_unified_diff(
+                device.rendered_config, exclude_lines(device.actual_config, device.exclude_regex), device.name
+            )

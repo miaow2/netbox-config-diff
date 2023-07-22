@@ -25,6 +25,12 @@ class ConfigCompliance(ChangeLoggingMixin, models.Model):
     error = models.TextField(
         blank=True,
     )
+    actual_config = models.TextField(
+        blank=True,
+    )
+    rendered_config = models.TextField(
+        blank=True,
+    )
 
     objects = RestrictedQuerySet.as_manager()
 
