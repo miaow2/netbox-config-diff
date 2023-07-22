@@ -1,0 +1,25 @@
+{% extends "netbox_config_diff/configcompliance/base.html" %}
+
+{% block title %}{{ object }} - {{ header }}{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <div class="float-end">
+            <a href="?export=True" class="btn btn-sm btn-primary" role="button">
+              <i class="mdi mdi-download" aria-hidden="true"></i> Download
+            </a>
+          </div>
+          <h5>{{ header }}</h5>
+        </div>
+        {% if config %}
+          <pre class="card-body">{{ config }}</pre>
+        {% else %}
+          <div class="card-body text-muted">No configuration</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "generic/object.html" %}
+{% load buttons %}
+{% load perms %}
+
+{% block controls %}
+  <div class="controls">
+    <div class="control-group">
+      {% if request.user|can_delete:object %}
+        {% delete_button object %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock controls %}

@@ -1,20 +1,5 @@
-
-{% extends "generic/object.html" %}
-{% load buttons %}
-{% load helpers %}
-{% load perms %}
+{% extends "netbox_config_diff/configcompliance/base.html" %}
 {% load static %}
-{% load render_table from django_tables2 %}
-
-{% block controls %}
-  <div class="controls">
-    <div class="control-group">
-      {% if request.user|can_delete:object %}
-        {% delete_button object %}
-      {% endif %}
-    </div>
-  </div>
-{% endblock controls %}
 
 {% block content %}
   <div class="row mb-3">

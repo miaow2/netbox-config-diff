@@ -5,8 +5,6 @@ from scrapli import AsyncScrapli
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices
 
-from .utils import exclude_lines
-
 
 @dataclass
 class DeviceDataClass:
@@ -51,6 +49,8 @@ class DeviceDataClass:
             "status": status,
             "diff": self.diff or "",
             "error": self.error or "",
+            "rendered_config": self.rendered_config or "",
+            "actual_config": self.actual_config or "",
         }
 
     async def get_actual_config(self):
@@ -62,6 +62,6 @@ class DeviceDataClass:
                 if result.failed:
                     self.error = result.result
                 else:
-                    self.actual_config = exclude_lines(result.result, self.exclude_regex)
+                    self.actual_config = result.result
         except Exception:
             self.error = traceback.format_exc()
