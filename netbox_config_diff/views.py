@@ -29,11 +29,15 @@ class BaseConfigComplianceConfigView(generic.ObjectView):
             response["Content-Disposition"] = f'attachment; filename="{filename}"'
             return response
 
-        return render(request, self.get_template_name(), {
-            "object": instance,
-            "tab": self.tab,
-            **context,
-        })
+        return render(
+            request,
+            self.get_template_name(),
+            {
+                "object": instance,
+                "tab": self.tab,
+                **context,
+            },
+        )
 
     def get_extra_context(self, request, instance):
         return {

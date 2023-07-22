@@ -7,7 +7,7 @@ from extras.querysets import ConfigContextQuerySet
 from jinja2.exceptions import TemplateError
 
 from .models import DeviceDataClass
-from .utils import get_unified_diff, exclude_lines
+from .utils import exclude_lines, get_unified_diff
 
 
 class ConfigDiffBase:
