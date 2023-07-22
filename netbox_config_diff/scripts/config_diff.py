@@ -58,7 +58,7 @@ class ConfigDiffScript(ConfigDiffBase, Script):
                 "No matching devices found, devices must have status `Active`, primary IP, platform and platformsetting"
             )
         else:
-            self.log_info(f"Working with devices: {', '.join(d.name for d in devices)}")
+            self.log_info(f"Working with device(s): {', '.join(d.name for d in devices)}")
         return devices
 
     def update_in_db(self, devices: list[DeviceDataClass]) -> None:

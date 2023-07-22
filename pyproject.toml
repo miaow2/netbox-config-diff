@@ -28,8 +28,8 @@ classifiers = [
 ]
 license = { file = "LICENSE" }
 authors = [
-  {email = "miaow2@yandex.ru"},
-  {name = "Artem Kotik"}
+  {email = { attr = "netbox_config_diff.__email__" }},
+  {name = { attr = "netbox_config_diff.__author__" }}
 ]
 dynamic = [
   "dependencies",
