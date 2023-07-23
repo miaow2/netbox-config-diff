@@ -6,22 +6,22 @@ on:
 
 jobs:
   deploy:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up python 3.11
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.10"
       - name: Setup publish env
         run: |
             python -m pip install --upgrade pip
             python -m pip install setuptools wheel build twine
-      - name: Build and publish
+      - name: Build
+        run: python -m build
+      - name: Check
+        run: python -m twine check dist/*
+      - name: Publish
         env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USER }}
+          TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_PASS }}
-        run: |
-          python -m build
-          python -m twine upload dist/*
+        run: python -m twine upload dist/*
