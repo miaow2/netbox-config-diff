@@ -2,35 +2,38 @@
 
 NetBox plugin for Config Diff.
 
-
 * Free software: Apache-2.0
 * Documentation: https://miaow2.github.io/netbox-config-diff/
 
-## Features
+<!--about-start-->
+## About
 
-Find diff between configurations rendered in NetBox and actual on the device.
+With this plugin you can find diff between the rendered configuration for a device to its actual configuration, retrieved from the device itself, or stored in DataSource.
+Read about [DataSources](https://demo.netbox.dev/static/docs/models/core/datasource/) for further details.
+
+Device configuration renders natively in NetBox. This [feature](https://demo.netbox.dev/static/docs/features/configuration-rendering/) was introduced in 3.5 version.
+ NetBox Labs [blog](https://demo.netbox.dev/static/docs/features/configuration-rendering/) post about it.
+
+Plugin support a wide list of vendors (Cisco, Juniper, Huawei, MicroTik etc.) with the help of Scrapli. Read [Scrapli](https://github.com/carlmontanari/scrapli/tree/main/scrapli/driver/core) and [scrapli-community](https://github.com/scrapli/scrapli_community/tree/main/scrapli_community) documentations to find full list of vendors.
+
+<!--about-end-->
 
 ## Compatibility
 
 | NetBox Version | Plugin Version |
 |----------------|----------------|
-|     3.5        |      0.1.0     |
+|     3.5        |    =>0.1.0     |
 
+<!--install-start-->
 ## Installing
 
 For adding to a NetBox Docker setup see
 [the general instructions for using netbox-docker with plugins](https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins).
 
-While this is still in development and not yet on pypi you can install with pip:
+Install with pip:
 
 ```bash
-pip install git+https://github.com/miaow2/netbox-config-diff
-```
-
-or by adding to your `local_requirements.txt` or `plugin_requirements.txt` (netbox-docker):
-
-```bash
-git+https://github.com/miaow2/netbox-config-diff
+pip install netbox-config-diff
 ```
 
 Enable the plugin in `/opt/netbox/netbox/netbox/configuration.py`,
@@ -62,40 +65,18 @@ Collect static from the plugin:
 python manage.py collectstatic --noinput
 ```
 
+Restart NetBox service:
+
+```bash
+systemctl restart netbox
+```
+<!--install-end-->
+
 ## Usage
 
-Under `Plugins` navbar menu you can find plugin
+Read the [docs](https://miaow2.github.io/netbox-config-diff/usage) about how to use plugin.
 
-![Screenshot of navbar](docs/media/screenshots/navbar.png)
-
-Add PlatformSetting objects for your platforms in NetBox.
-
-Define:
-
-- **Driver** for Scrapli, you can find all drivers in [Scrapli](https://github.com/carlmontanari/scrapli) and [Scrapli community](https://github.com/scrapli/scrapli_community) documentation.
-- **Command** to collect configuration
-- Optional regex patterns to exclude from actual config, specify each pattern on a new line
-
-![Screenshot of PlatformSetting](docs/media/screenshots/platformsetting.png)
-
-Plugin adds a custom script `ConfigDiffScript`
-
-![Screenshot of the scripts list](docs/media/screenshots/script-list.png)
-
-In the script, you can define a site, on which devices run compliance, or devices.
- If you define both fields, script will run only on devices from `Devices` field
-
-> **Warning**
->
-> Script run only on devices with status `Active`, assigned Primary IP, Platform and PlatformSetting
-
-![Screenshot of the script](docs/media/screenshots/script.png)
-
-After script is done you can find results in `Config Compliances` menu. Each device has its own result.
-
-![Screenshot of the compliance list](docs/media/screenshots/compliance-list.png)
-
-## Examples
+## Screenshots
 
 Compliance finished with error
 
