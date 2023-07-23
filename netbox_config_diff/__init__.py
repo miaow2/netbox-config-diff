@@ -10,7 +10,7 @@ class ConfigDiffConfig(PluginConfig):
     verbose_name = "NetBox Config Diff Plugin"
     description = "Find diff between the intended device configuration and actual."
     author = __author__
-    email = __email__
+    author_email = __email__
     version = __version__
     base_url = "config-diff"
     required_settings = ["USERNAME", "PASSWORD"]
