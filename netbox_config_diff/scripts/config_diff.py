@@ -9,8 +9,4 @@ class ConfigDiffScript(ConfigDiffBase, Script):
         job_timeout = 600
 
     def run(self, data: dict, commit: bool) -> None:
-        devices = self.validate_data(data)
-        devices = list(self.get_devices_with_rendered_configs(devices))
-        self.get_actual_configs(devices)
-        self.get_diff(devices)
-        self.update_in_db(devices)
+        self.run_script(data)

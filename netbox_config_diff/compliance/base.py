@@ -45,6 +45,13 @@ class ConfigDiffBase:
         description="Define synced DataSource, if you want compare configs stored in it wihout connecting to devices",
     )
 
+    def run_script(self, data: dict) -> None:
+        devices = self.validate_data(data)
+        devices = list(self.get_devices_with_rendered_configs(devices))
+        self.get_actual_configs(devices)
+        self.get_diff(devices)
+        self.update_in_db(devices)
+
     def validate_data(self, data: dict) -> Iterable[ConfigContextQuerySet]:
         if not data["site"] and not data["devices"]:
             raise AbortScript("Define site or devices")
