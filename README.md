@@ -62,6 +62,12 @@ Collect static from the plugin:
 python manage.py collectstatic --noinput
 ```
 
+Restart NetBox service:
+
+```bash
+systemctl restart netbox
+```
+
 ## Usage
 
 Under `Plugins` navbar menu you can find plugin
@@ -88,6 +94,12 @@ In the script, you can define a site, on which devices run compliance, or device
 > **Warning**
 >
 > Script run only on devices with status `Active`, assigned Primary IP, Platform and PlatformSetting
+
+If you have configs in NetBox DataSource, you can define it, the script will not connect to the devices and finds config in DataSource by device name
+
+> **Note**
+>
+> Only synced DataSources are acceptable
 
 ![Screenshot of the script](docs/media/screenshots/script.png)
 
