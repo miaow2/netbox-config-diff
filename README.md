@@ -1,9 +1,9 @@
-[![NetBox version](https://img.shields.io/badge/NetBox-3.4|3.5-blue.svg)](https://github.com/netbox-community/netbox)
+[![NetBox version](https://img.shields.io/badge/NetBox-3.5-blue.svg)](https://github.com/netbox-community/netbox)
 [![Supported Versions](https://img.shields.io/pypi/pyversions/netbox-config-diff.svg)](https://pypi.org/project/netbox-config-diff/)
 [![PyPI version](https://badge.fury.io/py/netbox-config-diff.svg)](https://badge.fury.io/py/netbox-config-diff)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![CI](https://github.com/miaow2/netbox-config-diff/actions/workflows/commit.yaml/badge.svg?branch=develop)](https://github.com/github/miaow2/netbox-config-diff/actions/workflows/commit.yaml/badge.svg?branch=develop)
+[![CI](https://github.com/miaow2/netbox-config-diff/actions/workflows/commit.yaml/badge.svg?branch=develop)](https://github.com/miaow2/netbox-config-diff/actions)
 
 # NetBox Config Diff Plugin
 
