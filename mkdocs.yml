@@ -5,6 +5,7 @@ repo_name: miaow2/netbox-config-diff
 #strict: true
 nav:
   - Home: index.md
+  - Usage: usage.md
   - Contributing: contributing.md
   - Changelog: changelog.md
 theme:
@@ -40,7 +41,6 @@ markdown_extensions:
   - toc:
       baselevel: 2
       permalink: true
-      slugify: !!python/name:pymdownx.slugs.uslugify
   - meta
 plugins:
   - include-markdown
@@ -54,5 +54,8 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/miaow2/netbox-config-diff
       name: Github
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/artem-kotik/
+      name: Linkedin
     - icon: material/email
       link: "mailto:miaow2@yandex.ru"
