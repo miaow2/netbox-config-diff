@@ -39,6 +39,8 @@ dynamic = [
 
 [project.urls]
 repository = "https://github.com/miaow2/netbox-config-dif"
+homepage = "https://miaow2.github.io/netbox-config-diff/"
+documentation = "https://miaow2.github.io/netbox-config-diff/"
 
 [tool.setuptools.packages]
 find = {}
