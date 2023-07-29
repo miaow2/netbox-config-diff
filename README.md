@@ -8,7 +8,7 @@
 
 # NetBox Config Diff Plugin
 
-NetBox plugin for Config Diff.
+[NetBox](https://github.com/netbox-community/netbox) plugin for Config Diff.
 
 * Free software: Apache-2.0
 * Documentation: https://miaow2.github.io/netbox-config-diff/

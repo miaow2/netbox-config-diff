@@ -6,6 +6,7 @@ repo_name: miaow2/netbox-config-diff
 nav:
   - Home: index.md
   - Usage: usage.md
+  - Screenshots: screenshots.md
   - Contributing: contributing.md
   - Changelog: changelog.md
 theme:
@@ -20,6 +21,8 @@ theme:
     - navigation.indexes
     - navigation.instant
     - navigation.tabs.sticky
+markdown_extensions:
+  - admonition
 plugins:
   - include-markdown
   - search:
