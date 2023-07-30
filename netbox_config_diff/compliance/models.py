@@ -19,6 +19,8 @@ class DeviceDataClass:
     rendered_config: str | None = None
     actual_config: str | None = None
     diff: str | None = None
+    missing: str | None = None
+    extra: str | None = None
     error: str | None = None
     auth_strict_key: bool = False
     transport: str = "asyncssh"
@@ -51,6 +53,8 @@ class DeviceDataClass:
             "error": self.error or "",
             "rendered_config": self.rendered_config or "",
             "actual_config": self.actual_config or "",
+            "missing": self.missing or "",
+            "extra": self.extra or "",
         }
 
     async def get_actual_config(self):

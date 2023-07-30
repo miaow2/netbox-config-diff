@@ -75,6 +75,42 @@ class ConfigComplianceActualConfigView(BaseConfigComplianceConfigView):
     )
 
 
+@register_model_view(ConfigCompliance, "missing-extra")
+class ConfigComplianceMissingExtraConfigView(generic.ObjectView):
+    queryset = ConfigCompliance.objects.all()
+    template_name = "netbox_config_diff/configcompliance/missing_extra.html"
+    tab = ViewTab(
+        label=_("Missing/Extra"),
+        weight=520,
+    )
+
+    def export_parts(self, name, lines, suffix):
+        response = HttpResponse(lines, content_type="text")
+        filename = f"{name}_{suffix}.txt"
+        response["Content-Disposition"] = f'attachment; filename="{filename}"'
+        return response
+
+    def get(self, request, **kwargs):
+        instance = self.get_object(**kwargs)
+        context = self.get_extra_context(request, instance)
+
+        if request.GET.get("export_missing"):
+            return self.export_parts(instance.device.name, instance.missing, "missing")
+
+        if request.GET.get("export_extra"):
+            return self.export_parts(instance.device.name, instance.extra, "extra")
+
+        return render(
+            request,
+            self.get_template_name(),
+            {
+                "object": instance,
+                "tab": self.tab,
+                **context,
+            },
+        )
+
+
 class ConfigComplianceListView(generic.ObjectListView):
     queryset = ConfigCompliance.objects.prefetch_related("device")
     filterset = ConfigComplianceFilterSet
