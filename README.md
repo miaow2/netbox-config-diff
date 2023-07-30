@@ -1,3 +1,11 @@
+[![NetBox version](https://img.shields.io/badge/NetBox-3.5-blue.svg)](https://github.com/netbox-community/netbox)
+[![Supported Versions](https://img.shields.io/pypi/pyversions/netbox-config-diff.svg)](https://pypi.org/project/netbox-config-diff/)
+[![PyPI version](https://badge.fury.io/py/netbox-config-diff.svg)](https://badge.fury.io/py/netbox-config-diff)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![CI](https://github.com/miaow2/netbox-config-diff/actions/workflows/commit.yaml/badge.svg?branch=develop)](https://github.com/miaow2/netbox-config-diff/actions)
+
 # NetBox Config Diff Plugin
 
 NetBox plugin for Config Diff.
@@ -14,7 +22,7 @@ Read about [DataSources](https://demo.netbox.dev/static/docs/models/core/datasou
 Device configuration renders natively in NetBox. This [feature](https://demo.netbox.dev/static/docs/features/configuration-rendering/) was introduced in 3.5 version.
  NetBox Labs [blog](https://demo.netbox.dev/static/docs/features/configuration-rendering/) post about it.
 
-Plugin supports a wide list of vendors (Cisco, Juniper, Huawei, MicroTik etc.) with the help of Scrapli. Read [Scrapli](https://github.com/carlmontanari/scrapli/tree/main/scrapli/driver/core) and [scrapli-community](https://github.com/scrapli/scrapli_community/tree/main/scrapli_community) documentations to find full list of vendors.
+Plugin supports a wide list of vendors (Cisco, Juniper, Huawei, MicroTik etc.) with the help of Scrapli. Read [Scrapli](https://carlmontanari.github.io/scrapli/user_guide/project_details/#supported-platforms) and [scrapli-community](https://scrapli.github.io/scrapli_community/user_guide/project_details/#supported-platforms) documentations to find full list of vendors.
 <!--about-end-->
 
 ## Compatibility
