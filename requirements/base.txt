@@ -1,2 +1,3 @@
+netutils==1.5.0
 scrapli[asyncssh]==2023.01.30
 scrapli-community==2023.01.30
