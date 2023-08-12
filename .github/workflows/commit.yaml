@@ -1,4 +1,4 @@
-name: Commit
+name: CI
 
 on: [push, pull_request]
 
@@ -10,7 +10,8 @@ jobs:
       matrix:
         python: ["3.10", "3.11"]
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Set up python ${{ matrix.python }}
         uses: actions/setup-python@v4
         with:
@@ -23,4 +24,15 @@ jobs:
       - name: Run black
         run: black --check --diff --color .
       - name: Run ruff
-        run: ruff netbox_config_diff
+        run: ruff .
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build NetBox
+        run: cd development && docker compose build
+        shell: bash
+      - name: Run tests
+        run: cd development && docker compose run netbox sh -c "cd /plugin/netbox_config_diff && pytest"

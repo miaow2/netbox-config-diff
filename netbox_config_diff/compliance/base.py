@@ -60,7 +60,16 @@ class ConfigDiffBase:
 
         self.data = data
         if data["devices"]:
-            devices = data["devices"].exclude(platform__platform_setting__isnull=True)
+            devices = (
+                data["devices"]
+                .filter(
+                    status=DeviceStatusChoices.STATUS_ACTIVE,
+                    platform__platform_setting__isnull=False,
+                )
+                .exclude(
+                    Q(primary_ip4__isnull=True) & Q(primary_ip6__isnull=True),
+                )
+            )
         else:
             devices = Device.objects.filter(
                 site=data["site"],

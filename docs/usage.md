@@ -15,7 +15,7 @@ Define:
 
 With regexps you can exclude big parts of the configuration and compare tiny configuration pieces (only ntp configuration).
 
-You can test regexp on the site https://regex101.com/.
+You can test regexp on the site [regex101.com](https://regex101.com/).
 
 ![Screenshot of PlatformSetting](media/screenshots/platformsetting.png)
 

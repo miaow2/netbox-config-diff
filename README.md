@@ -43,6 +43,12 @@ Install with pip:
 pip install netbox-config-diff
 ```
 
+Add to `local_requirements.txt`:
+
+```bash
+echo netbox-config-diff >> local_requirements.txt
+```
+
 Enable the plugin in `/opt/netbox/netbox/netbox/configuration.py`,
  or if you use netbox-docker, your `/configuration/plugins.py` file,
  and define credentials for devices connection:
