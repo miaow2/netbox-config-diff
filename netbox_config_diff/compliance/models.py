@@ -13,9 +13,9 @@ class DeviceDataClass:
     mgmt_ip: str
     platform: str
     command: str
-    exclude_regex: str
     username: str
     password: str
+    exclude_regex: str | None = None
     rendered_config: str | None = None
     actual_config: str | None = None
     diff: str | None = None

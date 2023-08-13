@@ -6,13 +6,11 @@ services:
       context: ../
       dockerfile: ./development/Dockerfile
       args:
-        NETBOX_VERSION: ${NETBOX_VERSION}
+        NETBOX_VERSION: ${NETBOX_VERSION-develop}
     command: sh -c "python manage.py rqworker"
     depends_on:
       - postgres
       - redis
-    env_file:
-      - ./.env
     volumes:
       - ./configuration.py:/opt/netbox/netbox/netbox/configuration.py
       - ../netbox_config_diff:/plugin/netbox_config_diff/netbox_config_diff
@@ -32,17 +30,16 @@ services:
 
   postgres:
     image: postgres:14-alpine
-    env_file: ./.env
+    environment:
+      - POSTGRES_DB=netbox
+      - POSTGRES_USER=netbox
+      - POSTGRES_PASSWORD=netbox
     volumes:
       - pgdata-data:/var/lib/postgresql/data
 
   redis:
     image: redis:7-alpine
-    command:
-      - sh
-      - -c # this is to evaluate the $REDIS_PASSWORD from the env
-      - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
-    env_file: ./.env
+    command: sh -c "redis-server --appendonly yes --requirepass redis"
     volumes:
       - redis-data:/data
 

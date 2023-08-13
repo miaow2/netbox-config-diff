@@ -10,7 +10,7 @@ DATABASE = {
     "PORT": 5432,
 }
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "secret_key")
+SECRET_KEY = os.environ.get("SECRET_KEY", "dummydummydummydummydummydummydummydummydummydummy")
 
 REDIS = {
     "tasks": {
