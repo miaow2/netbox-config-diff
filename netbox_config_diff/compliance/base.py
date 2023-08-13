@@ -8,7 +8,6 @@ from dcim.choices import DeviceStatusChoices
 from dcim.models import Device, Site
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-from extras.plugins.utils import get_plugin_config
 from extras.querysets import ConfigContextQuerySet
 from extras.scripts import MultiObjectVar, ObjectVar
 from jinja2.exceptions import TemplateError
@@ -18,6 +17,11 @@ from netbox_config_diff.models import ConfigCompliance
 
 from .models import DeviceDataClass
 from .utils import exclude_lines, get_unified_diff
+
+try:
+    from extras.plugins import get_plugin_config
+except ImportError:
+    from extras.plugins.utils import get_plugin_config
 
 
 class ConfigDiffBase:
