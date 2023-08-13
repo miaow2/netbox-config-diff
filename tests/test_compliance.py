@@ -115,4 +115,6 @@ def test_devicedataclass_to_db(
         "error": error,
         "rendered_config": "",
         "actual_config": "",
+        "missing": "",
+        "extra": "",
     }

@@ -65,6 +65,8 @@ class DeviceDataClassData(TypedDict, total=False):
     rendered_config: str | None
     actual_config: str | None
     error: str | None
+    missing: str | None
+    extra: str | None
 
 
 class DeviceDataClassDataFactory(Protocol):
