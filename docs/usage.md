@@ -17,7 +17,7 @@ Define:
 
 With regexps you can exclude big parts of the configuration and compare tiny configuration pieces (only ntp configuration).
 
-You can test regexp on the site https://regex101.com/.
+You can test regexp on the site [regex101.com](https://regex101.com/).
 
 ![Screenshot of PlatformSetting](media/screenshots/platformsetting.png)
 
@@ -31,19 +31,16 @@ You can find scripts list in navbar `Customization -> Scripts`.
 In the script, you can define a site, on which devices run compliance, or devices.
  If you define both fields, script will run only on devices from `Devices` field
 
-> **Warning**
->
-> Script runs only on devices with status `Active`, assigned Primary IP, Platform and PlatformSetting
+!!! warning
+    Script runs only on devices with status `Active`, assigned Primary IP, Platform and PlatformSetting
 
 If you have configs in NetBox DataSource, you can define it, the script instead of connecting to devices will find configs in DataSource by device's names.
 
-> **Warning**
->
-> Be sure that DataSource is synced and has the latest data
+!!! warning
+    Be sure that DataSource is synced and has the latest data
 
-> **Note**
->
-> Only synced DataSources are acceptable
+!!! note
+    Only synced DataSources are acceptable
 
 ![Screenshot of the script](media/screenshots/script.png)
 
