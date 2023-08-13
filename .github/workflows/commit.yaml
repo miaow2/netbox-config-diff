@@ -35,7 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build NetBox
-        uses: ./.github/netbox.yaml
+        uses: ./.github/workflows/netbox
         with:
           netbox_version: ${{ matrix.netbox_version }}
       - name: Run tests
