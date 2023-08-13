@@ -8,7 +8,6 @@ from dcim.choices import DeviceStatusChoices
 from dcim.models import Device, Site
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-from extras.plugins import get_plugin_config
 from extras.scripts import MultiObjectVar, ObjectVar
 from jinja2.exceptions import TemplateError
 from netutils.config.compliance import diff_network_config
@@ -18,6 +17,11 @@ from netbox_config_diff.models import ConfigCompliance
 
 from .models import DeviceDataClass
 from .utils import PLATFORM_MAPPING, exclude_lines, get_unified_diff
+
+try:
+    from extras.plugins import get_plugin_config
+except ImportError:
+    from extras.plugins.utils import get_plugin_config
 
 
 class ConfigDiffBase:
@@ -60,7 +64,16 @@ class ConfigDiffBase:
 
         self.data = data
         if data["devices"]:
-            devices = data["devices"].exclude(platform__platform_setting__isnull=True)
+            devices = (
+                data["devices"]
+                .filter(
+                    status=DeviceStatusChoices.STATUS_ACTIVE,
+                    platform__platform_setting__isnull=False,
+                )
+                .exclude(
+                    Q(primary_ip4__isnull=True) & Q(primary_ip6__isnull=True),
+                )
+            )
         else:
             devices = Device.objects.filter(
                 site=data["site"],

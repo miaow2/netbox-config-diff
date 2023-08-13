@@ -8,7 +8,7 @@
 
 # NetBox Config Diff Plugin
 
-NetBox plugin for Config Diff.
+[NetBox](https://github.com/netbox-community/netbox) plugin for Config Diff.
 
 * Free software: Apache-2.0
 * Documentation: https://miaow2.github.io/netbox-config-diff/
@@ -41,6 +41,12 @@ Install with pip:
 
 ```bash
 pip install netbox-config-diff
+```
+
+Add to `local_requirements.txt`:
+
+```bash
+echo netbox-config-diff >> local_requirements.txt
 ```
 
 Enable the plugin in `/opt/netbox/netbox/netbox/configuration.py`,
