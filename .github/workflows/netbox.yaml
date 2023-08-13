@@ -1,0 +1,14 @@
+name: Build NetBox
+inputs:
+  netbox_version:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - name: Define NetBox version
+    run: echo "NETBOX_VERSION=${{ inputs.netbox_version }}" > development/.env
+    shell: bash
+  - name: Build NetBox
+    run: cd development && docker compose build
+    shell: bash
