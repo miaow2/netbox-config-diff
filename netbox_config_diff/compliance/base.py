@@ -11,12 +11,13 @@ from django.db.models import Q
 from extras.querysets import ConfigContextQuerySet
 from extras.scripts import MultiObjectVar, ObjectVar
 from jinja2.exceptions import TemplateError
+from netutils.config.compliance import diff_network_config
 from utilities.exceptions import AbortScript
 
 from netbox_config_diff.models import ConfigCompliance
 
 from .models import DeviceDataClass
-from .utils import exclude_lines, get_unified_diff
+from .utils import PLATFORM_MAPPING, exclude_lines, get_unified_diff
 
 try:
     from extras.plugins import get_plugin_config
@@ -56,7 +57,7 @@ class ConfigDiffBase:
         self.get_diff(devices)
         self.update_in_db(devices)
 
-    def validate_data(self, data: dict) -> Iterable[ConfigContextQuerySet]:
+    def validate_data(self, data: dict) -> Iterable[Device]:
         if not data["site"] and not data["devices"]:
             raise AbortScript("Define site or devices")
         if data.get("data_source") and data["data_source"].status != DataSourceStatusChoices.COMPLETED:
@@ -114,7 +115,7 @@ class ConfigDiffBase:
         else:
             self.log_success(f"{device.name} no diff")
 
-    def get_devices_with_rendered_configs(self, devices: Iterable[ConfigContextQuerySet]) -> Iterator[DeviceDataClass]:
+    def get_devices_with_rendered_configs(self, devices: Iterable[Device]) -> Iterator[DeviceDataClass]:
         username = get_plugin_config("netbox_config_diff", "USERNAME")
         password = get_plugin_config("netbox_config_diff", "PASSWORD")
         for device in devices:
@@ -164,6 +165,12 @@ class ConfigDiffBase:
         for device in devices:
             if device.error is not None:
                 continue
-            device.diff = get_unified_diff(
-                device.rendered_config, exclude_lines(device.actual_config, device.exclude_regex), device.name
-            )
+            cleaned_config = exclude_lines(device.actual_config, device.exclude_regex)
+            device.diff = get_unified_diff(device.rendered_config, cleaned_config, device.name)
+            if device.platform in PLATFORM_MAPPING:
+                device.missing = diff_network_config(
+                    device.rendered_config, cleaned_config, PLATFORM_MAPPING[device.platform]
+                )
+                device.extra = diff_network_config(
+                    cleaned_config, device.rendered_config, PLATFORM_MAPPING[device.platform]
+                )

@@ -31,6 +31,12 @@ class ConfigCompliance(ChangeLoggingMixin, models.Model):
     rendered_config = models.TextField(
         blank=True,
     )
+    missing = models.TextField(
+        blank=True,
+    )
+    extra = models.TextField(
+        blank=True,
+    )
 
     objects = RestrictedQuerySet.as_manager()
 
@@ -67,8 +73,8 @@ class PlatformSetting(NetBoxModel):
         max_length=25,
         help_text=_(
             "Scrapli driver for platfrom, you can find them in "
-            "<a href='https://github.com/carlmontanari/scrapli'>Scrapli</a> and "
-            "<a href='https://github.com/scrapli/scrapli_community'>Scrapli community</a> documentation."
+            "<a href='https://carlmontanari.github.io/scrapli/user_guide/project_details/#supported-platforms'>Scrapli</a> and "  # noqa
+            "<a href='https://scrapli.github.io/scrapli_community/user_guide/project_details/#supported-platforms'>Scrapli community</a> documentation."  # noqa
         ),
     )
     command = models.CharField(
