@@ -35,8 +35,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build NetBox
-        uses: ./.github/workflows/netbox
-        with:
-          netbox_version: ${{ matrix.netbox_version }}
+        run: cd development && docker compose build --build-arg NETBOX_VERSION=${{ matrix.netbox_version }}
       - name: Run tests
         run: cd development && docker compose run netbox sh -c "cd /plugin/netbox_config_diff && pytest"

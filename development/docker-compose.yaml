@@ -8,7 +8,6 @@ services:
       args:
         NETBOX_VERSION: ${NETBOX_VERSION-develop}
     command: sh -c "python manage.py rqworker"
-    env_file: ./.env
     depends_on:
       - postgres
       - redis
