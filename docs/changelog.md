@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.0 (2023-08-22)
+## 1.2.0 (2023-08-23)
 
 * [#20](https://github.com/miaow2/netbox-config-diff/issues/20) Add integration with [netbox-secrets](https://github.com/Onemind-Services-LLC/netbox-secrets) plugin
 
