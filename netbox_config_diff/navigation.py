@@ -8,6 +8,7 @@ def get_add_button(model: str) -> PluginMenuButton:
         title="Add",
         icon_class="mdi mdi-plus-thick",
         color=ButtonColorChoices.GREEN,
+        permissions=[f"netbox_config_diff.add_{model}"],
     )
 
 
@@ -16,10 +17,12 @@ menu_items = (
         link="plugins:netbox_config_diff:platformsetting_list",
         link_text="Platform Settings",
         buttons=[get_add_button("platformsetting")],
+        permissions=["netbox_config_diff.view_platformsetting"],
     ),
     PluginMenuItem(
         link="plugins:netbox_config_diff:configcompliance_list",
         link_text="Config Compliances",
         buttons=[],
+        permissions=["netbox_config_diff.view_configcompliance"],
     ),
 )
