@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        netbox_version: ["v3.5.7"]
+        netbox_version: ["v3.5.8"]
     steps:
       - name: Checkout
         uses: actions/checkout@v3

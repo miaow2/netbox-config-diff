@@ -2,7 +2,7 @@ from extras.plugins import PluginConfig
 
 __author__ = "Artem Kotik"
 __email__ = "miaow2@yandex.ru"
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 
 
 class ConfigDiffConfig(PluginConfig):
@@ -15,6 +15,10 @@ class ConfigDiffConfig(PluginConfig):
     base_url = "config-diff"
     required_settings = ["USERNAME", "PASSWORD"]
     min_version = "3.5.0"
+    default_settings = {
+        "USER_SECRET_ROLE": "Username",
+        "PASSWORD_SECRET_ROLE": "Password",
+    }
 
 
 config = ConfigDiffConfig

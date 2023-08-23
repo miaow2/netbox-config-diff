@@ -5,7 +5,9 @@ repo_name: miaow2/netbox-config-diff
 #strict: true
 nav:
   - Home: index.md
-  - Usage: usage.md
+  - User Guide:
+    - Quick Start Guide: usage.md
+    - Integration with secrets: secrets.md
   - Screenshots: screenshots.md
   - Contributing: contributing.md
   - Changelog: changelog.md

@@ -16,15 +16,16 @@ from utilities.exceptions import AbortScript
 from netbox_config_diff.models import ConfigCompliance
 
 from .models import DeviceDataClass
+from .secrets import SecretsMixin
 from .utils import PLATFORM_MAPPING, exclude_lines, get_unified_diff
 
 try:
-    from extras.plugins import get_plugin_config
+    from extras.plugins import get_installed_plugins, get_plugin_config
 except ImportError:
-    from extras.plugins.utils import get_plugin_config
+    from extras.plugins.utils import get_installed_plugins, get_plugin_config
 
 
-class ConfigDiffBase:
+class ConfigDiffBase(SecretsMixin):
     site = ObjectVar(
         model=Site,
         required=False,
@@ -115,9 +116,13 @@ class ConfigDiffBase:
             self.log_success(f"{device.name} no diff")
 
     def get_devices_with_rendered_configs(self, devices: Iterable[Device]) -> Iterator[DeviceDataClass]:
-        username = get_plugin_config("netbox_config_diff", "USERNAME")
-        password = get_plugin_config("netbox_config_diff", "PASSWORD")
+        if "netbox_secrets" in get_installed_plugins():
+            self.get_master_key()
+            self.user_role = get_plugin_config("netbox_config_diff", "USER_SECRET_ROLE")
+            self.password_role = get_plugin_config("netbox_config_diff", "PASSWORD_SECRET_ROLE")
         for device in devices:
+            username, password = self.get_credentials(device)
+            self.log_info(f"{username} {password}")
             rendered_config = None
             error = None
             context_data = device.get_config_context()
@@ -173,3 +178,16 @@ class ConfigDiffBase:
                 device.extra = diff_network_config(
                     cleaned_config, device.rendered_config, PLATFORM_MAPPING[device.platform]
                 )
+
+    def get_credentials(self, device: Device) -> tuple[str, str]:
+        username = get_plugin_config("netbox_config_diff", "USERNAME")
+        password = get_plugin_config("netbox_config_diff", "PASSWORD")
+        if "netbox_secrets" in get_installed_plugins():
+            if secret := device.secrets.filter(role__name=self.user_role).first():
+                if value := self.get_secret(secret):
+                    username = value
+            if secret := device.secrets.filter(role__name=self.password_role).first():
+                if value := self.get_secret(secret):
+                    password = value
+
+        return username, password
