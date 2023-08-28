@@ -20,7 +20,7 @@ With this plugin you can find diff between the rendered configuration for a devi
 Read about [DataSources](https://demo.netbox.dev/static/docs/models/core/datasource/) for further details.
 
 Device configuration renders natively in NetBox. This [feature](https://demo.netbox.dev/static/docs/features/configuration-rendering/) was introduced in 3.5 version.
- NetBox Labs [blog](https://demo.netbox.dev/static/docs/features/configuration-rendering/) post about it.
+ NetBox Labs [blog](https://netboxlabs.com/blog/how-to-generate-device-configurations-with-netbox/) post about it.
 
 Plugin supports a wide list of vendors (Cisco, Juniper, Huawei, MicroTik etc.) with the help of Scrapli. Read [Scrapli](https://carlmontanari.github.io/scrapli/user_guide/project_details/#supported-platforms) and [scrapli-community](https://scrapli.github.io/scrapli_community/user_guide/project_details/#supported-platforms) documentations to find full list of vendors.
 <!--about-end-->
