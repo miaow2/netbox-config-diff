@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1 (2023-09-07)
+
+* [#26](https://github.com/miaow2/netbox-config-diff/issues/26) Add dark theme for diff
+
 ## 1.2.0 (2023-08-23)
 
 * [#20](https://github.com/miaow2/netbox-config-diff/issues/20) Add integration with [netbox-secrets](https://github.com/Onemind-Services-LLC/netbox-secrets) plugin
