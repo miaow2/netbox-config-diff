@@ -2,7 +2,7 @@ from extras.plugins import PluginConfig
 
 __author__ = "Artem Kotik"
 __email__ = "miaow2@yandex.ru"
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 
 
 class ConfigDiffConfig(PluginConfig):
