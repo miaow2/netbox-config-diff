@@ -13,7 +13,8 @@ ACTUAL_CONFIG = """hostname test-1
 
 interface fa-0/0
   switchport mode access
-  switchport access vlan 100"""
+  switchport access vlan 100
+"""
 
 
 @pytest.mark.parametrize(
@@ -21,15 +22,15 @@ interface fa-0/0
     [
         (
             "^interface.?\n^Building",
-            "hostname test-1\n\nfa-0/0\n  switchport mode access\n  switchport access vlan 100\n",
+            "hostname test-1\n\nfa-0/0\n  switchport mode access\n  switchport access vlan 100",
         ),
         (
             "^interface.*$\n^Building",
-            "hostname test-1\n\n\n  switchport mode access\n  switchport access vlan 100\n",
+            "hostname test-1\n\n\n  switchport mode access\n  switchport access vlan 100",
         ),
         (
             "^Building",
-            "hostname test-1\n\ninterface fa-0/0\n  switchport mode access\n  switchport access vlan 100\n",
+            "hostname test-1\n\ninterface fa-0/0\n  switchport mode access\n  switchport access vlan 100",
         ),
     ],
     ids=["part of line", "full line", "no effect"],
