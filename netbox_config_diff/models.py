@@ -83,7 +83,7 @@ class PlatformSetting(NetBoxModel):
     )
     exclude_regex = models.TextField(
         blank=True,
-        help_text=_("Regex patterns to exclude from actual config, specify each pattern on a new line."),
+        help_text=_("Regex patterns to exclude config lines from actual config, specify each pattern on a new line."),
     )
 
     prerequisite_models = ("dcim.Platform",)

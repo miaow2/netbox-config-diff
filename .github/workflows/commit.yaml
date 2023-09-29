@@ -29,8 +29,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 10
       matrix:
-        netbox_version: ["v3.5.8"]
+        netbox_version: ["v3.5.9", "v3.6.1"]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
