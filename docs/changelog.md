@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.2 (2023-09-29)
+
+* [#28](https://github.com/miaow2/netbox-config-diff/issues/28) Add legacy ssh algorithms to support old OS versions
+
 ## 1.2.1 (2023-09-07)
 
 * [#26](https://github.com/miaow2/netbox-config-diff/issues/26) Add dark theme for diff

@@ -36,6 +36,42 @@ class DeviceDataClass:
             "platform": self.platform,
             "auth_strict_key": self.auth_strict_key,
             "transport": self.transport,
+            "transport_options": {
+                "asyncssh": {
+                    "kex_algs": [
+                        "curve25519-sha256",
+                        "curve25519-sha256@libssh.org",
+                        "curve448-sha512",
+                        "ecdh-sha2-nistp521",
+                        "ecdh-sha2-nistp384",
+                        "ecdh-sha2-nistp256",
+                        "ecdh-sha2-1.3.132.0.10",
+                        "diffie-hellman-group-exchange-sha256",
+                        "diffie-hellman-group14-sha256",
+                        "diffie-hellman-group15-sha512",
+                        "diffie-hellman-group16-sha512",
+                        "diffie-hellman-group17-sha512",
+                        "diffie-hellman-group18-sha512",
+                        "diffie-hellman-group14-sha256@ssh.com",
+                        "diffie-hellman-group14-sha1",
+                        "rsa2048-sha256",
+                        "diffie-hellman-group1-sha1",
+                        "diffie-hellman-group-exchange-sha1",
+                        "diffie-hellman-group-exchange-sha256",
+                    ],
+                    "encryption_algs": [
+                        "aes256-cbc",
+                        "aes192-cbc",
+                        "aes128-cbc",
+                        "3des-cbc",
+                        "aes256-ctr",
+                        "aes192-ctr",
+                        "aes128-ctr",
+                        "aes128-gcm@openssh.com",
+                        "chacha20-poly1305@openssh.com",
+                    ],
+                },
+            },
         }
 
     def to_db(self):
