@@ -13,8 +13,7 @@ ACTUAL_CONFIG = """hostname test-1
 
 interface fa-0/0
   switchport mode access
-  switchport access vlan 100
-"""
+  switchport access vlan 100"""
 
 
 @pytest.mark.parametrize(

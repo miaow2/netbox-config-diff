@@ -19,7 +19,7 @@ PLATFORM_MAPPING = {
 
 def get_unified_diff(rendered_config: str, actual_config: str, device: str) -> str:
     diff = unified_diff(
-        rendered_config.splitlines(),
+        rendered_config.strip().splitlines(),
         actual_config.splitlines(),
         fromfiledate=device,
         tofiledate=device,
