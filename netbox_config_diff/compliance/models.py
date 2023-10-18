@@ -12,9 +12,9 @@ class DeviceDataClass:
     name: str
     mgmt_ip: str
     platform: str
-    command: str
     username: str
     password: str
+    command: str | None = None
     exclude_regex: str | None = None
     rendered_config: str | None = None
     actual_config: str | None = None
@@ -22,11 +22,15 @@ class DeviceDataClass:
     missing: str | None = None
     extra: str | None = None
     error: str | None = None
+    config_error: str | None = None
     auth_strict_key: bool = False
     transport: str = "asyncssh"
 
     def __str__(self):
         return self.name
+
+    def __hash__(self):
+        return hash(self.name)
 
     def to_scrapli(self):
         return {
@@ -78,7 +82,7 @@ class DeviceDataClass:
         if self.error:
             status = ConfigComplianceStatusChoices.ERRORED
         elif self.diff:
-            status = ConfigComplianceStatusChoices.FAILED
+            status = ConfigComplianceStatusChoices.DIFF
         else:
             status = ConfigComplianceStatusChoices.COMPLIANT
 

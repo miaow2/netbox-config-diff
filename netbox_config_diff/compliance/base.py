@@ -1,4 +1,5 @@
 import asyncio
+import re
 import traceback
 from typing import Iterable, Iterator
 
@@ -19,17 +20,13 @@ from .models import DeviceDataClass
 from .secrets import SecretsMixin
 from .utils import PLATFORM_MAPPING, exclude_lines, get_unified_diff
 
-try:
-    from extras.plugins import get_installed_plugins, get_plugin_config
-except ImportError:
-    from extras.plugins.utils import get_installed_plugins, get_plugin_config
-
 
 class ConfigDiffBase(SecretsMixin):
     site = ObjectVar(
         model=Site,
         required=False,
-        description="Run compliance for devices (with status Active, primary IP and platform) in this site",
+        description="Run compliance for devices (with status Active, "
+        "primary IP, platform and config template) in this site",
     )
     devices = MultiObjectVar(
         model=Device,
@@ -38,6 +35,7 @@ class ConfigDiffBase(SecretsMixin):
             "status": DeviceStatusChoices.STATUS_ACTIVE,
             "has_primary_ip": True,
             "platform_id__n": "null",
+            "config_template_id__n": "null",
         },
         description="If you define devices in this field, the Site field will be ignored",
     )
@@ -70,6 +68,7 @@ class ConfigDiffBase(SecretsMixin):
                 .filter(
                     status=DeviceStatusChoices.STATUS_ACTIVE,
                     platform__platform_setting__isnull=False,
+                    config_template__isnull=False,
                 )
                 .exclude(
                     Q(primary_ip4__isnull=True) & Q(primary_ip6__isnull=True),
@@ -80,6 +79,7 @@ class ConfigDiffBase(SecretsMixin):
                 site=data["site"],
                 status=DeviceStatusChoices.STATUS_ACTIVE,
                 platform__platform_setting__isnull=False,
+                config_template__isnull=False,
             ).exclude(
                 Q(primary_ip4__isnull=True) & Q(primary_ip6__isnull=True),
             )
@@ -116,13 +116,10 @@ class ConfigDiffBase(SecretsMixin):
             self.log_success(f"{device.name} no diff")
 
     def get_devices_with_rendered_configs(self, devices: Iterable[Device]) -> Iterator[DeviceDataClass]:
-        if "netbox_secrets" in get_installed_plugins():
-            self.get_master_key()
-            self.user_role = get_plugin_config("netbox_config_diff", "USER_SECRET_ROLE")
-            self.password_role = get_plugin_config("netbox_config_diff", "PASSWORD_SECRET_ROLE")
+        self.check_netbox_secrets()
+        self.substitutes = {}
         for device in devices:
             username, password = self.get_credentials(device)
-            self.log_info(f"{username} {password}")
             rendered_config = None
             error = None
             context_data = device.get_config_context()
@@ -130,16 +127,22 @@ class ConfigDiffBase(SecretsMixin):
             if config_template := device.get_config_template():
                 try:
                     rendered_config = config_template.render(context=context_data)
+                    rendered_config = re.sub(r"{{.+}}\s+", "", rendered_config)
                 except TemplateError:
                     error = traceback.format_exc()
             else:
                 error = "Define config template for device"
 
+            platform = device.platform.platform_setting.driver
+            if not self.substitutes.get(platform):
+                if substitutes := device.platform.platform_setting.substitutes.all():
+                    self.substitutes[platform] = [s.regexp for s in substitutes]
+
             yield DeviceDataClass(
                 pk=device.pk,
                 name=device.name,
                 mgmt_ip=str(device.primary_ip.address.ip),
-                platform=device.platform.platform_setting.driver,
+                platform=platform,
                 command=device.platform.platform_setting.command,
                 exclude_regex=device.platform.platform_setting.exclude_regex,
                 username=username,
@@ -169,7 +172,9 @@ class ConfigDiffBase(SecretsMixin):
         for device in devices:
             if device.error is not None:
                 continue
-            cleaned_config = exclude_lines(device.actual_config, device.exclude_regex)
+            cleaned_config = exclude_lines(device.actual_config, device.exclude_regex.splitlines())
+            if self.substitutes.get(device.platform):
+                cleaned_config = exclude_lines(cleaned_config, self.substitutes[device.platform])
             device.diff = get_unified_diff(device.rendered_config, cleaned_config, device.name)
             if device.platform in PLATFORM_MAPPING:
                 device.missing = diff_network_config(
@@ -178,16 +183,3 @@ class ConfigDiffBase(SecretsMixin):
                 device.extra = diff_network_config(
                     cleaned_config, device.rendered_config, PLATFORM_MAPPING[device.platform]
                 )
-
-    def get_credentials(self, device: Device) -> tuple[str, str]:
-        username = get_plugin_config("netbox_config_diff", "USERNAME")
-        password = get_plugin_config("netbox_config_diff", "PASSWORD")
-        if "netbox_secrets" in get_installed_plugins():
-            if secret := device.secrets.filter(role__name=self.user_role).first():
-                if value := self.get_secret(secret):
-                    username = value
-            if secret := device.secrets.filter(role__name=self.password_role).first():
-                if value := self.get_secret(secret):
-                    password = value
-
-        return username, password

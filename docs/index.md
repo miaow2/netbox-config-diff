@@ -12,4 +12,4 @@
 
 ## Usage
 
-Read this [doc](usage.md) to find out how to use plugin
+Read this [doc](colliecting-diffs.md) about collecting diffs, for configuration management read [this](configuratiom-management.md)

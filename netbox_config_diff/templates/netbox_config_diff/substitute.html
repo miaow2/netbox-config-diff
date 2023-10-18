@@ -10,30 +10,20 @@
         <div class="card-body">
           <table class="table table-hover attr-table">
             <tr>
-              <th scope="row">Platform</th>
-              <td>{{ object.platform|linkify }}</td>
+              <th scope="row">Platform Setting</th>
+              <td>{{ object.platform_setting|linkify }}</td>
             </tr>
             <tr>
-              <th scope="row">Driver</th>
-              <td>{{ object.driver }}</td>
-            </tr>
-            <tr>
-              <th scope="row">Command</th>
-              <td><pre>{{ object.command }}</pre></td>
+              <th scope="row">Name</th>
+              <td>{{ object.name }}</td>
             </tr>
             <tr>
               <th scope="row">Description</th>
               <td>{{ object.description|placeholder }}</td>
             </tr>
             <tr>
-              <th scope="row">Exclude regex</th>
-              <td>
-                {% if object.exclude_regex %}
-                  <pre>{{ object.exclude_regex }}</pre>
-                {% else %}
-                  {{ ''|placeholder }}
-                {% endif %}
-              </td>
+              <th scope="row">Regexp</th>
+              <td><pre>{{ object.regexp }}</pre></td>
             </tr>
           </table>
         </div>

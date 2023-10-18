@@ -2,6 +2,7 @@ import factory
 import factory.fuzzy
 from core.models import DataSource
 from dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Platform, Site
+from extras.models import ConfigTemplate
 from factory.django import DjangoModelFactory
 from ipam.models import IPAddress
 
@@ -56,6 +57,14 @@ class IPAddressFactory(DjangoModelFactory):
         model = IPAddress
 
 
+class ConfigTemplateFactory(DjangoModelFactory):
+    name = factory.Sequence(lambda n: f"configcontext-{n}")
+    template_code = factory.fuzzy.FuzzyText()
+
+    class Meta:
+        model = ConfigTemplate
+
+
 class DeviceFactory(DjangoModelFactory):
     name = factory.Sequence(lambda n: f"device-{n}")
     site = factory.SubFactory(SiteFactory)
@@ -63,6 +72,7 @@ class DeviceFactory(DjangoModelFactory):
     device_role = factory.SubFactory(DeviceRoleFactory)
     platform = factory.SubFactory(PlatformFactory)
     primary_ip4 = factory.SubFactory(IPAddressFactory)
+    config_template = factory.SubFactory(ConfigTemplateFactory)
 
     class Meta:
         model = Device
