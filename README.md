@@ -100,10 +100,11 @@ Restart NetBox service:
 systemctl restart netbox
 ```
 <!--install-end-->
-
+<!--usage-start-->
 ## Usage
 
-Read the [docs](https://miaow2.github.io/netbox-config-diff/usage) about how to use plugin.
+Read this [doc](docs/colliecting-diffs.md) about collecting diffs, for configuration management read [this](docs/configuratiom-management.md)
+<!--usage-end-->
 
 ## Screenshots
 

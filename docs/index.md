@@ -10,6 +10,8 @@
     end="<!--install-end-->"
 %}
 
-## Usage
-
-Read this [doc](colliecting-diffs.md) about collecting diffs, for configuration management read [this](configuratiom-management.md)
+{%
+    include-markdown "../README.md"
+    start="<!--usage-start-->"
+    end="<!--usage-end-->"
+%}
