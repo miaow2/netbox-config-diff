@@ -4,15 +4,15 @@ from django.utils.translation import gettext as _
 from netbox.views import generic
 from utilities.views import ViewTab, register_model_view
 
-from .filtersets import ConfigComplianceFilterSet, PlatformSettingFilterSet
-from .forms import (
+from netbox_config_diff.filtersets import ConfigComplianceFilterSet, PlatformSettingFilterSet
+from netbox_config_diff.forms import (
     ConfigComplianceFilterForm,
     PlatformSettingBulkEditForm,
     PlatformSettingFilterForm,
     PlatformSettingForm,
 )
-from .models import ConfigCompliance, PlatformSetting
-from .tables import ConfigComplianceTable, PlatformSettingTable
+from netbox_config_diff.models import ConfigCompliance, PlatformSetting
+from netbox_config_diff.tables import ConfigComplianceTable, PlatformSettingTable
 
 
 class BaseConfigComplianceConfigView(generic.ObjectView):

@@ -1,0 +1,102 @@
+{% extends "netbox_config_diff/configurationrequest/base.html" %}
+{% load helpers %}
+{% load static %}
+
+{% block content %}
+  {% if job %}
+    <div class="row mb-3">
+      <div class="col col-md-6">
+        <div class="card">
+          <h5 class="card-header">Job</h5>
+          <div class="card-body">
+            <table class="table table-hover attr-table">
+              <tr>
+                <th scope="row">Name</th>
+                <td>
+                  <a href="{% url 'core:job' pk=job.pk%}">{{ job.name }}</a>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Status</th>
+                <td>{% badge job.get_status_display job.get_status_color %}</td>
+              </tr>
+              <tr>
+                <th scope="row">Created By</th>
+                <td>{{ job.user|placeholder }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col col-md-6">
+        <div class="card">
+          <h5 class="card-header">Time</h5>
+          <div class="card-body">
+            <table class="table table-hover attr-table">
+              <tr>
+                <th scope="row">Created</th>
+                <td>{{ job.created|annotated_date }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Started</th>
+                <td>{{ job.started|annotated_date|placeholder }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Completed</th>
+                <td>{{ job.completed|annotated_date|placeholder }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% if job.completed %}
+      <div class="row mb-3">
+        <div class="col col-md-12">
+          {% if job.status == "failed" or job.status == "errored" %}
+            {% include 'netbox_config_diff/inc/job_log.html' %}
+          {% else %}
+            {% for diff in job.data.diffs %}
+              {% if diff.error %}
+                <div class="card">
+                  <h5 class="card-header">{{ diff.name }} - Error</h5>
+                  <div class="card-body">
+                    <pre class="block">{{ diff.error }}</pre>
+                  </div>
+                </div>
+              {% elif diff.diff %}
+                {% include 'netbox_config_diff/inc/diff.html' with device_name=diff.name data=diff.diff %}
+              {% else %}
+                <div class="card">
+                  <h5 class="card-header">{{ diff.name }} - No diff</h5>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="alert alert-warning text-end" role="alert">
+      <div class="float-start"><i class="mdi mdi-alert"></i>There is no diffs, run collect diffs</div>
+    </div>
+  {% endif %}
+{% endblock content %}
+
+{% block javascript %}
+  {% if job.status == "completed" %}
+    <script type="text/javascript" src="{% static 'netbox_config_diff/diff2html-ui.min.js' %}"></script>
+    <script type="text/javascript">
+      var link = document.createElement('link');
+      link.type = 'text/css';
+      link.rel = 'stylesheet';
+      const colorMode = localStorage.getItem("netbox-color-mode");
+      if (colorMode === 'dark') {
+        link.href = `{% static 'netbox_config_diff/diff2html.dark.min.css' %}`
+      } else {
+        link.href = `{% static 'netbox_config_diff/diff2html.min.css' %}`
+      };
+      document.head.appendChild(link);
+    </script>
+  {% endif %}
+{% endblock javascript %}

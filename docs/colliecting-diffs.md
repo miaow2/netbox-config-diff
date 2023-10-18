@@ -32,7 +32,7 @@ In the script, you can define a site, on which devices run compliance, or device
  If you define both fields, script will run only on devices from `Devices` field
 
 !!! warning
-    Script runs only on devices with status `Active`, assigned Primary IP, Platform and PlatformSetting
+    Script runs only on devices with status `Active`, assigned Primary IP, Config Template, Platform and PlatformSetting
 
 If you have configs in NetBox DataSource, you can define it, the script instead of connecting to devices will find configs in DataSource by device's names.
 

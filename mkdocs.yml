@@ -6,7 +6,8 @@ repo_name: miaow2/netbox-config-diff
 nav:
   - Home: index.md
   - User Guide:
-    - Quick Start Guide: usage.md
+    - Collecting diffs: colliecting-diffs.md
+    - Configuration management: configuratiom-management.md
     - Integration with secrets: secrets.md
   - Screenshots: screenshots.md
   - Contributing: contributing.md

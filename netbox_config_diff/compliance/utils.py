@@ -28,7 +28,7 @@ def get_unified_diff(rendered_config: str, actual_config: str, device: str) -> s
     return "\n".join(diff).strip()
 
 
-def exclude_lines(text: str, regex: str) -> str:
-    for item in regex.splitlines():
-        text = re.sub(item, "", text, flags=re.MULTILINE)
+def exclude_lines(text: str, regexs: list) -> str:
+    for item in regexs:
+        text = re.sub(item, "", text, flags=re.I | re.M)
     return text.strip()

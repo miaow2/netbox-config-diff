@@ -1,0 +1,27 @@
+<div class="card">
+  <h5 class="card-header">{{ device_name }} - Diff</h5>
+  <div class="card-body" id="{{ device_name }}-diffElement"></div>
+</div>
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', () => {
+    var configuration = {
+        drawFileList: false,
+        fileListToggle: false,
+        fileListStartVisible: false,
+        fileContentToggle: false,
+        matching: 'lines',
+        outputFormat: 'side-by-side',
+        synchronisedScroll: true,
+        highlight: true,
+        renderNothingWhenEmpty: false,
+        stickyFileHeaders: false,
+        drawFileList: false,
+    };
+    const jsonDiff = `{{ data|safe }}`;
+    var targetElement = document.getElementById('{{ device_name }}-diffElement');
+    var diff2htmlUi = new Diff2HtmlUI(targetElement, jsonDiff, configuration);
+    diff2htmlUi.draw();
+    document.querySelector(".d2h-file-header").remove();
+    diff2htmlUi.highlightCode();
+  });
+</script>
