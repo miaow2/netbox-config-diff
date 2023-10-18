@@ -36,7 +36,7 @@ interface fa-0/0
     ids=["part of line", "full line", "no effect"],
 )
 def test_exclude_lines(regex: str, expected: str) -> None:
-    assert exclude_lines(ACTUAL_CONFIG, regex) == expected
+    assert exclude_lines(ACTUAL_CONFIG, regex.splitlines()) == expected
 
 
 @pytest.mark.parametrize(

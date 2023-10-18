@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.0 (2023-10-XX)
+
+* [#25](https://github.com/miaow2/netbox-config-diff/issues/25) Add configuration management
+
 ## 1.2.2 (2023-09-29)
 
 * [#28](https://github.com/miaow2/netbox-config-diff/issues/28) Add legacy ssh algorithms to support old OS versions

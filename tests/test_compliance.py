@@ -133,7 +133,7 @@ def test_devicedataclass_to_scrapli(devicedataclass_data: "DeviceDataClassData")
     "diff, error, status",
     [
         ("", "asyncio.exceptions.CancelledError", "errored"),
-        ("there is a diff", "", "failed"),
+        ("there is a diff", "", "diff"),
         ("", "", "compliant"),
     ],
     ids=["errored", "failed", "compliant"],

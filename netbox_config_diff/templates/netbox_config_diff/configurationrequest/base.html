@@ -1,0 +1,57 @@
+{% extends "generic/object.html" %}
+{% load buttons %}
+{% load perms %}
+
+{% block controls %}
+  <div class="controls">
+    <div class="control-group">
+      {% if perms.extras.add_bookmark and object.bookmarks %}
+        {% bookmark_button object %}
+      {% endif %}
+      {% if not object.finished %}
+        <form action="{% url 'plugins:netbox_config_diff:configurationrequest_collectdiffs' pk=object.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-outline-dark">
+            <i class="mdi mdi-shape-plus" aria-hidden="true"></i> Collect diffs
+          </button>
+        </form>
+        {% if perms.netbox_config_diff.approve_configurationrequest %}
+          {% if not object.approved_by %}
+            <form action="{% url 'plugins:netbox_config_diff:configurationrequest_approve' pk=object.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-teal">
+                <i class="mdi mdi-check-circle" aria-hidden="true"></i> Approve
+              </button>
+            </form>
+            {% endif %}
+          {% if object.approved_by %}
+            <form action="{% url 'plugins:netbox_config_diff:configurationrequest_approve' pk=object.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-orange">
+                <i class="mdi mdi-minus-circle" aria-hidden="true"></i> Unapprove
+              </button>
+            </form>
+            {% if object.scheduled_by %}
+              <form action="{% url 'plugins:netbox_config_diff:configurationrequest_unschedule' pk=object.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-pink">
+                  <i class="mdi mdi-calendar-remove" aria-hidden="true"></i> Unschedule
+                </button>
+              </form>
+            {% else %}
+              <a href="{% url 'plugins:netbox_config_diff:configurationrequest_schedule' pk=object.pk %}" type="button" class="btn btn-sm btn-blue">
+                <i class="mdi mdi-calendar"></i> Schedule
+              </a>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+        {% if request.user|can_change:object %}
+          {% edit_button object %}
+        {% endif %}
+      {% endif %}
+      {% if request.user|can_delete:object %}
+        {% delete_button object %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock controls %}

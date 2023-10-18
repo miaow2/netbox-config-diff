@@ -16,6 +16,8 @@
 <!--about-start-->
 ## About
 
+### Collecting diffs
+
 With this plugin you can find diff between the rendered configuration for a device to its actual configuration, retrieved from the device itself, or stored in DataSource.
 Read about [DataSources](https://demo.netbox.dev/static/docs/models/core/datasource/) for further details.
 
@@ -23,6 +25,20 @@ Device configuration renders natively in NetBox. This [feature](https://demo.net
  NetBox Labs [blog](https://netboxlabs.com/blog/how-to-generate-device-configurations-with-netbox/) post about it.
 
 Plugin supports a wide list of vendors (Cisco, Juniper, Huawei, MicroTik etc.) with the help of Scrapli. Read [Scrapli](https://carlmontanari.github.io/scrapli/user_guide/project_details/#supported-platforms) and [scrapli-community](https://scrapli.github.io/scrapli_community/user_guide/project_details/#supported-platforms) documentations to find full list of vendors.
+
+### Pushing configuration
+
+Also you can push rendered configuration from NetBox to device and apply it.
+
+Supported platforms:
+
+* `arista_eos`
+* `cisco_iosxe`
+* `cisco_iosxr`
+* `cisco_nxos`
+* `juniper_junos`
+
+This is possible thanks to the scrapli_cfg. Read [Scrapli](https://github.com/scrapli/scrapli_cfg/) documentation for more info.
 <!--about-end-->
 
 ## Compatibility
