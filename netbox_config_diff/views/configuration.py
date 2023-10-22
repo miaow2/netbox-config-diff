@@ -6,7 +6,7 @@ from core.models import Job
 from core.tables import JobTable
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from netbox.constants import RQ_QUEUE_DEFAULT
@@ -300,9 +300,7 @@ class ConfigurationRequestCollectDiffsView(BaseObjectView):
 
 
 class JobListView(generic.ObjectListView):
-    queryset = Job.objects.filter(
-        object_type=ContentType.objects.get(app_label="netbox_config_diff", model="configurationrequest")
-    )
+    queryset = Job.objects.filter(Q(name__contains="push_configs") | Q(name__contains="collect_diffs"))
     filterset = JobFilterSet
     filterset_form = JobFilterForm
     table = JobTable
