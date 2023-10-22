@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (2023-10-XX)
+## 2.0.0 (2023-10-18)
 
 * [#25](https://github.com/miaow2/netbox-config-diff/issues/25) Add configuration management
 
