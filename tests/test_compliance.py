@@ -34,7 +34,9 @@ def test_validate_data_no_platformsetting(
 ) -> None:
     DeviceFactory.create()
     DeviceFactory.create()
-    devices = mock_config_diff.validate_data(data=script_data_factory(**{"devices": Device.objects.all()}))
+    devices = mock_config_diff.validate_data(
+        data=script_data_factory(**{"devices": Device.objects.all(), "status": "active"})
+    )
 
     assert len(devices) == 0
 
@@ -44,7 +46,9 @@ def test_validate_data(mock_config_diff: "ConfigDiffBase", script_data_factory: 
     device = DeviceFactory.create()
     DeviceFactory.create()
     PlatformSettingFactory.create(platform=device.platform)
-    devices = mock_config_diff.validate_data(data=script_data_factory(**{"devices": Device.objects.all()}))
+    devices = mock_config_diff.validate_data(
+        data=script_data_factory(**{"devices": Device.objects.all(), "status": "active"})
+    )
 
     assert len(devices) == 1
 
@@ -54,7 +58,9 @@ def test_device_data(mock_config_diff: "ConfigDiffBase", script_data_factory: "S
     device = DeviceFactory.create()
     DeviceFactory.create()
     PlatformSettingFactory.create(platform=device.platform)
-    devices = mock_config_diff.validate_data(data=script_data_factory(**{"devices": Device.objects.all()}))
+    devices = mock_config_diff.validate_data(
+        data=script_data_factory(**{"devices": Device.objects.all(), "status": "active"})
+    )
     devices = list(mock_config_diff.get_devices_with_rendered_configs(devices))
 
     assert len(devices) == 1
