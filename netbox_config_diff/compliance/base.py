@@ -6,7 +6,8 @@ from typing import Iterable, Iterator
 from core.choices import DataSourceStatusChoices
 from core.models import DataFile, DataSource
 from dcim.choices import DeviceStatusChoices
-from dcim.models import Device, Site
+from dcim.models import Device, DeviceRole, Site
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from extras.scripts import MultiObjectVar, ObjectVar
@@ -27,6 +28,11 @@ class ConfigDiffBase(SecretsMixin):
         required=False,
         description="Run compliance for devices (with primary IP, platform) in this site",
     )
+    role = ObjectVar(
+        model=DeviceRole,
+        required=False,
+        description="Run compliance for devices with this role",
+    )
     devices = MultiObjectVar(
         model=Device,
         required=False,
@@ -34,7 +40,7 @@ class ConfigDiffBase(SecretsMixin):
             "has_primary_ip": True,
             "platform_id__n": "null",
         },
-        description="If you define devices in this field, the Site field will be ignored",
+        description="If you define devices in this field, Site, Role fields will be ignored",
     )
     status = CustomChoiceVar(
         choices=DeviceStatusChoices,
@@ -57,8 +63,8 @@ class ConfigDiffBase(SecretsMixin):
         self.update_in_db(devices)
 
     def validate_data(self, data: dict) -> Iterable[Device]:
-        if not data["site"] and not data["devices"]:
-            raise AbortScript("Define site or devices")
+        if not data["site"] and not data["role"] and not data["devices"]:
+            raise AbortScript("Define site, role or devices")
         if data.get("data_source") and data["data_source"].status != DataSourceStatusChoices.COMPLETED:
             raise AbortScript("Define synced DataSource")
 
@@ -75,13 +81,21 @@ class ConfigDiffBase(SecretsMixin):
                 )
             )
         else:
-            devices = Device.objects.filter(
-                site=data["site"],
-                status=data["status"],
-                platform__platform_setting__isnull=False,
-            ).exclude(
+            filters = {
+                "status": data["status"],
+                "platform__platform_setting__isnull": False,
+            }
+            if data["site"]:
+                filters["site"] = data["site"]
+            elif data["role"]:
+                if settings.VERSION.split(".", 1)[1].startswith("5"):
+                    filters["device_role"] = data["role"]
+                else:
+                    filters["role"] = data["role"]
+            devices = Device.objects.filter(**filters).exclude(
                 Q(primary_ip4__isnull=True) & Q(primary_ip6__isnull=True),
             )
+
         if data.get("devices"):
             if qs_diff := data["devices"].difference(devices):
                 platforms = {d.platform.name for d in qs_diff}

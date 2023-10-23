@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 def test_validate_data_no_data(mock_config_diff: "ConfigDiffBase", script_data: "ScriptData") -> None:
     with pytest.raises(AbortScript) as e:
         mock_config_diff.validate_data(data=script_data)
-    assert str(e.value) == "Define site or devices"
+    assert str(e.value) == "Define site, role or devices"
 
 
 @pytest.mark.django_db()
