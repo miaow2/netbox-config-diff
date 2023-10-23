@@ -1,6 +1,9 @@
 import re
 from difflib import unified_diff
 
+from django.forms import ChoiceField
+from extras.scripts import ScriptVariable
+
 PLATFORM_MAPPING = {
     "arista_eos": "arista_eos",
     "cisco_aireos": "cisco_aireos",
@@ -15,6 +18,14 @@ PLATFORM_MAPPING = {
     "paloalto_panos": "paloalto_panos",
     "ruckus_fastiron": "ruckus_fastiron",
 }
+
+
+class CustomChoiceVar(ScriptVariable):
+    form_field = ChoiceField
+
+    def __init__(self, choices, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.field_attrs["choices"] = choices
 
 
 def get_unified_diff(rendered_config: str, actual_config: str, device: str) -> str:

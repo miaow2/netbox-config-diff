@@ -18,26 +18,28 @@ from netbox_config_diff.models import ConfigCompliance
 
 from .models import DeviceDataClass
 from .secrets import SecretsMixin
-from .utils import PLATFORM_MAPPING, exclude_lines, get_unified_diff
+from .utils import PLATFORM_MAPPING, CustomChoiceVar, exclude_lines, get_unified_diff
 
 
 class ConfigDiffBase(SecretsMixin):
     site = ObjectVar(
         model=Site,
         required=False,
-        description="Run compliance for devices (with status Active, "
-        "primary IP, platform and config template) in this site",
+        description="Run compliance for devices (with primary IP, platform and config template) in this site",
     )
     devices = MultiObjectVar(
         model=Device,
         required=False,
         query_params={
-            "status": DeviceStatusChoices.STATUS_ACTIVE,
             "has_primary_ip": True,
             "platform_id__n": "null",
             "config_template_id__n": "null",
         },
         description="If you define devices in this field, the Site field will be ignored",
+    )
+    status = CustomChoiceVar(
+        choices=DeviceStatusChoices,
+        default=DeviceStatusChoices.STATUS_ACTIVE,
     )
     data_source = ObjectVar(
         model=DataSource,
@@ -66,7 +68,7 @@ class ConfigDiffBase(SecretsMixin):
             devices = (
                 data["devices"]
                 .filter(
-                    status=DeviceStatusChoices.STATUS_ACTIVE,
+                    status=data["status"],
                     platform__platform_setting__isnull=False,
                     config_template__isnull=False,
                 )
@@ -77,7 +79,7 @@ class ConfigDiffBase(SecretsMixin):
         else:
             devices = Device.objects.filter(
                 site=data["site"],
-                status=DeviceStatusChoices.STATUS_ACTIVE,
+                status=data["status"],
                 platform__platform_setting__isnull=False,
                 config_template__isnull=False,
             ).exclude(
@@ -90,7 +92,7 @@ class ConfigDiffBase(SecretsMixin):
 
         if not devices:
             self.log_warning(
-                "No matching devices found, devices must have status `Active`, primary IP, platform and platformsetting"
+                "No matching devices found, devices must have status primary IP, platform and platformsetting"
             )
         else:
             self.log_info(f"Working with device(s): {', '.join(d.name for d in devices)}")
