@@ -34,6 +34,7 @@ def script_data_factory() -> "ScriptDataFactory":
     def factory(**fields: Unpack["ScriptData"]) -> "ScriptData":
         data = {
             "site": None,
+            "role": None,
             "devices": None,
             "data_source": None,
             "status": "active",
