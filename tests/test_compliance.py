@@ -24,7 +24,9 @@ def test_validate_data_no_sync_datasource(
     mock_config_diff: "ConfigDiffBase", script_data_factory: "ScriptDataFactory"
 ) -> None:
     with pytest.raises(AbortScript) as e:
-        mock_config_diff.validate_data(data=script_data_factory(**{"site": "test", "devices": "test", "status": "new"}))
+        mock_config_diff.validate_data(
+            data=script_data_factory(**{"site": "test", "devices": "test", "data_source_status": "new"})
+        )
     assert str(e.value) == "Define synced DataSource"
 
 
