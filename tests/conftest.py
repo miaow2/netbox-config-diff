@@ -36,10 +36,11 @@ def script_data_factory() -> "ScriptDataFactory":
             "site": None,
             "devices": None,
             "data_source": None,
+            "status": "active",
         }
-        if fields.get("status"):
-            data["data_source"] = DataSourceFactory.create(status=fields["status"])
-            fields.pop("status")
+        if fields.get("data_source_status"):
+            data["data_source"] = DataSourceFactory.create(status=fields["data_source_status"])
+            fields.pop("data_source_status")
         return data | fields
 
     return factory
