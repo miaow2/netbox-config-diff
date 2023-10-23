@@ -25,7 +25,7 @@ class ConfigDiffBase(SecretsMixin):
     site = ObjectVar(
         model=Site,
         required=False,
-        description="Run compliance for devices (with primary IP, platform and config template) in this site",
+        description="Run compliance for devices (with primary IP, platform) in this site",
     )
     devices = MultiObjectVar(
         model=Device,
@@ -33,7 +33,6 @@ class ConfigDiffBase(SecretsMixin):
         query_params={
             "has_primary_ip": True,
             "platform_id__n": "null",
-            "config_template_id__n": "null",
         },
         description="If you define devices in this field, the Site field will be ignored",
     )
@@ -70,7 +69,6 @@ class ConfigDiffBase(SecretsMixin):
                 .filter(
                     status=data["status"],
                     platform__platform_setting__isnull=False,
-                    config_template__isnull=False,
                 )
                 .exclude(
                     Q(primary_ip4__isnull=True) & Q(primary_ip6__isnull=True),
@@ -81,7 +79,6 @@ class ConfigDiffBase(SecretsMixin):
                 site=data["site"],
                 status=data["status"],
                 platform__platform_setting__isnull=False,
-                config_template__isnull=False,
             ).exclude(
                 Q(primary_ip4__isnull=True) & Q(primary_ip6__isnull=True),
             )

@@ -116,6 +116,11 @@ class ConfigurationRequestSerializer(NetBoxModelSerializer):
             }:
                 raise ValidationError({"devices": f"Driver(s) not supported: {', '.join(drivers)}"})
 
+            if devices := list(filter(lambda x: x.get_config_template() is None, data["devices"])):
+                raise ValidationError(
+                    {"devices": f"Define config template for device(s): {', '.join(d.name for d in devices)}"}
+                )
+
         return super().validate(data)
 
 
