@@ -14,7 +14,8 @@ from jinja2.exceptions import TemplateError
 from netutils.config.compliance import diff_network_config
 from utilities.exceptions import AbortScript
 
-from .models import DeviceDataClass
+from netbox_config_diff.models import ConplianceDeviceDataClass
+
 from .secrets import SecretsMixin
 from .utils import PLATFORM_MAPPING, CustomChoiceVar, exclude_lines, get_unified_diff
 
@@ -106,12 +107,12 @@ class ConfigDiffBase(SecretsMixin):
             self.log_info(f"Working with device(s): {', '.join(d.name for d in devices)}")
         return devices
 
-    def update_in_db(self, devices: list[DeviceDataClass]) -> None:
+    def update_in_db(self, devices: list[ConplianceDeviceDataClass]) -> None:
         for device in devices:
             self.log_results(device)
             device.send_to_db()
 
-    def log_results(self, device: DeviceDataClass) -> None:
+    def log_results(self, device: ConplianceDeviceDataClass) -> None:
         if device.error:
             self.log_failure(f"{device.name} errored")
         elif device.diff:
@@ -119,7 +120,7 @@ class ConfigDiffBase(SecretsMixin):
         else:
             self.log_success(f"{device.name} no diff")
 
-    def get_devices_with_rendered_configs(self, devices: Iterable[Device]) -> Iterator[DeviceDataClass]:
+    def get_devices_with_rendered_configs(self, devices: Iterable[Device]) -> Iterator[ConplianceDeviceDataClass]:
         self.check_netbox_secrets()
         self.substitutes = {}
         for device in devices:
@@ -142,7 +143,7 @@ class ConfigDiffBase(SecretsMixin):
                 if substitutes := device.platform.platform_setting.substitutes.all():
                     self.substitutes[platform] = [s.regexp for s in substitutes]
 
-            yield DeviceDataClass(
+            yield ConplianceDeviceDataClass(
                 pk=device.pk,
                 name=device.name,
                 mgmt_ip=str(device.primary_ip.address.ip),
@@ -155,7 +156,7 @@ class ConfigDiffBase(SecretsMixin):
                 error=error,
             )
 
-    def get_config_from_datasource(self, devices: list[DeviceDataClass]) -> None:
+    def get_config_from_datasource(self, devices: list[ConplianceDeviceDataClass]) -> None:
         for device in devices:
             if df := DataFile.objects.filter(source=self.data["data_source"], path__icontains=device.name).first():
                 if config := df.data_as_string:
@@ -165,14 +166,14 @@ class ConfigDiffBase(SecretsMixin):
             else:
                 device.error = f"Not found file in DataSource for device {device.name}"
 
-    def get_actual_configs(self, devices: list[DeviceDataClass]) -> None:
+    def get_actual_configs(self, devices: list[ConplianceDeviceDataClass]) -> None:
         if self.data["data_source"]:
             self.get_config_from_datasource(devices)
         else:
             loop = asyncio.get_event_loop()
             loop.run_until_complete(asyncio.gather(*(d.get_actual_config() for d in devices)))
 
-    def get_diff(self, devices: list[DeviceDataClass]) -> None:
+    def get_diff(self, devices: list[ConplianceDeviceDataClass]) -> None:
         for device in devices:
             if device.error is not None:
                 continue

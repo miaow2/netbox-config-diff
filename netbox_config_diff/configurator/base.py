@@ -13,12 +13,12 @@ from scrapli_cfg.platform.base.async_platform import AsyncScrapliCfgPlatform
 from scrapli_cfg.response import ScrapliCfgResponse
 from utilities.utils import NetBoxFakeRequest
 
-from netbox_config_diff.compliance.models import DeviceDataClass
 from netbox_config_diff.compliance.secrets import SecretsMixin
 from netbox_config_diff.compliance.utils import PLATFORM_MAPPING, get_unified_diff
 from netbox_config_diff.configurator.exceptions import DeviceConfigurationError, DeviceValidationError
 from netbox_config_diff.configurator.utils import CustomLogger
 from netbox_config_diff.constants import ACCEPTABLE_DRIVERS
+from netbox_config_diff.models import ConfiguratorDeviceDataClass
 
 from .factory import AsyncScrapliCfg
 
@@ -27,9 +27,9 @@ class Configurator(SecretsMixin):
     def __init__(self, devices: Iterable[Device], request: NetBoxFakeRequest) -> None:
         self.devices = devices
         self.request = request
-        self.unprocessed_devices: set[DeviceDataClass] = set()
-        self.processed_devices: set[DeviceDataClass] = set()
-        self.failed_devices: set[DeviceDataClass] = set()
+        self.unprocessed_devices: set[ConfiguratorDeviceDataClass] = set()
+        self.processed_devices: set[ConfiguratorDeviceDataClass] = set()
+        self.failed_devices: set[ConfiguratorDeviceDataClass] = set()
         self.substitutes: dict[str, list] = {}
         self.logger = CustomLogger()
         self.connections: dict[str, AsyncScrapliCfgPlatform] = {}
@@ -59,7 +59,7 @@ class Configurator(SecretsMixin):
                     error = "Define config template for device"
                     self.logger.log_failure(error)
 
-                d = DeviceDataClass(
+                d = ConfiguratorDeviceDataClass(
                     pk=device.pk,
                     name=device.name,
                     mgmt_ip=str(device.primary_ip.address.ip),
@@ -115,7 +115,7 @@ class Configurator(SecretsMixin):
             await asyncio.gather(*(self._collect_one_diff(d) for d in self.unprocessed_devices))
         await self.update_diffs()
 
-    async def _collect_one_diff(self, device: DeviceDataClass) -> None:
+    async def _collect_one_diff(self, device: ConfiguratorDeviceDataClass) -> None:
         self.logger.log_info(f"Collecting diff on {device.name}")
         try:
             conn = self.connections[device.name]
@@ -161,7 +161,7 @@ class Configurator(SecretsMixin):
                 devices=", ".join(f"{d.name}: {d.config_error}" for d in self.failed_devices),
             )
 
-    async def _push_one_config(self, device: DeviceDataClass) -> None:
+    async def _push_one_config(self, device: ConfiguratorDeviceDataClass) -> None:
         self.logger.log_info(f"Push config to {device.name}")
         try:
             conn = self.connections[device.name]
@@ -184,7 +184,11 @@ class Configurator(SecretsMixin):
             self.failed_devices.add(device)
 
     async def abort_config(
-        self, operation: str, conn: AsyncScrapliCfgPlatform, response: ScrapliCfgResponse, device: DeviceDataClass
+        self,
+        operation: str,
+        conn: AsyncScrapliCfgPlatform,
+        response: ScrapliCfgResponse,
+        device: ConfiguratorDeviceDataClass,
     ) -> None:
         self.logger.log_failure(f"Failed to {operation} config on {device.name}: {response.result}")
         device.config_error = response.result
@@ -197,7 +201,7 @@ class Configurator(SecretsMixin):
         self.logger.log_info(f"Rollback config: {', '.join(d.name for d in self.processed_devices)}")
         await asyncio.gather(*(self._rollback_one(d) for d in self.processed_devices))
 
-    async def _rollback_one(self, device: DeviceDataClass) -> None:
+    async def _rollback_one(self, device: ConfiguratorDeviceDataClass) -> None:
         conn = self.connections[device.name]
         await conn.load_config(config=device.actual_config, replace=True)
         await conn.commit_config()

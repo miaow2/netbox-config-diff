@@ -4,18 +4,18 @@ from dataclasses import dataclass
 from scrapli import AsyncScrapli
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices
-from netbox_config_diff.models import ConfigCompliance
+
+from .models import ConfigCompliance
 
 
 @dataclass
-class DeviceDataClass:
+class BaseDeviceDataClass:
     pk: int
     name: str
     mgmt_ip: str
     platform: str
     username: str
     password: str
-    command: str | None = None
     exclude_regex: str | None = None
     rendered_config: str | None = None
     actual_config: str | None = None
@@ -25,13 +25,11 @@ class DeviceDataClass:
     error: str = ""
     config_error: str | None = None
     auth_strict_key: bool = False
+    auth_secondary: str | None = None
     transport: str = "asyncssh"
 
     def __str__(self) -> str:
         return self.name
-
-    def __hash__(self) -> int:
-        return hash(self.name)
 
     def to_scrapli(self) -> dict:
         return {
@@ -40,6 +38,7 @@ class DeviceDataClass:
             "auth_password": self.password,
             "platform": self.platform,
             "auth_strict_key": self.auth_strict_key,
+            "auth_secondary": self.auth_secondary,
             "transport": self.transport,
             "transport_options": {
                 "asyncssh": {
@@ -111,6 +110,10 @@ class DeviceDataClass:
         except ConfigCompliance.DoesNotExist:
             ConfigCompliance.objects.create(**self.to_db())
 
+
+class ConplianceDeviceDataClass(BaseDeviceDataClass):
+    command: str
+
     async def get_actual_config(self) -> None:
         if self.error is not None:
             return
@@ -123,3 +126,8 @@ class DeviceDataClass:
                     self.actual_config = result.result
         except Exception:
             self.error = traceback.format_exc()
+
+
+class ConfiguratorDeviceDataClass(BaseDeviceDataClass):
+    def __hash__(self) -> int:
+        return hash(self.name)
