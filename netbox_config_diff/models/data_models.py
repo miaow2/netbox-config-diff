@@ -114,6 +114,10 @@ class BaseDeviceDataClass:
 class ConplianceDeviceDataClass(BaseDeviceDataClass):
     command: str
 
+    def __init__(self, command: str, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.command = command
+
     async def get_actual_config(self) -> None:
         if self.error is not None:
             return
