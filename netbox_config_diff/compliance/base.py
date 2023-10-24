@@ -8,14 +8,11 @@ from core.models import DataFile, DataSource
 from dcim.choices import DeviceStatusChoices
 from dcim.models import Device, DeviceRole, Site
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from extras.scripts import MultiObjectVar, ObjectVar
 from jinja2.exceptions import TemplateError
 from netutils.config.compliance import diff_network_config
 from utilities.exceptions import AbortScript
-
-from netbox_config_diff.models import ConfigCompliance
 
 from .models import DeviceDataClass
 from .secrets import SecretsMixin
@@ -112,13 +109,7 @@ class ConfigDiffBase(SecretsMixin):
     def update_in_db(self, devices: list[DeviceDataClass]) -> None:
         for device in devices:
             self.log_results(device)
-            try:
-                obj = ConfigCompliance.objects.get(device_id=device.pk)
-                obj.snapshot()
-                obj.update(**device.to_db())
-                obj.save()
-            except ObjectDoesNotExist:
-                ConfigCompliance.objects.create(**device.to_db())
+            device.send_to_db()
 
     def log_results(self, device: DeviceDataClass) -> None:
         if device.error:

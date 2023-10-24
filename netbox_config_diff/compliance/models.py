@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from scrapli import AsyncScrapli
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices
+from netbox_config_diff.models import ConfigCompliance
 
 
 @dataclass
@@ -18,21 +19,21 @@ class DeviceDataClass:
     exclude_regex: str | None = None
     rendered_config: str | None = None
     actual_config: str | None = None
-    diff: str | None = None
+    diff: str = ""
     missing: str | None = None
     extra: str | None = None
-    error: str | None = None
+    error: str = ""
     config_error: str | None = None
     auth_strict_key: bool = False
     transport: str = "asyncssh"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.name)
 
-    def to_scrapli(self):
+    def to_scrapli(self) -> dict:
         return {
             "host": self.mgmt_ip,
             "auth_username": self.username,
@@ -78,13 +79,16 @@ class DeviceDataClass:
             },
         }
 
-    def to_db(self):
+    def get_status(self) -> str:
         if self.error:
-            status = ConfigComplianceStatusChoices.ERRORED
+            return ConfigComplianceStatusChoices.ERRORED
         elif self.diff:
-            status = ConfigComplianceStatusChoices.DIFF
+            return ConfigComplianceStatusChoices.DIFF
         else:
-            status = ConfigComplianceStatusChoices.COMPLIANT
+            return ConfigComplianceStatusChoices.COMPLIANT
+
+    def to_db(self) -> dict:
+        status = self.get_status()
 
         return {
             "device_id": self.pk,
@@ -97,7 +101,17 @@ class DeviceDataClass:
             "extra": self.extra or "",
         }
 
-    async def get_actual_config(self):
+    def send_to_db(self) -> None:
+        try:
+            obj = ConfigCompliance.objects.get(device_id=self.pk)
+            if obj.status != self.get_status():
+                obj.update(commit=True, **self.to_db())
+            elif obj.diff != self.diff or obj.error != self.error:
+                obj.update(commit=True, **self.to_db())
+        except ConfigCompliance.DoesNotExist:
+            ConfigCompliance.objects.create(**self.to_db())
+
+    async def get_actual_config(self) -> None:
         if self.error is not None:
             return
         try:
