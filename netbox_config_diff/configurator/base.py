@@ -19,7 +19,6 @@ from netbox_config_diff.compliance.utils import PLATFORM_MAPPING, get_unified_di
 from netbox_config_diff.configurator.exceptions import DeviceConfigurationError, DeviceValidationError
 from netbox_config_diff.configurator.utils import CustomLogger
 from netbox_config_diff.constants import ACCEPTABLE_DRIVERS
-from netbox_config_diff.models import ConfigCompliance
 
 from .factory import AsyncScrapliCfg
 
@@ -28,9 +27,9 @@ class Configurator(SecretsMixin):
     def __init__(self, devices: Iterable[Device], request: NetBoxFakeRequest) -> None:
         self.devices = devices
         self.request = request
-        self.unprocessed_devices = set()
-        self.processed_devices = set()
-        self.failed_devices = set()
+        self.unprocessed_devices: set[DeviceDataClass] = set()
+        self.processed_devices: set[DeviceDataClass] = set()
+        self.failed_devices: set[DeviceDataClass] = set()
         self.substitutes: dict[str, list] = {}
         self.logger = CustomLogger()
         self.connections: dict[str, AsyncScrapliCfgPlatform] = {}
@@ -109,13 +108,7 @@ class Configurator(SecretsMixin):
     @sync_to_async
     def update_diffs(self) -> None:
         for device in self.unprocessed_devices:
-            try:
-                obj = ConfigCompliance.objects.get(device_id=device.pk)
-                obj.snapshot()
-                obj.update(**device.to_db())
-                obj.save()
-            except ConfigCompliance.DoesNotExist:
-                ConfigCompliance.objects.create(**device.to_db())
+            device.send_to_db()
 
     async def _collect_diffs(self) -> None:
         async with self.connection():

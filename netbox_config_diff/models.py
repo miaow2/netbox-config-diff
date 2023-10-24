@@ -54,16 +54,18 @@ class ConfigCompliance(ChangeLoggingMixin, models.Model):
     class Meta:
         ordering = ("device",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.device.name
 
     def get_absolute_url(self):
         return reverse("plugins:netbox_config_diff:configcompliance", args=[self.pk])
 
-    def get_status_color(self):
+    def get_status_color(self) -> str:
         return ConfigComplianceStatusChoices.colors.get(self.status)
 
-    def update(self, commit=False, **kwargs):
+    def update(self, commit: bool = False, **kwargs) -> None:
+        if commit:
+            self.snapshot()
         for key, value in kwargs.items():
             setattr(self, key, value)
         if commit:
@@ -102,7 +104,7 @@ class PlatformSetting(NetBoxModel):
     class Meta:
         ordering = ("driver",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.platform} {self.driver}"
 
     def get_absolute_url(self):
@@ -156,20 +158,20 @@ class ConfigurationRequest(JobsMixin, PrimaryModel):
     class Meta:
         ordering = ("-created",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"CR #{self.pk}"
 
     def get_absolute_url(self):
         return reverse("plugins:netbox_config_diff:configurationrequest", args=[self.pk])
 
-    def get_status_color(self):
+    def get_status_color(self) -> str:
         return ConfigurationRequestStatusChoices.colors.get(self.status)
 
     @property
-    def finished(self):
+    def finished(self) -> bool:
         return self.status in ConfigurationRequestStatusChoices.FINISHED_STATE_CHOICES
 
-    def delete(self, *args, **kwargs):
+    def delete(self, *args, **kwargs) -> None:
         super().delete(*args, **kwargs)
 
         queue = django_rq.get_queue(RQ_QUEUE_DEFAULT)
@@ -180,7 +182,7 @@ class ConfigurationRequest(JobsMixin, PrimaryModel):
                 except InvalidJobOperation:
                     pass
 
-    def enqueue_job(self, request, job_name, schedule_at=None):
+    def enqueue_job(self, request, job_name, schedule_at=None) -> Job:
         return Job.enqueue(
             import_string(f"netbox_config_diff.jobs.{job_name}"),
             name=f"{self} {job_name}",
@@ -190,7 +192,7 @@ class ConfigurationRequest(JobsMixin, PrimaryModel):
             schedule_at=schedule_at,
         )
 
-    def start(self, job: Job):
+    def start(self, job: Job) -> None:
         """
         Record the job's start time and update its status to "running."
         """
@@ -201,7 +203,7 @@ class ConfigurationRequest(JobsMixin, PrimaryModel):
         self.status = ConfigurationRequestStatusChoices.RUNNING
         self.save()
 
-    def terminate(self, job: Job, status: str = ConfigurationRequestStatusChoices.COMPLETED):
+    def terminate(self, job: Job, status: str = ConfigurationRequestStatusChoices.COMPLETED) -> None:
         job.terminate(status=status)
         self.status = status
         self.completed = timezone.now()
@@ -243,7 +245,7 @@ class Substitute(NetBoxModel):
     class Meta:
         ordering = ("name",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
     def get_absolute_url(self):
