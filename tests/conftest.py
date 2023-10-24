@@ -6,7 +6,7 @@ from faker import Faker
 from typing_extensions import Unpack
 
 from netbox_config_diff.compliance.base import ConfigDiffBase
-from netbox_config_diff.compliance.models import DeviceDataClass
+from netbox_config_diff.models import ConplianceDeviceDataClass
 from tests.factories import DataSourceFactory
 
 
@@ -97,6 +97,6 @@ def devicedataclass_factory() -> "DeviceDataClassDataFactory":
 
 
 @pytest.fixture()
-def devicedataclass_data(devicedataclass_factory: "DeviceDataClassDataFactory") -> DeviceDataClass:
+def devicedataclass_data(devicedataclass_factory: "DeviceDataClassDataFactory") -> ConplianceDeviceDataClass:
     data = devicedataclass_factory()
-    return DeviceDataClass(**data)
+    return ConplianceDeviceDataClass(**data)

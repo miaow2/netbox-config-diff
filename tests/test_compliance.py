@@ -4,8 +4,7 @@ import pytest
 from dcim.models import Device
 from utilities.exceptions import AbortScript
 
-from netbox_config_diff.compliance.models import DeviceDataClass
-from netbox_config_diff.models import ConfigCompliance
+from netbox_config_diff.models import ConfigCompliance, ConplianceDeviceDataClass
 from tests.factories import ConfigComplianceFactory, DeviceFactory, PlatformSettingFactory
 
 if TYPE_CHECKING:
@@ -144,7 +143,7 @@ def test_devicedataclass_to_db(
     devicedataclass_factory: "DeviceDataClassDataFactory", diff: str, error: str, status: str
 ) -> None:
     data = devicedataclass_factory(**{"diff": diff, "error": error})
-    d = DeviceDataClass(**data)
+    d = ConplianceDeviceDataClass(**data)
 
     assert d.to_db() == {
         "device_id": d.pk,
