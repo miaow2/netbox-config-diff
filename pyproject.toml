@@ -58,10 +58,6 @@ ignore = ["C901"]
 line-length = 120
 target-version = "py310"
 
-[tool.ruff.format]
-line-length = 120
-exclude =['migrations']
-
 [tool.pytest.ini_options]
 addopts = "-p no:warnings -vv --no-migrations"
 DJANGO_SETTINGS_MODULE = "netbox.settings"
