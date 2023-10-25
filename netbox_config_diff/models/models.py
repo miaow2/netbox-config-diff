@@ -110,21 +110,21 @@ class ConfigurationRequest(AbsoluteURLMixin, JobsMixin, PrimaryModel):
     created_by = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
-        related_name='+',
+        related_name="+",
         blank=True,
         null=True,
     )
     approved_by = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
-        related_name='+',
+        related_name="+",
         blank=True,
         null=True,
     )
     scheduled_by = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
-        related_name='+',
+        related_name="+",
         blank=True,
         null=True,
     )
@@ -213,12 +213,12 @@ class Substitute(AbsoluteURLMixin, NetBoxModel):
         unique=True,
         validators=(
             RegexValidator(
-                regex=r'^[a-z0-9_]+$',
+                regex=r"^[a-z0-9_]+$",
                 message=_("Only alphanumeric characters and underscores are allowed."),
                 flags=re.IGNORECASE,
             ),
             RegexValidator(
-                regex=r'__',
+                regex=r"__",
                 message=_("Double underscores are not permitted in names."),
                 flags=re.IGNORECASE,
                 inverse_match=True,
@@ -226,7 +226,6 @@ class Substitute(AbsoluteURLMixin, NetBoxModel):
         ),
     )
     description = models.CharField(
-        verbose_name=_('description'),
         max_length=200,
         blank=True,
     )
