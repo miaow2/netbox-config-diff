@@ -30,6 +30,8 @@ from netbox_config_diff.forms import (
 from netbox_config_diff.models import ConfigurationRequest, Substitute
 from netbox_config_diff.tables import ConfigurationRequestTable, SubstituteTable
 
+from .base import BaseObjectDeleteView, BaseObjectEditView
+
 
 @register_model_view(ConfigurationRequest)
 class ConfigurationRequestView(generic.ObjectView):
@@ -55,7 +57,7 @@ class ConfigurationRequestListView(generic.ObjectListView):
 
 
 @register_model_view(ConfigurationRequest, "edit")
-class ConfigurationRequestEditView(generic.ObjectEditView):
+class ConfigurationRequestEditView(BaseObjectEditView):
     queryset = ConfigurationRequest.objects.all()
     form = ConfigurationRequestForm
 
@@ -86,7 +88,7 @@ class ConfigurationRequestEditView(generic.ObjectEditView):
 
 
 @register_model_view(ConfigurationRequest, "delete")
-class ConfigurationRequestDeleteView(generic.ObjectDeleteView):
+class ConfigurationRequestDeleteView(BaseObjectDeleteView):
     queryset = ConfigurationRequest.objects.all()
 
 
@@ -173,7 +175,7 @@ class ConfigurationRequestApproveView(BaseObjectView):
 
 
 @register_model_view(ConfigurationRequest, "schedule")
-class ConfigurationRequestScheduleView(generic.ObjectEditView):
+class ConfigurationRequestScheduleView(BaseObjectEditView):
     queryset = ConfigurationRequest.objects.all()
     form = ConfigurationRequestScheduleForm
 
@@ -320,11 +322,11 @@ class SubstituteListView(generic.ObjectListView):
 
 
 @register_model_view(Substitute, "edit")
-class SubstituteEditView(generic.ObjectEditView):
+class SubstituteEditView(BaseObjectEditView):
     queryset = Substitute.objects.all()
     form = SubstituteForm
 
 
 @register_model_view(Substitute, "delete")
-class SubstituteDeleteView(generic.ObjectDeleteView):
+class SubstituteDeleteView(BaseObjectDeleteView):
     queryset = Substitute.objects.all()
