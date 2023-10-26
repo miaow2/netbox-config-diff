@@ -89,7 +89,6 @@ class ConfigurationRequestForm(NetBoxModelForm):
             "status": DeviceStatusChoices.STATUS_ACTIVE,
             "has_primary_ip": True,
             "platform_id__n": "null",
-            "config_template_id__n": "null",
         },
     )
     created_by = forms.ModelChoiceField(
@@ -121,6 +120,11 @@ class ConfigurationRequestForm(NetBoxModelForm):
             if device.platform.platform_setting.driver not in ACCEPTABLE_DRIVERS
         }:
             raise forms.ValidationError({"devices": f"Driver(s) not supported: {', '.join(drivers)}"})
+
+        if devices := list(filter(lambda x: x.get_config_template() is None, self.cleaned_data["devices"])):
+            raise forms.ValidationError(
+                {"devices": f"Define config template for device(s): {', '.join(d.name for d in devices)}"}
+            )
 
 
 class ConfigurationRequestFilterForm(NetBoxModelFilterSetForm):

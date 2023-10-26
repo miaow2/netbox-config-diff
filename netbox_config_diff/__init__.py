@@ -2,7 +2,7 @@ from extras.plugins import PluginConfig
 
 __author__ = "Artem Kotik"
 __email__ = "miaow2@yandex.ru"
-__version__ = "2.0.1"
+__version__ = "2.1.0"
 
 
 class ConfigDiffConfig(PluginConfig):
@@ -18,6 +18,7 @@ class ConfigDiffConfig(PluginConfig):
     default_settings = {
         "USER_SECRET_ROLE": "Username",
         "PASSWORD_SECRET_ROLE": "Password",
+        "SECOND_AUTH_SECRET_ROLE": "Second Auth",
     }
 
 

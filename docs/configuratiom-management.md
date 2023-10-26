@@ -59,7 +59,7 @@ And rendered config template with substitute
 Now you let's create `Configuration Request` with devices you want to configure.
 
 !!! warning
-    For request only accepts devices with `Active` status and assigned Platform, Primary IP, Config Template and PlatformSetting
+    For request only accepts devices with `Active` status and assigned Platform, Primary IP, and PlatformSetting
 
 Find `Configuration Requests` in navbar.
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.1.0 (2023-10-26)
+
+* [#35](https://github.com/miaow2/netbox-config-diff/issues/35) Add ability to define password for accessing priviliged exec mode
+* [#37](https://github.com/miaow2/netbox-config-diff/issues/37) Add `DeviceRole` field to `CollectDiffScript`
+* [#38](https://github.com/miaow2/netbox-config-diff/issues/38) Remove config template filter for devices filed in forms
+* [#39](https://github.com/miaow2/netbox-config-diff/issues/39) Add `Status` field to `CollectDiffScript`
+* [#43](https://github.com/miaow2/netbox-config-diff/issues/43) `ConfigDiffScript` does not create empty changelog entries
+
+## 2.0.1 (2023-10-22)
+
+* [#33](https://github.com/miaow2/netbox-config-diff/issues/33) Fix failing migrations on fresh database install
+
 ## 2.0.0 (2023-10-18)
 
 * [#25](https://github.com/miaow2/netbox-config-diff/issues/25) Add configuration management

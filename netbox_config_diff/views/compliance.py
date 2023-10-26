@@ -14,6 +14,8 @@ from netbox_config_diff.forms import (
 from netbox_config_diff.models import ConfigCompliance, PlatformSetting
 from netbox_config_diff.tables import ConfigComplianceTable, PlatformSettingTable
 
+from .base import BaseObjectDeleteView, BaseObjectEditView
+
 
 class BaseConfigComplianceConfigView(generic.ObjectView):
     config_field = None
@@ -119,7 +121,7 @@ class ConfigComplianceListView(generic.ObjectListView):
 
 
 @register_model_view(ConfigCompliance, "delete")
-class ConfigComplianceDeleteView(generic.ObjectDeleteView):
+class ConfigComplianceDeleteView(BaseObjectDeleteView):
     queryset = ConfigCompliance.objects.all()
 
 
@@ -142,13 +144,13 @@ class PlatformSettingListView(generic.ObjectListView):
 
 
 @register_model_view(PlatformSetting, "edit")
-class PlatformSettingEditView(generic.ObjectEditView):
+class PlatformSettingEditView(BaseObjectEditView):
     queryset = PlatformSetting.objects.all()
     form = PlatformSettingForm
 
 
 @register_model_view(PlatformSetting, "delete")
-class PlatformSettingDeleteView(generic.ObjectDeleteView):
+class PlatformSettingDeleteView(BaseObjectDeleteView):
     queryset = PlatformSetting.objects.all()
 
 

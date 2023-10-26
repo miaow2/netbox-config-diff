@@ -28,11 +28,11 @@ You can find scripts list in navbar `Customization -> Scripts`.
 
 ![Screenshot of the scripts list](media/screenshots/script-list.png)
 
-In the script, you can define a site, on which devices run compliance, or devices.
- If you define both fields, script will run only on devices from `Devices` field
+In the script, you can define a site or role, on which devices run compliance, or devices.
+ If you define all fields, script will run only on devices from `Devices` field
 
 !!! warning
-    Script runs only on devices with status `Active`, assigned Primary IP, Config Template, Platform and PlatformSetting
+    Script runs only on devices with assigned Primary IP, Platform and PlatformSetting
 
 If you have configs in NetBox DataSource, you can define it, the script instead of connecting to devices will find configs in DataSource by device's names.
 

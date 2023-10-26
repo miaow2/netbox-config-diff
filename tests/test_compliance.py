@@ -4,8 +4,7 @@ import pytest
 from dcim.models import Device
 from utilities.exceptions import AbortScript
 
-from netbox_config_diff.compliance.models import DeviceDataClass
-from netbox_config_diff.models import ConfigCompliance
+from netbox_config_diff.models import ConfigCompliance, ConplianceDeviceDataClass
 from tests.factories import ConfigComplianceFactory, DeviceFactory, PlatformSettingFactory
 
 if TYPE_CHECKING:
@@ -16,7 +15,7 @@ if TYPE_CHECKING:
 def test_validate_data_no_data(mock_config_diff: "ConfigDiffBase", script_data: "ScriptData") -> None:
     with pytest.raises(AbortScript) as e:
         mock_config_diff.validate_data(data=script_data)
-    assert str(e.value) == "Define site or devices"
+    assert str(e.value) == "Define site, role or devices"
 
 
 @pytest.mark.django_db()
@@ -24,7 +23,9 @@ def test_validate_data_no_sync_datasource(
     mock_config_diff: "ConfigDiffBase", script_data_factory: "ScriptDataFactory"
 ) -> None:
     with pytest.raises(AbortScript) as e:
-        mock_config_diff.validate_data(data=script_data_factory(**{"site": "test", "devices": "test", "status": "new"}))
+        mock_config_diff.validate_data(
+            data=script_data_factory(**{"site": "test", "devices": "test", "data_source_status": "new"})
+        )
     assert str(e.value) == "Define synced DataSource"
 
 
@@ -89,6 +90,7 @@ def test_devicedataclass_to_scrapli(devicedataclass_data: "DeviceDataClassData")
         "auth_password": devicedataclass_data.password,
         "platform": devicedataclass_data.platform,
         "auth_strict_key": devicedataclass_data.auth_strict_key,
+        "auth_secondary": devicedataclass_data.auth_secondary,
         "transport": devicedataclass_data.transport,
         "transport_options": {
             "asyncssh": {
@@ -142,7 +144,7 @@ def test_devicedataclass_to_db(
     devicedataclass_factory: "DeviceDataClassDataFactory", diff: str, error: str, status: str
 ) -> None:
     data = devicedataclass_factory(**{"diff": diff, "error": error})
-    d = DeviceDataClass(**data)
+    d = ConplianceDeviceDataClass(**data)
 
     assert d.to_db() == {
         "device_id": d.pk,

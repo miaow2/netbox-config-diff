@@ -6,7 +6,7 @@ from faker import Faker
 from typing_extensions import Unpack
 
 from netbox_config_diff.compliance.base import ConfigDiffBase
-from netbox_config_diff.compliance.models import DeviceDataClass
+from netbox_config_diff.models import ConplianceDeviceDataClass
 from tests.factories import DataSourceFactory
 
 
@@ -34,12 +34,14 @@ def script_data_factory() -> "ScriptDataFactory":
     def factory(**fields: Unpack["ScriptData"]) -> "ScriptData":
         data = {
             "site": None,
+            "role": None,
             "devices": None,
             "data_source": None,
+            "status": "active",
         }
-        if fields.get("status"):
-            data["data_source"] = DataSourceFactory.create(status=fields["status"])
-            fields.pop("status")
+        if fields.get("data_source_status"):
+            data["data_source"] = DataSourceFactory.create(status=fields["data_source_status"])
+            fields.pop("data_source_status")
         return data | fields
 
     return factory
@@ -95,6 +97,6 @@ def devicedataclass_factory() -> "DeviceDataClassDataFactory":
 
 
 @pytest.fixture()
-def devicedataclass_data(devicedataclass_factory: "DeviceDataClassDataFactory") -> DeviceDataClass:
+def devicedataclass_data(devicedataclass_factory: "DeviceDataClassDataFactory") -> ConplianceDeviceDataClass:
     data = devicedataclass_factory()
-    return DeviceDataClass(**data)
+    return ConplianceDeviceDataClass(**data)

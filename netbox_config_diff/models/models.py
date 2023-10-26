@@ -5,7 +5,6 @@ from core.models import Job
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext as _
@@ -18,8 +17,10 @@ from utilities.utils import copy_safe_request
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices, ConfigurationRequestStatusChoices
 
+from .base import AbsoluteURLMixin
 
-class ConfigCompliance(ChangeLoggingMixin, models.Model):
+
+class ConfigCompliance(AbsoluteURLMixin, ChangeLoggingMixin, models.Model):
     device = models.OneToOneField(
         to="dcim.Device",
         on_delete=models.CASCADE,
@@ -54,23 +55,22 @@ class ConfigCompliance(ChangeLoggingMixin, models.Model):
     class Meta:
         ordering = ("device",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.device.name
 
-    def get_absolute_url(self):
-        return reverse("plugins:netbox_config_diff:configcompliance", args=[self.pk])
-
-    def get_status_color(self):
+    def get_status_color(self) -> str:
         return ConfigComplianceStatusChoices.colors.get(self.status)
 
-    def update(self, commit=False, **kwargs):
+    def update(self, commit: bool = False, **kwargs) -> None:
+        if commit:
+            self.snapshot()
         for key, value in kwargs.items():
             setattr(self, key, value)
         if commit:
             self.save()
 
 
-class PlatformSetting(NetBoxModel):
+class PlatformSetting(AbsoluteURLMixin, NetBoxModel):
     description = models.CharField(
         max_length=200,
         blank=True,
@@ -102,32 +102,29 @@ class PlatformSetting(NetBoxModel):
     class Meta:
         ordering = ("driver",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.platform} {self.driver}"
 
-    def get_absolute_url(self):
-        return reverse("plugins:netbox_config_diff:platformsetting", args=[self.pk])
 
-
-class ConfigurationRequest(JobsMixin, PrimaryModel):
+class ConfigurationRequest(AbsoluteURLMixin, JobsMixin, PrimaryModel):
     created_by = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
-        related_name='+',
+        related_name="+",
         blank=True,
         null=True,
     )
     approved_by = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
-        related_name='+',
+        related_name="+",
         blank=True,
         null=True,
     )
     scheduled_by = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
-        related_name='+',
+        related_name="+",
         blank=True,
         null=True,
     )
@@ -156,20 +153,17 @@ class ConfigurationRequest(JobsMixin, PrimaryModel):
     class Meta:
         ordering = ("-created",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"CR #{self.pk}"
 
-    def get_absolute_url(self):
-        return reverse("plugins:netbox_config_diff:configurationrequest", args=[self.pk])
-
-    def get_status_color(self):
+    def get_status_color(self) -> str:
         return ConfigurationRequestStatusChoices.colors.get(self.status)
 
     @property
-    def finished(self):
+    def finished(self) -> bool:
         return self.status in ConfigurationRequestStatusChoices.FINISHED_STATE_CHOICES
 
-    def delete(self, *args, **kwargs):
+    def delete(self, *args, **kwargs) -> None:
         super().delete(*args, **kwargs)
 
         queue = django_rq.get_queue(RQ_QUEUE_DEFAULT)
@@ -180,7 +174,7 @@ class ConfigurationRequest(JobsMixin, PrimaryModel):
                 except InvalidJobOperation:
                     pass
 
-    def enqueue_job(self, request, job_name, schedule_at=None):
+    def enqueue_job(self, request, job_name, schedule_at=None) -> Job:
         return Job.enqueue(
             import_string(f"netbox_config_diff.jobs.{job_name}"),
             name=f"{self} {job_name}",
@@ -190,7 +184,7 @@ class ConfigurationRequest(JobsMixin, PrimaryModel):
             schedule_at=schedule_at,
         )
 
-    def start(self, job: Job):
+    def start(self, job: Job) -> None:
         """
         Record the job's start time and update its status to "running."
         """
@@ -201,14 +195,14 @@ class ConfigurationRequest(JobsMixin, PrimaryModel):
         self.status = ConfigurationRequestStatusChoices.RUNNING
         self.save()
 
-    def terminate(self, job: Job, status: str = ConfigurationRequestStatusChoices.COMPLETED):
+    def terminate(self, job: Job, status: str = ConfigurationRequestStatusChoices.COMPLETED) -> None:
         job.terminate(status=status)
         self.status = status
         self.completed = timezone.now()
         self.save()
 
 
-class Substitute(NetBoxModel):
+class Substitute(AbsoluteURLMixin, NetBoxModel):
     platform_setting = models.ForeignKey(
         to="netbox_config_diff.PlatformSetting",
         on_delete=models.CASCADE,
@@ -219,12 +213,12 @@ class Substitute(NetBoxModel):
         unique=True,
         validators=(
             RegexValidator(
-                regex=r'^[a-z0-9_]+$',
+                regex=r"^[a-z0-9_]+$",
                 message=_("Only alphanumeric characters and underscores are allowed."),
                 flags=re.IGNORECASE,
             ),
             RegexValidator(
-                regex=r'__',
+                regex=r"__",
                 message=_("Double underscores are not permitted in names."),
                 flags=re.IGNORECASE,
                 inverse_match=True,
@@ -232,7 +226,6 @@ class Substitute(NetBoxModel):
         ),
     )
     description = models.CharField(
-        verbose_name=_('description'),
         max_length=200,
         blank=True,
     )
@@ -243,8 +236,5 @@ class Substitute(NetBoxModel):
     class Meta:
         ordering = ("name",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
-
-    def get_absolute_url(self):
-        return reverse("plugins:netbox_config_diff:substitute", args=[self.pk])
