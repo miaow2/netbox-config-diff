@@ -15,7 +15,7 @@ class CustomLogger:
             raise Exception(f"Unknown logging level: {log_level}")
         if log_level is None:
             log_level = LogLevelChoices.LOG_DEFAULT
-        self.log_data.append((timezone.now().strftime('%Y-%m-%d %H:%M:%S'), log_level, message))
+        self.log_data.append((timezone.now().strftime("%Y-%m-%d %H:%M:%S"), log_level, message))
 
     def log(self, message: str) -> None:
         self._log(message, log_level=LogLevelChoices.LOG_DEFAULT)

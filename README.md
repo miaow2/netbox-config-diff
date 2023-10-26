@@ -1,7 +1,6 @@
 [![NetBox version](https://img.shields.io/badge/NetBox-3.5|3.6-blue.svg)](https://github.com/netbox-community/netbox)
 [![Supported Versions](https://img.shields.io/pypi/pyversions/netbox-config-diff.svg)](https://pypi.org/project/netbox-config-diff/)
 [![PyPI version](https://badge.fury.io/py/netbox-config-diff.svg)](https://badge.fury.io/py/netbox-config-diff)
-[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CI](https://github.com/miaow2/netbox-config-diff/actions/workflows/commit.yaml/badge.svg?branch=develop)](https://github.com/miaow2/netbox-config-diff/actions)
@@ -78,6 +77,7 @@ PLUGINS_CONFIG = {
     "netbox_config_diff": {
         "USERNAME": "foo",
         "PASSWORD": "bar",
+        "AUTH_SECONDARY": "foobar",  # define here password for accessing Privileged EXEC mode, this variable is optional
     },
 }
 ```
@@ -119,6 +119,14 @@ Render diff between configurations
 No diff
 
 ![Screenshot of the compliance ok](docs/media/screenshots/compliance-ok.png)
+
+Configuration request
+
+![Screenshot of the CR](docs/media/screenshots/cr-created.png)
+
+Completed Configuration request
+
+![Screenshot of the completed CR](docs/media/screenshots/cr-completed.png)
 
 ## Credits
 

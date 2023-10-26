@@ -4,7 +4,8 @@ You can store credentials for devices authentification in NetBox secrets [plugin
 
 Read NetBox secrets docs for more info.
 
-In plugin variables define secrets roles for username (`USER_SECRET_ROLE`) and password (`PASSWORD_SECRET_ROLE`).
+In plugin variables define secrets roles for username (`USER_SECRET_ROLE`), password (`PASSWORD_SECRET_ROLE`) and
+ password (`SECOND_AUTH_SECRET_ROLE`) for Privileged EXEC mode.
 
 Default values for this variables are:
 
@@ -13,6 +14,7 @@ PLUGINS_CONFIG = {
     "netbox_config_diff": {
         "USER_SECRET_ROLE": "Username",
         "PASSWORD_SECRET_ROLE": "Password",
+        "SECOND_AUTH_SECRET_ROLE": "Second Auth",
     },
 }
 ```
