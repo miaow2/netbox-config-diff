@@ -77,6 +77,7 @@ PLUGINS_CONFIG = {
     "netbox_config_diff": {
         "USERNAME": "foo",
         "PASSWORD": "bar",
+        "AUTH_SECONDARY": "foobar",  # define here password for accessing Privileged EXEC mode, this variable is optional
     },
 }
 ```
@@ -118,6 +119,14 @@ Render diff between configurations
 No diff
 
 ![Screenshot of the compliance ok](docs/media/screenshots/compliance-ok.png)
+
+Configuration request
+
+![Screenshot of the CR](docs/media/screenshots/cr-created.png)
+
+Completed Configuration request
+
+![Screenshot of the completed CR](docs/media/screenshots/cr-completed.png)
 
 ## Credits
 

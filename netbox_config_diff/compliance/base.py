@@ -124,7 +124,7 @@ class ConfigDiffBase(SecretsMixin):
         self.check_netbox_secrets()
         self.substitutes = {}
         for device in devices:
-            username, password = self.get_credentials(device)
+            username, password, auth_secondary = self.get_credentials(device)
             rendered_config = None
             error = None
             context_data = device.get_config_context()
@@ -152,6 +152,7 @@ class ConfigDiffBase(SecretsMixin):
                 exclude_regex=device.platform.platform_setting.exclude_regex,
                 username=username,
                 password=password,
+                auth_secondary=auth_secondary,
                 rendered_config=rendered_config,
                 error=error,
             )
