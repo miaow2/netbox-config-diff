@@ -103,7 +103,7 @@ systemctl restart netbox
 <!--usage-start-->
 ## Usage
 
-Read this [doc](docs/colliecting-diffs.md) about collecting diffs, for configuration management read [this](docs/configuratiom-management.md)
+Read this [doc](https://miaow2.github.io/netbox-config-diff/colliecting-diffs/) about collecting diffs, for configuration management read [this](https://miaow2.github.io/netbox-config-diff/configuratiom-management/)
 <!--usage-end-->
 
 ## Screenshots
