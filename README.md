@@ -104,6 +104,12 @@ systemctl restart netbox
 ## Usage
 
 Read this [doc](https://miaow2.github.io/netbox-config-diff/colliecting-diffs/) about collecting diffs, for configuration management read [this](https://miaow2.github.io/netbox-config-diff/configuratiom-management/)
+
+## Video
+
+My presention about plugin at October NetBox community call (19.10.2023).
+
+[![October NetBox community call](https://img.youtube.com/vi/B4uhtYh278o/0.jpg)](https://youtu.be/B4uhtYh278o?t=425)
 <!--usage-end-->
 
 ## Screenshots
