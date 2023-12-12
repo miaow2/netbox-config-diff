@@ -7,7 +7,7 @@ requires = [
 
 [project]
 name = "netbox-config-diff"
-description = "Find diff between the intended device configuration and actual."
+description = "Push rendered device configurations from NetBox to devices and apply them."
 readme = "README.md"
 keywords = [
   "netbox",
