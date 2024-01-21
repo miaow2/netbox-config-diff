@@ -1,6 +1,7 @@
 import traceback
 from dataclasses import dataclass
 
+from dcim.models import Device
 from scrapli import AsyncScrapli
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices
@@ -113,10 +114,12 @@ class BaseDeviceDataClass:
 
 class ConplianceDeviceDataClass(BaseDeviceDataClass):
     command: str
+    device: Device
 
-    def __init__(self, command: str, **kwargs) -> None:
+    def __init__(self, command: str, device: Device, **kwargs) -> None:
         super().__init__(**kwargs)
         self.command = command
+        self.device = device
 
     async def get_actual_config(self) -> None:
         if self.error is not None:

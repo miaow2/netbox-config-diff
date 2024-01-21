@@ -9,10 +9,11 @@ from dcim.choices import DeviceStatusChoices
 from dcim.models import Device, DeviceRole, Site
 from django.conf import settings
 from django.db.models import Q
-from extras.scripts import MultiObjectVar, ObjectVar
+from extras.scripts import MultiObjectVar, ObjectVar, TextVar
 from jinja2.exceptions import TemplateError
 from netutils.config.compliance import diff_network_config
 from utilities.exceptions import AbortScript
+from utilities.utils import render_jinja2
 
 from netbox_config_diff.models import ConplianceDeviceDataClass
 
@@ -51,6 +52,11 @@ class ConfigDiffBase(SecretsMixin):
             "status": DataSourceStatusChoices.COMPLETED,
         },
         description="Define synced DataSource, if you want compare configs stored in it wihout connecting to devices",
+    )
+    name_template = TextVar(
+        required=False,
+        description="Jinja2 template code for the device name in Data source. "
+        "Reference the object as <code>{{ object }}</code>.",
     )
 
     def run_script(self, data: dict) -> None:
@@ -155,17 +161,26 @@ class ConfigDiffBase(SecretsMixin):
                 auth_secondary=auth_secondary,
                 rendered_config=rendered_config,
                 error=error,
+                device=device,
             )
 
     def get_config_from_datasource(self, devices: list[ConplianceDeviceDataClass]) -> None:
         for device in devices:
-            if df := DataFile.objects.filter(source=self.data["data_source"], path__icontains=device.name).first():
+            if self.data["name_template"]:
+                try:
+                    device_name = render_jinja2(self.data["name_template"], {"object": device.device}).strip()
+                except Exception as e:
+                    self.log_failure(f"Error in rendering data source name for {device.name}: {e}, using device name.")
+                    device_name = device.name
+            else:
+                device_name = device.name
+            if df := DataFile.objects.filter(source=self.data["data_source"], path__icontains=device_name).first():
                 if config := df.data_as_string:
                     device.actual_config = config
                 else:
                     device.error = f"Data in file {df} is broken, skiping device {device.name}"
             else:
-                device.error = f"Not found file in DataSource for device {device.name}"
+                device.error = f"Not found file in DataSource for device {device_name}"
 
     def get_actual_configs(self, devices: list[ConplianceDeviceDataClass]) -> None:
         if self.data["data_source"]:
