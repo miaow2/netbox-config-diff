@@ -90,6 +90,7 @@ def devicedataclass_factory() -> "DeviceDataClassDataFactory":
             "password": faker.password(),
             "auth_strict_key": False,
             "transport": "asyncssh",
+            "device": None,
         }
         return data | fields
 
