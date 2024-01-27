@@ -114,7 +114,7 @@ class BaseDeviceDataClass:
 
 class ConplianceDeviceDataClass(BaseDeviceDataClass):
     command: str
-    device: Device
+    device: Device | None
 
     def __init__(self, command: str, device: Device, **kwargs) -> None:
         super().__init__(**kwargs)

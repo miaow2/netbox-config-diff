@@ -180,7 +180,7 @@ class ConfigDiffBase(SecretsMixin):
                 else:
                     device.error = f"Data in file {df} is broken, skiping device {device.name}"
             else:
-                device.error = f"Not found file in DataSource for device {device_name}"
+                device.error = f"Not found file in DataSource for name {device_name}"
 
     def get_actual_configs(self, devices: list[ConplianceDeviceDataClass]) -> None:
         if self.data["data_source"]:
