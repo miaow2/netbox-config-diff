@@ -42,6 +42,17 @@ If you have configs in NetBox DataSource, you can define it, the script instead 
 !!! note
     Only synced DataSources are acceptable
 
+If in your DataSource config names are different from the hostnames of the devices, you can specify config name with Jinja2 template in `Name template` field.
+ Reference device with `{{ object }}` variable.
+
+For example, config name is virtual chassis name plus `config` (`switchname-config`) and your devices names are `switchname1`, `switchname2` and etc.
+
+You can define Jinja2 template with logic to use virtual chassis name if device is in chassis, else use device name:
+
+```
+{% if object.virtual_chassis %}{{ object.virtual_chassis.name }}-config{% else %}{{ object.name }}{% endif %}
+```
+
 ![Screenshot of the script](media/screenshots/script.png)
 
 ## Results
