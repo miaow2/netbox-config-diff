@@ -1,5 +1,6 @@
+from dcim.models import Device
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 from netbox.views import generic
 from utilities.views import ViewTab, register_model_view
@@ -51,6 +52,14 @@ class BaseConfigComplianceConfigView(generic.ObjectView):
 @register_model_view(ConfigCompliance)
 class ConfigComplianceView(generic.ObjectView):
     queryset = ConfigCompliance.objects.all()
+    base_template = "netbox_config_diff/configcompliance.html"
+    template_name = "netbox_config_diff/configcompliance/data.html"
+
+    def get_extra_context(self, request, instance):
+        return {
+            "instance": instance,
+            "base_template": self.base_template,
+        }
 
 
 @register_model_view(ConfigCompliance, "rendered-config")
@@ -109,6 +118,37 @@ class ConfigComplianceMissingExtraConfigView(generic.ObjectView):
                 "object": instance,
                 "tab": self.tab,
                 **context,
+            },
+        )
+
+
+@register_model_view(Device, "config_compliance", "config-compliance")
+class ConfigComplianceDeviceView(generic.ObjectView):
+    queryset = Device.objects.all()
+    base_template = "dcim/device/base.html"
+    template_name = "netbox_config_diff/configcompliance/data.html"
+    tab = ViewTab(
+        label=_("Config Compliance"),
+        weight=2110,
+        badge=lambda obj: 1 if hasattr(obj, "config_compliance") else 0,
+        hide_if_empty=True,
+    )
+
+    def get(self, request, **kwargs):
+        instance = self.get_object(**kwargs)
+
+        if not hasattr(instance, "config_compliance"):
+            return redirect("dcim:device", pk=instance.pk)
+
+        return render(
+            request,
+            self.get_template_name(),
+            {
+                "object": instance,
+                "instance": instance.config_compliance,
+                "tab": self.tab,
+                "base_template": self.base_template,
+                **self.get_extra_context(request, instance),
             },
         )
 

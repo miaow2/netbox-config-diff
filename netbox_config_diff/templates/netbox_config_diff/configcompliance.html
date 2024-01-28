@@ -1,81 +1,13 @@
-{% extends "netbox_config_diff/configcompliance/base.html" %}
-{% load static %}
+{% extends "generic/object.html" %}
+{% load buttons %}
+{% load perms %}
 
-{% block content %}
-  <div class="row mb-3">
-    <div class="col col-md-6">
-      <div class="card">
-        <h5 class="card-header">{{ object|meta:"verbose_name"|bettertitle }}</h5>
-        <div class="card-body">
-          <table class="table table-hover attr-table">
-            <tr>
-              <th scope="row">Device</th>
-              <td>{{ object.device|linkify }}</td>
-            </tr>
-            <tr>
-              <th scope="row">Status</th>
-              <td>{% badge object.get_status_display bg_color=object.get_status_color %}</td>
-            </tr>
-          </table>
-        </div>
-      </div>
+{% block controls %}
+  <div class="controls">
+    <div class="control-group">
+      {% if request.user|can_delete:object %}
+        {% delete_button object %}
+      {% endif %}
     </div>
-    {% if object.error %}
-      <div class="col col-md-6">
-        <div class="card">
-          <h5 class="card-header">Error</h5>
-          <div class="card-body">
-            <pre class="block">{{ object.error }}</pre>
-          </div>
-        </div>
-      </div>
-    {% endif %}
   </div>
-  {% if object.diff %}
-    <div class="row mb-3">
-      <div class="col col-md-12">
-        <div class="card">
-          <h5 class="card-header">Diff</h5>
-          <div class="card-body" id="diffElement"></div>
-        </div>
-      </div>
-    </div>
-  {% endif %}
-{% endblock content %}
-
-{% block javascript %}
-  <script type="text/javascript" src="{% static 'netbox_config_diff/diff2html-ui.min.js' %}"></script>
-  <script type="text/javascript">
-    var link = document.createElement('link');
-    link.type = 'text/css';
-    link.rel = 'stylesheet';
-    const colorMode = localStorage.getItem("netbox-color-mode");
-    if (colorMode === 'dark') {
-      link.href = `{% static 'netbox_config_diff/diff2html.dark.min.css' %}`
-    } else {
-      link.href = `{% static 'netbox_config_diff/diff2html.min.css' %}`
-    };
-    document.head.appendChild(link);
-    document.addEventListener('DOMContentLoaded', () => {
-      var configuration = {
-          drawFileList: false,
-          fileListToggle: false,
-          fileListStartVisible: false,
-          fileContentToggle: false,
-          matching: 'lines',
-          outputFormat: 'side-by-side',
-          synchronisedScroll: true,
-          highlight: true,
-          renderNothingWhenEmpty: false,
-          stickyFileHeaders: false,
-          drawFileList: false,
-      };
-      const jsonDiff = `{{ object.diff|safe }}`;
-      var targetElement = document.getElementById('diffElement');
-      var diff2htmlUi = new Diff2HtmlUI(targetElement, jsonDiff, configuration);
-      diff2htmlUi.draw();
-      document.querySelector(".d2h-file-header").remove();
-      diff2htmlUi.highlightCode();
-    });
-  </script>
-{% endblock javascript %}
+{% endblock controls %}

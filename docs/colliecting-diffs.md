@@ -1,7 +1,7 @@
 
 # Usage
 
-Under `Plugins` navbar menu you can find plugin
+In navbar serach for `Config Diff Plugin` menu
 
 ![Screenshot of navbar](media/screenshots/navbar.png)
 
