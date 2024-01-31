@@ -97,7 +97,7 @@ python manage.py collectstatic --noinput
 Restart NetBox service:
 
 ```bash
-systemctl restart netbox
+systemctl restart netbox netbox-rq
 ```
 <!--install-end-->
 <!--usage-start-->
