@@ -24,7 +24,7 @@ class ConfigCompliance(AbsoluteURLMixin, ChangeLoggingMixin, models.Model):
     device = models.OneToOneField(
         to="dcim.Device",
         on_delete=models.CASCADE,
-        related_name="config_compliamce",
+        related_name="config_compliance",
     )
     status = models.CharField(
         max_length=50,

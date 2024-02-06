@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.0 (2024-02-06)
+
+* [#47](https://github.com/miaow2/netbox-config-diff/issues/47) Move plugin to separete menu item in navbar and add tab for devices with compliance result
+* [#50](https://github.com/miaow2/netbox-config-diff/issues/50) Add template field for device name in DataSource to ConfigDiffScript
+* [#53](https://github.com/miaow2/netbox-config-diff/issues/53) Add netbox-rq to installation process docs
+
 ## 2.1.0 (2023-10-26)
 
 * [#35](https://github.com/miaow2/netbox-config-diff/issues/35) Add ability to define password for accessing priviliged exec mode
