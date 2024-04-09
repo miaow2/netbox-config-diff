@@ -56,4 +56,4 @@ def test_exclude_lines(regex: str, expected: str) -> None:
     ids=["diff", "no diff"],
 )
 def test_get_unified_diff(render: str, actual: str, expected: str) -> None:
-    assert get_unified_diff(render, actual, "test-1") == expected
+    assert get_unified_diff(actual, render, "test-1") == expected
