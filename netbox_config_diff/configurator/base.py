@@ -126,7 +126,7 @@ class Configurator(SecretsMixin):
                 )
                 device.rendered_config = rendered_config
             else:
-                actual_config = await conn.get_config()
+                actual_config = await conn.get_config(config_template=device.rendered_config)
             device.actual_config = conn.clean_config(actual_config.result)
 
             device.diff = get_unified_diff(device.rendered_config, device.actual_config, device.name)
