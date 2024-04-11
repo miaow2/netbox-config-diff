@@ -44,7 +44,7 @@ This is possible thanks to the scrapli_cfg. Read [Scrapli](https://github.com/sc
 
 | NetBox Version | Plugin Version |
 |----------------|----------------|
-|    3.5, 3.6    |    =>0.1.0     |
+|  3.5, 3.6, 3.7 |    =>0.1.0     |
 
 <!--install-start-->
 ## Installing
