@@ -12,6 +12,12 @@ Supported platforms:
 
 Plugin using [scrapli-cfg](https://github.com/scrapli/scrapli_cfg) for this feature.
 
+!!! warning
+    If you use Juniper and render config in set commands, please read next info.
+    Plugin uses `load override` command to load config to a device, set commands load with `load set`.
+    With `load set` commnad you can't replace all config, because this command uses `merge` action.
+    So, please, be careful when using set commands in rendering config and pushig it with plugin, it can have unexpected side effects.
+
 ## Substitutes
 
 If you render not full configuration, it is acceptable to pull missing config sections from the actual configuration to render full configuration.
