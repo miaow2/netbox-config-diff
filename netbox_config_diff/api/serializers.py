@@ -29,6 +29,7 @@ class ConfigComplianceSerializer(NetBoxModelSerializer):
             "diff",
             "rendered_config",
             "actual_config",
+            "patch",
             "missing",
             "extra",
             "created",

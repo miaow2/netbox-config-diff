@@ -14,7 +14,7 @@ from scrapli_cfg.response import ScrapliCfgResponse
 from utilities.utils import NetBoxFakeRequest
 
 from netbox_config_diff.compliance.secrets import SecretsMixin
-from netbox_config_diff.compliance.utils import PLATFORM_MAPPING, get_unified_diff
+from netbox_config_diff.compliance.utils import PLATFORM_MAPPING, get_remediation_commands, get_unified_diff
 from netbox_config_diff.configurator.exceptions import DeviceConfigurationError, DeviceValidationError
 from netbox_config_diff.configurator.utils import CustomLogger
 from netbox_config_diff.constants import ACCEPTABLE_DRIVERS
@@ -136,6 +136,9 @@ class Configurator(SecretsMixin):
             )
             device.extra = diff_network_config(
                 device.actual_config, device.rendered_config, PLATFORM_MAPPING[device.platform]
+            )
+            device.patch = get_remediation_commands(
+                device.name, device.platform, device.actual_config, device.rendered_config
             )
             self.logger.log_info(f"Got diff from {device.name}")
         except Exception:

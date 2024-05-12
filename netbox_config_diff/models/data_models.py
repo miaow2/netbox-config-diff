@@ -23,6 +23,7 @@ class BaseDeviceDataClass:
     diff: str = ""
     missing: str | None = None
     extra: str | None = None
+    patch: str | None = None
     error: str = ""
     config_error: str | None = None
     auth_strict_key: bool = False
@@ -99,6 +100,7 @@ class BaseDeviceDataClass:
             "actual_config": self.actual_config or "",
             "missing": self.missing or "",
             "extra": self.extra or "",
+            "patch": self.patch or "",
         }
 
     def send_to_db(self) -> None:

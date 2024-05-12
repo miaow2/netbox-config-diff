@@ -3,6 +3,7 @@ from difflib import unified_diff
 
 from django.forms import ChoiceField
 from extras.scripts import ScriptVariable
+from hier_config import Host
 
 PLATFORM_MAPPING = {
     "arista_eos": "arista_eos",
@@ -17,6 +18,15 @@ PLATFORM_MAPPING = {
     "nokia_sros": "nokia_sros",
     "paloalto_panos": "paloalto_panos",
     "ruckus_fastiron": "ruckus_fastiron",
+}
+
+REMEDIATION_MAPPING = {
+    "arista_eos": "eos",
+    "cisco_iosxe": "ios",
+    "cisco_iosxr": "iosxr",
+    "cisco_nxos": "nxos",
+    "juniper_junos": "junos",
+    "vyos_vyos": "vyos",
 }
 
 
@@ -43,3 +53,10 @@ def exclude_lines(text: str, regexs: list) -> str:
     for item in regexs:
         text = re.sub(item, "", text, flags=re.I | re.M)
     return text.strip()
+
+
+def get_remediation_commands(name: str, platform: str, actual_config: str, rendered_config: str) -> str:
+    host = Host(hostname=name, os=REMEDIATION_MAPPING.get(platform))
+    host.load_running_config(config_text=actual_config)
+    host.load_generated_config(config_text=rendered_config)
+    return host.remediation_config_filtered_text(include_tags={}, exclude_tags={})

@@ -8,6 +8,7 @@
       <div class="card">
         <div class="card-header">
           <div class="float-end">
+            {% copy_content config_field %}
             <a href="?export=True" class="btn btn-sm btn-primary" role="button">
               <i class="mdi mdi-download" aria-hidden="true"></i> Download
             </a>
@@ -15,7 +16,7 @@
           <h5>{{ header }}</h5>
         </div>
         {% if config %}
-          <pre class="card-body">{{ config }}</pre>
+          <pre class="card-body" id="{{ config_field }}">{{ config }}</pre>
         {% else %}
           <div class="card-body text-muted">No configuration</div>
         {% endif %}

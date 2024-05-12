@@ -18,7 +18,14 @@ from utilities.utils import render_jinja2
 from netbox_config_diff.models import ConplianceDeviceDataClass
 
 from .secrets import SecretsMixin
-from .utils import PLATFORM_MAPPING, CustomChoiceVar, exclude_lines, get_unified_diff
+from .utils import (
+    PLATFORM_MAPPING,
+    REMEDIATION_MAPPING,
+    CustomChoiceVar,
+    exclude_lines,
+    get_remediation_commands,
+    get_unified_diff,
+)
 
 
 class ConfigDiffBase(SecretsMixin):
@@ -203,4 +210,8 @@ class ConfigDiffBase(SecretsMixin):
                 )
                 device.extra = diff_network_config(
                     cleaned_config, device.rendered_config, PLATFORM_MAPPING[device.platform]
+                )
+            if device.platform in REMEDIATION_MAPPING:
+                device.patch = get_remediation_commands(
+                    device.name, device.platform, cleaned_config, device.rendered_config
                 )
