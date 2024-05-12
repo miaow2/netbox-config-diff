@@ -155,4 +155,5 @@ def test_devicedataclass_to_db(
         "actual_config": "",
         "missing": "",
         "extra": "",
+        "patch": "",
     }

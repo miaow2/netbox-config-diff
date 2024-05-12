@@ -5,38 +5,10 @@
 {% block content %}
   <div class="row">
     <div class="col col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <div class="float-end">
-            <a href="?export_missing=True" class="btn btn-sm btn-primary" role="button">
-              <i class="mdi mdi-download" aria-hidden="true"></i> Download
-            </a>
-          </div>
-          <h5>Missing</h5>
-        </div>
-        {% if object.missing %}
-          <pre class="card-body">{{ object.missing }}</pre>
-        {% else %}
-          <div class="card-body text-muted">No lines</div>
-        {% endif %}
-      </div>
+      {% include 'netbox_config_diff/inc/commands_card.html' with data=object.missing header='Missing' pre_id='missing' %}
     </div>
     <div class="col col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <div class="float-end">
-            <a href="?export_extra=True" class="btn btn-sm btn-primary" role="button">
-              <i class="mdi mdi-download" aria-hidden="true"></i> Download
-            </a>
-          </div>
-          <h5>Extra</h5>
-        </div>
-        {% if object.extra %}
-          <pre class="card-body">{{ object.extra }}</pre>
-        {% else %}
-          <div class="card-body text-muted">No lines</div>
-        {% endif %}
-      </div>
+      {% include 'netbox_config_diff/inc/commands_card.html' with data=object.extra header='Extra' pre_id='extra' %}
     </div>
   </div>
 {% endblock %}

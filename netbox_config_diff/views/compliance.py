@@ -1,5 +1,4 @@
 from dcim.models import Device
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 from netbox.views import generic
@@ -15,38 +14,7 @@ from netbox_config_diff.forms import (
 from netbox_config_diff.models import ConfigCompliance, PlatformSetting
 from netbox_config_diff.tables import ConfigComplianceTable, PlatformSettingTable
 
-from .base import BaseObjectDeleteView, BaseObjectEditView
-
-
-class BaseConfigComplianceConfigView(generic.ObjectView):
-    config_field = None
-    template_header = None
-
-    def get(self, request, **kwargs):
-        instance = self.get_object(**kwargs)
-        context = self.get_extra_context(request, instance)
-
-        if request.GET.get("export"):
-            response = HttpResponse(context["config"], content_type="text")
-            filename = f"{instance.device.name}_{self.config_field}.txt"
-            response["Content-Disposition"] = f'attachment; filename="{filename}"'
-            return response
-
-        return render(
-            request,
-            self.get_template_name(),
-            {
-                "object": instance,
-                "tab": self.tab,
-                **context,
-            },
-        )
-
-    def get_extra_context(self, request, instance):
-        return {
-            "header": self.template_header,
-            "config": getattr(instance, self.config_field),
-        }
+from .base import BaseConfigComplianceConfigView, BaseExportView, BaseObjectDeleteView, BaseObjectEditView
 
 
 @register_model_view(ConfigCompliance)
@@ -87,19 +55,13 @@ class ConfigComplianceActualConfigView(BaseConfigComplianceConfigView):
 
 
 @register_model_view(ConfigCompliance, "missing-extra")
-class ConfigComplianceMissingExtraConfigView(generic.ObjectView):
+class ConfigComplianceMissingExtraConfigView(BaseExportView):
     queryset = ConfigCompliance.objects.all()
     template_name = "netbox_config_diff/configcompliance/missing_extra.html"
     tab = ViewTab(
         label=_("Missing/Extra"),
         weight=520,
     )
-
-    def export_parts(self, name, lines, suffix):
-        response = HttpResponse(lines, content_type="text")
-        filename = f"{name}_{suffix}.txt"
-        response["Content-Disposition"] = f'attachment; filename="{filename}"'
-        return response
 
     def get(self, request, **kwargs):
         instance = self.get_object(**kwargs)
@@ -110,6 +72,33 @@ class ConfigComplianceMissingExtraConfigView(generic.ObjectView):
 
         if request.GET.get("export_extra"):
             return self.export_parts(instance.device.name, instance.extra, "extra")
+
+        return render(
+            request,
+            self.get_template_name(),
+            {
+                "object": instance,
+                "tab": self.tab,
+                **context,
+            },
+        )
+
+
+@register_model_view(ConfigCompliance, "patch")
+class ConfigCompliancePatchView(BaseExportView):
+    queryset = ConfigCompliance.objects.all()
+    template_name = "netbox_config_diff/configcompliance/patch.html"
+    tab = ViewTab(
+        label=_("Patch"),
+        weight=515,
+    )
+
+    def get(self, request, **kwargs):
+        instance = self.get_object(**kwargs)
+        context = self.get_extra_context(request, instance)
+
+        if request.GET.get("export_patch"):
+            return self.export_parts(instance.device.name, instance.patch, "patch")
 
         return render(
             request,

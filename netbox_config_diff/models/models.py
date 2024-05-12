@@ -49,6 +49,9 @@ class ConfigCompliance(AbsoluteURLMixin, ChangeLoggingMixin, models.Model):
     extra = models.TextField(
         blank=True,
     )
+    patch = models.TextField(
+        blank=True,
+    )
 
     objects = RestrictedQuerySet.as_manager()
 
