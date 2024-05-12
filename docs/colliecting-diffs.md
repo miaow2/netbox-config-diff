@@ -63,6 +63,41 @@ After script is done you can find results in `Config Compliances` menu. Each dev
 
 Also result is storing rendered and actual configurations from devices.
 
+Compliance finished with error
+
+![Screenshot of the compliance error](media/screenshots/compliance-error.png)
+
+Render diff between configurations
+
+![Screenshot of diff](media/screenshots/compliance-diff.png)
+
+No diff
+
+![Screenshot of the compliance ok](media/screenshots/compliance-ok.png)
+
+### Patch commands
+
+With [hier_config](https://github.com/netdevops/hier_config) library you are able to take a actual configuration of a network device, compare it to its rendered configuration,
+ and build the remediation steps necessary to bring a device into spec with its intended configuration.
+
+![Screenshot of the patch commands](media/screenshots/compliance-patch.png)
+
+Supported platforms:
+
+* Arista EOS (arista_eos)
+* Cisco IOS-XE (cisco_iosxe)
+* Cisco IOS-XR (cisco_iosxr)
+* Cisco NX-OS (cisco_nxos)
+
+However, any NOS that utilizes a CLI syntax that is structured in a similar fasion to IOS should work mostly out of the box.
+
+NOS's that utilize a `set` based CLI syntax has been added as experimental functionality:
+
+* Juniper JunOS (juniper_junos)
+* VyOS (vyos_vyos)
+
+### Missing/extra
+
 With the help of [netutils](https://github.com/networktocode/netutils) library plugin stores missing and extra config lines.
 
 ![Screenshot of the missing/extra lines](media/screenshots/compliance-missing-extra.png)
@@ -81,15 +116,3 @@ Supported platforms for missing/extra lines:
 * Nokia SROS (nokia_sros)
 * PaloAlto PanOS (paloalto_panos)
 * Ruckus FastIron (ruckus_fastiron)
-
-Compliance finished with error
-
-![Screenshot of the compliance error](media/screenshots/compliance-error.png)
-
-Render diff between configurations
-
-![Screenshot of diff](media/screenshots/compliance-diff.png)
-
-No diff
-
-![Screenshot of the compliance ok](media/screenshots/compliance-ok.png)

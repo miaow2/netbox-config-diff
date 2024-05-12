@@ -56,7 +56,7 @@ def exclude_lines(text: str, regexs: list) -> str:
 
 
 def get_remediation_commands(name: str, platform: str, actual_config: str, rendered_config: str) -> str:
-    host = Host(hostname=name, os=REMEDIATION_MAPPING.get(platform))
+    host = Host(hostname=name, os=REMEDIATION_MAPPING.get(platform, "ios"))
     host.load_running_config(config_text=actual_config)
     host.load_generated_config(config_text=rendered_config)
     return host.remediation_config_filtered_text(include_tags={}, exclude_tags={})
