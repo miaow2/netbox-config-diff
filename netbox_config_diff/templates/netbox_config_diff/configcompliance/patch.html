@@ -1,0 +1,11 @@
+{% extends "netbox_config_diff/configcompliance.html" %}
+
+{% block title %}{{ object }} - Patch commands{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col col-md-6">
+      {% include 'netbox_config_diff/inc/commands_card.html' with data=object.patch header='Patch commands' pre_id='patch' %}
+    </div>
+  </div>
+{% endblock %}
