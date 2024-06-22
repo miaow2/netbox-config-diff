@@ -34,7 +34,7 @@ class SecretsMixin:
             self.master_key = sk.get_master_key(self.session_key)
         except Exception as e:
             if getattr(self, "logger"):
-                self.logger.log_failure(f"Can't fetch master_key: {str(e)}")
+                self.log_failure(f"Can't fetch master_key: {str(e)}")
             else:
                 self.log_failure(f"Can't fetch master_key: {str(e)}")
 
