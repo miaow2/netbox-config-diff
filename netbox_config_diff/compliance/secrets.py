@@ -62,10 +62,11 @@ class SecretsMixin:
         else:
             auth_secondary = self.auth_secondary
         if secret := device.secrets.filter(role__name=self.default_desired_privilege_level_role).first():
-            default_desired_privilege_level = value if (value := self.get_secret(secret)) else self.default_desired_privilege_level
+            default_desired_privilege_level = (
+                value if (value := self.get_secret(secret)) else self.default_desired_privilege_level
+            )
         else:
             default_desired_privilege_level = self.default_desired_privilege_level
-
 
         return username, password, auth_secondary, default_desired_privilege_level
 
@@ -75,10 +76,14 @@ class SecretsMixin:
             self.user_role = get_plugin_config("netbox_config_diff", "USER_SECRET_ROLE")
             self.password_role = get_plugin_config("netbox_config_diff", "PASSWORD_SECRET_ROLE")
             self.auth_secondary_role = get_plugin_config("netbox_config_diff", "SECOND_AUTH_SECRET_ROLE")
-            self.default_desired_privilege_level_role = get_plugin_config("netbox_config_diff", "DEFAULT_DESIRED_PRIVILEGE_LEVEL_ROLE")
+            self.default_desired_privilege_level_role = get_plugin_config(
+                "netbox_config_diff", "DEFAULT_DESIRED_PRIVILEGE_LEVEL_ROLE"
+            )
             self.netbox_secrets_installed = True
 
         self.username = get_plugin_config("netbox_config_diff", "USERNAME")
         self.password = get_plugin_config("netbox_config_diff", "PASSWORD")
         self.auth_secondary = get_plugin_config("netbox_config_diff", "AUTH_SECONDARY")
-        self.default_desired_privilege_level = get_plugin_config("netbox_config_diff", "DEFAULT_DESIRED_PRIVILEGE_LEVEL")
+        self.default_desired_privilege_level = get_plugin_config(
+            "netbox_config_diff", "DEFAULT_DESIRED_PRIVILEGE_LEVEL"
+        )

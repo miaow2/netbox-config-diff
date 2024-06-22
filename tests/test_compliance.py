@@ -91,6 +91,7 @@ def test_devicedataclass_to_scrapli(devicedataclass_data: "DeviceDataClassData")
         "platform": devicedataclass_data.platform,
         "auth_strict_key": devicedataclass_data.auth_strict_key,
         "auth_secondary": devicedataclass_data.auth_secondary,
+        "default_desired_privilege_level": devicedataclass_data.default_desired_privilege_level,
         "transport": devicedataclass_data.transport,
         "transport_options": {
             "asyncssh": {
