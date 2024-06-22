@@ -15,8 +15,8 @@ class BaseDeviceDataClass:
     name: str
     mgmt_ip: str
     platform: str
-    username: str
-    password: str
+    username: str | None
+    password: str | None
     exclude_regex: str | None = None
     rendered_config: str | None = None
     actual_config: str | None = None
