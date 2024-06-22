@@ -37,7 +37,7 @@ class Configurator(SecretsMixin):
     def validate_devices(self) -> None:
         self.check_netbox_secrets()
         for device in self.devices:
-            username, password, auth_secondary = self.get_credentials(device)
+            username, password, auth_secondary, default_desired_privilege_level = self.get_credentials(device)
             if device.platform.platform_setting is None:
                 self.logger.log_warning(f"Skipping {device}, add PlatformSetting for {device.platform} platform")
             elif device.platform.platform_setting.driver not in ACCEPTABLE_DRIVERS:
@@ -67,6 +67,7 @@ class Configurator(SecretsMixin):
                     username=username,
                     password=password,
                     auth_secondary=auth_secondary,
+                    default_desired_privilege_level=default_desired_privilege_level,
                     rendered_config=rendered_config,
                     error=error,
                 )
