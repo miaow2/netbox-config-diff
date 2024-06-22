@@ -130,7 +130,10 @@ class ConfigDiffBase(SecretsMixin):
         self.check_netbox_secrets()
         self.substitutes = {}
         for device in devices:
-            username, password, auth_secondary, default_desired_privilege_level = self.get_credentials(device)
+            if self.data["data_source"]:
+                username, password, auth_secondary, default_desired_privilege_level = None, None, None, None
+            else:
+                username, password, auth_secondary, default_desired_privilege_level = self.get_credentials(device)
             rendered_config = None
             error = None
             context_data = device.get_config_context()
