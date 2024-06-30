@@ -70,7 +70,7 @@
           stickyFileHeaders: false,
           drawFileList: false,
       };
-      const jsonDiff = `{{ instance.diff|safe }}`;
+      const jsonDiff = `{{ instance.diff|escapejs|safe }}`;
       var targetElement = document.getElementById('diffElement');
       var diff2htmlUi = new Diff2HtmlUI(targetElement, jsonDiff, configuration);
       diff2htmlUi.draw();
