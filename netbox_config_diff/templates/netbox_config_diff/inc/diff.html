@@ -17,7 +17,7 @@
         stickyFileHeaders: false,
         drawFileList: false,
     };
-    const jsonDiff = `{{ data|safe }}`;
+    const jsonDiff = `{{ data|escapejs|safe }}`;
     var targetElement = document.getElementById('{{ device_name }}-diffElement');
     var diff2htmlUi = new Diff2HtmlUI(targetElement, jsonDiff, configuration);
     diff2htmlUi.draw();
