@@ -1,5 +1,22 @@
 # Changelog
 
+
+## 2.5.0 (2024-06-30)
+
+* [#67](https://github.com/miaow2/netbox-config-diff/issues/67) Add option `default_desired_privilege_level` to plugins variables (thanks to [@cknost](https://github.com/cknost))
+* [#69](https://github.com/miaow2/netbox-config-diff/issues/69) Fix logger in SecretsMixin
+* [#70](https://github.com/miaow2/netbox-config-diff/issues/80) Add `escapejs` filter to diff templates
+
+## 2.4.0 (2024-05-12)
+
+* [#63](https://github.com/miaow2/netbox-config-diff/issues/63) Generate patch commands necessary to bring a device into its intended configuration with [hier_config](https://github.com/netdevops/hier_config)
+
+## 2.3.0 (2024-04-11)
+
+* [#49](https://github.com/miaow2/netbox-config-diff/issues/49) Handle junipers templates with set commands
+* [#56](https://github.com/miaow2/netbox-config-diff/issues/56) Add support for NetBox 3.7
+* [#57](https://github.com/miaow2/netbox-config-diff/issues/57) Reverse columns in compliance diff
+
 ## 2.2.0 (2024-02-06)
 
 * [#47](https://github.com/miaow2/netbox-config-diff/issues/47) Move plugin to separete menu item in navbar and add tab for devices with compliance result
