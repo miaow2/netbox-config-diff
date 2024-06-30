@@ -34,7 +34,10 @@ class SecretsMixin:
             self.master_key = sk.get_master_key(self.session_key)
         except Exception as e:
             if getattr(self, "logger"):
-                self.logger.log_failure(f"Can't fetch master_key: {str(e)}")
+                if getattr(self.logger, "log_failure"):
+                    self.logger.log_failure(f"Can't fetch master_key: {str(e)}")
+                else:
+                    self.logger.error(f"Can't fetch master_key: {str(e)}")
             else:
                 self.log_failure(f"Can't fetch master_key: {str(e)}")
 
@@ -45,9 +48,9 @@ class SecretsMixin:
             return None
         return secret.plaintext
 
-    def get_credentials(self, device: Device) -> tuple[str, str, str]:
+    def get_credentials(self, device: Device) -> tuple[str, str, str, str]:
         if not self.netbox_secrets_installed:
-            return self.username, self.password, self.auth_secondary
+            return self.username, self.password, self.auth_secondary, self.default_desired_privilege_level
 
         if secret := device.secrets.filter(role__name=self.user_role).first():
             username = value if (value := self.get_secret(secret)) else self.username
@@ -61,8 +64,14 @@ class SecretsMixin:
             auth_secondary = value if (value := self.get_secret(secret)) else self.auth_secondary
         else:
             auth_secondary = self.auth_secondary
+        if secret := device.secrets.filter(role__name=self.default_desired_privilege_level_role).first():
+            default_desired_privilege_level = (
+                value if (value := self.get_secret(secret)) else self.default_desired_privilege_level
+            )
+        else:
+            default_desired_privilege_level = self.default_desired_privilege_level
 
-        return username, password, auth_secondary
+        return username, password, auth_secondary, default_desired_privilege_level
 
     def check_netbox_secrets(self) -> None:
         if "netbox_secrets" in get_installed_plugins():
@@ -70,8 +79,14 @@ class SecretsMixin:
             self.user_role = get_plugin_config("netbox_config_diff", "USER_SECRET_ROLE")
             self.password_role = get_plugin_config("netbox_config_diff", "PASSWORD_SECRET_ROLE")
             self.auth_secondary_role = get_plugin_config("netbox_config_diff", "SECOND_AUTH_SECRET_ROLE")
+            self.default_desired_privilege_level_role = get_plugin_config(
+                "netbox_config_diff", "DEFAULT_DESIRED_PRIVILEGE_LEVEL_ROLE"
+            )
             self.netbox_secrets_installed = True
 
         self.username = get_plugin_config("netbox_config_diff", "USERNAME")
         self.password = get_plugin_config("netbox_config_diff", "PASSWORD")
         self.auth_secondary = get_plugin_config("netbox_config_diff", "AUTH_SECONDARY")
+        self.default_desired_privilege_level = get_plugin_config(
+            "netbox_config_diff", "DEFAULT_DESIRED_PRIVILEGE_LEVEL"
+        )

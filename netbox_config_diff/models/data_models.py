@@ -15,8 +15,8 @@ class BaseDeviceDataClass:
     name: str
     mgmt_ip: str
     platform: str
-    username: str
-    password: str
+    username: str | None
+    password: str | None
     exclude_regex: str | None = None
     rendered_config: str | None = None
     actual_config: str | None = None
@@ -28,6 +28,7 @@ class BaseDeviceDataClass:
     config_error: str | None = None
     auth_strict_key: bool = False
     auth_secondary: str | None = None
+    default_desired_privilege_level: str | None = None
     transport: str = "asyncssh"
 
     def __str__(self) -> str:
@@ -41,6 +42,7 @@ class BaseDeviceDataClass:
             "platform": self.platform,
             "auth_strict_key": self.auth_strict_key,
             "auth_secondary": self.auth_secondary,
+            "default_desired_privilege_level": self.default_desired_privilege_level,
             "transport": self.transport,
             "transport_options": {
                 "asyncssh": {
