@@ -3,18 +3,24 @@ from dcim.models import Device, Platform
 from django import forms
 from django.contrib.auth import get_user_model
 from netbox.forms import NetBoxModelBulkEditForm, NetBoxModelFilterSetForm, NetBoxModelForm
+from netbox.settings import VERSION
 from utilities.forms.fields import (
     DynamicModelChoiceField,
     DynamicModelMultipleChoiceField,
     TagFilterField,
 )
-from utilities.forms.mixins import BootstrapMixin
 from utilities.forms.widgets import DateTimePicker
-from utilities.utils import local_now
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices, ConfigurationRequestStatusChoices
 from netbox_config_diff.constants import ACCEPTABLE_DRIVERS
 from netbox_config_diff.models import ConfigCompliance, ConfigurationRequest, PlatformSetting, Substitute
+
+from .base import CustomForm
+
+if VERSION.startswith("3."):
+    from utilities.utils import local_now
+else:
+    from utilities.datetime import local_now
 
 
 class ConfigComplianceFilterForm(NetBoxModelFilterSetForm):
@@ -157,7 +163,7 @@ class ConfigurationRequestFilterForm(NetBoxModelFilterSetForm):
     tag = TagFilterField(model)
 
 
-class ConfigurationRequestScheduleForm(BootstrapMixin, forms.ModelForm):
+class ConfigurationRequestScheduleForm(CustomForm):
     scheduled = forms.DateTimeField(
         widget=DateTimePicker(),
         label="Schedule at",

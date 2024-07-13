@@ -2,16 +2,22 @@ from dcim.api.serializers import NestedDeviceSerializer, NestedPlatformSerialize
 from dcim.models import Device
 from netbox.api.fields import ChoiceField, SerializedPKRelatedField
 from netbox.api.serializers import NetBoxModelSerializer
+from netbox.settings import VERSION
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from users.api.nested_serializers import NestedUserSerializer
-from utilities.utils import local_now
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices, ConfigurationRequestStatusChoices
 from netbox_config_diff.constants import ACCEPTABLE_DRIVERS
 from netbox_config_diff.models import ConfigCompliance, ConfigurationRequest, PlatformSetting, Substitute
 
+if VERSION.startswith("3."):
+    from utilities.utils import local_now
+else:
+    from utilities.datetime import local_now
 
+
+# TODO: after droping support for NetBox 3.x, delete nested serializers and add brief_fields
 class ConfigComplianceSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="plugins-api:netbox_config_diff-api:configcompliance-detail")
     device = NestedDeviceSerializer()

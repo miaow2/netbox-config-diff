@@ -35,15 +35,15 @@
             <table class="table table-hover attr-table">
               <tr>
                 <th scope="row">Created</th>
-                <td>{{ job.created|annotated_date }}</td>
+                <td>{{ job.created }}</td>
               </tr>
               <tr>
                 <th scope="row">Started</th>
-                <td>{{ job.started|annotated_date|placeholder }}</td>
+                <td>{{ job.started|placeholder }}</td>
               </tr>
               <tr>
                 <th scope="row">Completed</th>
-                <td>{{ job.completed|annotated_date|placeholder }}</td>
+                <td>{{ job.completed|placeholder }}</td>
               </tr>
             </table>
           </div>
