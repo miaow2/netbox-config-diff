@@ -69,7 +69,7 @@ class DeviceFactory(DjangoModelFactory):
     name = factory.Sequence(lambda n: f"device-{n}")
     site = factory.SubFactory(SiteFactory)
     device_type = factory.SubFactory(DeviceTypeFactory)
-    device_role = factory.SubFactory(DeviceRoleFactory)
+    role = factory.SubFactory(DeviceRoleFactory)
     platform = factory.SubFactory(PlatformFactory)
     primary_ip4 = factory.SubFactory(IPAddressFactory)
     config_template = factory.SubFactory(ConfigTemplateFactory)
