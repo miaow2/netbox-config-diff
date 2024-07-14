@@ -1,5 +1,12 @@
-from extras.plugins import PluginMenu, PluginMenuButton, PluginMenuItem
-from utilities.choices import ButtonColorChoices
+from netbox.settings import VERSION
+
+if VERSION.startswith("3."):
+    from extras.plugins import PluginMenu, PluginMenuButton, PluginMenuItem
+    from utilities.choices import ButtonColorChoices
+else:
+    # TODO: after droping support for NetBox 3.x, delete ButtonColorChoices
+    from netbox.choices import ButtonColorChoices
+    from netbox.plugins import PluginMenu, PluginMenuButton, PluginMenuItem
 
 
 def get_add_button(model: str) -> PluginMenuButton:

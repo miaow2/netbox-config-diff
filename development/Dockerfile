@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ARG NETBOX_VERSION
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git \
+    && apt-get install -y --no-install-recommends git postgresql-client libpq-dev gcc build-essential \
     && pip install --upgrade pip
 
 # Install NetBox

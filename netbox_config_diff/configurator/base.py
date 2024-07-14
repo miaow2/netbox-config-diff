@@ -7,11 +7,11 @@ from typing import AsyncIterator, Iterable
 from asgiref.sync import sync_to_async
 from dcim.models import Device
 from jinja2.exceptions import TemplateError
+from netbox.settings import VERSION
 from netutils.config.compliance import diff_network_config
 from scrapli import AsyncScrapli
 from scrapli_cfg.platform.base.async_platform import AsyncScrapliCfgPlatform
 from scrapli_cfg.response import ScrapliCfgResponse
-from utilities.utils import NetBoxFakeRequest
 
 from netbox_config_diff.compliance.secrets import SecretsMixin
 from netbox_config_diff.compliance.utils import PLATFORM_MAPPING, get_remediation_commands, get_unified_diff
@@ -21,6 +21,11 @@ from netbox_config_diff.constants import ACCEPTABLE_DRIVERS
 from netbox_config_diff.models import ConfiguratorDeviceDataClass
 
 from .factory import AsyncScrapliCfg
+
+if VERSION.startswith("3."):
+    from utilities.utils import NetBoxFakeRequest
+else:
+    from utilities.request import NetBoxFakeRequest
 
 
 class Configurator(SecretsMixin):

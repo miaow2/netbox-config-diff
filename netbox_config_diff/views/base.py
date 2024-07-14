@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from netbox.settings import VERSION
 from netbox.views.generic import ObjectDeleteView, ObjectEditView, ObjectView
 
 
@@ -15,24 +16,34 @@ class BaseObjectEditView(ObjectEditView):
         return f"plugins:netbox_config_diff:{self.queryset.model._meta.model_name}_list"
 
 
-class BaseExportView(ObjectView):
-    def export_parts(self, name, lines, suffix):
-        response = HttpResponse(lines, content_type="text")
-        filename = f"{name}_{suffix}.txt"
-        response["Content-Disposition"] = f'attachment; filename="{filename}"'
-        return response
-
-
-class BaseConfigComplianceConfigView(BaseExportView):
+class BaseConfigComplianceConfigView(ObjectView):
     config_field = None
     template_header = None
+
+    def export_parts(self, name: str, lines: str, suffix: str | None = None) -> HttpResponse:
+        response = HttpResponse(lines, content_type="text")
+        filename = f"{name}_{suffix if suffix else self.config_field}.txt"
+        response["Content-Disposition"] = f'attachment; filename="{filename}"'
+        return response
 
     def get(self, request, **kwargs):
         instance = self.get_object(**kwargs)
         context = self.get_extra_context(request, instance)
 
-        if request.GET.get("export"):
-            return self.export_parts(instance.device.name, context["config"], self.config_field)
+        if request.GET.get("export_rendered_config"):
+            return self.export_parts(instance.device.name, context["config"])
+
+        if request.GET.get("export_actual_config"):
+            return self.export_parts(instance.device.name, context["config"])
+
+        if request.GET.get("export_missing"):
+            return self.export_parts(instance.device.name, instance.missing, "missing")
+
+        if request.GET.get("export_extra"):
+            return self.export_parts(instance.device.name, instance.extra, "extra")
+
+        if request.GET.get("export_patch"):
+            return self.export_parts(instance.device.name, context["config"])
 
         return render(
             request,
@@ -49,4 +60,5 @@ class BaseConfigComplianceConfigView(BaseExportView):
             "header": self.template_header,
             "config": getattr(instance, self.config_field),
             "config_field": self.config_field,
+            "version": VERSION,
         }

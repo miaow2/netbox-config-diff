@@ -24,14 +24,14 @@ jobs:
       - name: Run ruff format
         run: ruff format .
       - name: Run ruff
-        run: ruff .
+        run: ruff check .
 
   test:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 10
       matrix:
-        netbox_version: ["v3.5.9", "v3.6.9", "v3.7.8"]
+        netbox_version: ["v3.6.9", "v3.7.8", "v4.0.7"]
     steps:
       - name: Checkout
         uses: actions/checkout@v3

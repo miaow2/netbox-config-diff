@@ -6,7 +6,7 @@
     <div class="col col-md-6">
       <div class="card">
         <h5 class="card-header">{{ object|meta:"verbose_name"|bettertitle }}</h5>
-        <div class="card-body">
+        {% if version|first == "3" %}<div class="card-body">{% endif %}
           <table class="table table-hover attr-table">
             <tr>
               <th scope="row">Status</th>
@@ -60,18 +60,18 @@
             </tr>
             <tr>
               <th scope="row">Scheduled</th>
-              <td>{{ object.scheduled|annotated_date|placeholder }}</td>
+              <td>{{ object.scheduled|placeholder }}</td>
             </tr>
             <tr>
               <th scope="row">Started</th>
-              <td>{{ object.started|annotated_date|placeholder }}</td>
+              <td>{{ object.started|placeholder }}</td>
             </tr>
             <tr>
               <th scope="row">Completed</th>
-              <td>{{ object.completed|annotated_date|placeholder }}</td>
+              <td>{{ object.completed|placeholder }}</td>
             </tr>
           </table>
-        </div>
+        {% if version|first == "3" %}</div>{% endif %}
       </div>
       {% include 'inc/panels/comments.html' %}
       {% include "inc/panels/tags.html" %}
@@ -82,7 +82,7 @@
         <h5 class="card-header">
           Devices
         </h5>
-        <div class="card-body">
+        {% if version|first == "3" %}<div class="card-body">{% endif %}
           <table class="table table-hover">
             <thead>
               <tr>
@@ -103,7 +103,7 @@
                 {% endfor %}
             </tbody>
           </table>
-        </div>
+        {% if version|first == "3" %}</div>{% endif %}
       </div>
     </div>
   </div>
