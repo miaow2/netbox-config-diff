@@ -2,7 +2,7 @@
 
 <div class="card mb-3">
   <h5 class="card-header">Job Log</h5>
-  <div class="card-body">
+  {% if version|first == "3" %}<div class="card-body">{% endif %}
     <table class="table table-hover panel-body">
       <tr>
         <th>Time</th>
@@ -23,5 +23,5 @@
         </tr>
       {% endfor %}
     </table>
-  </div>
+  {% if version|first == "3" %}</div>{% endif %}
 </div>

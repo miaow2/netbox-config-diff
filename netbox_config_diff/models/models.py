@@ -11,13 +11,18 @@ from django.utils.translation import gettext as _
 from netbox.constants import RQ_QUEUE_DEFAULT
 from netbox.models import NetBoxModel, PrimaryModel
 from netbox.models.features import ChangeLoggingMixin, JobsMixin
+from netbox.settings import VERSION
 from rq.exceptions import InvalidJobOperation
 from utilities.querysets import RestrictedQuerySet
-from utilities.utils import copy_safe_request
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices, ConfigurationRequestStatusChoices
 
 from .base import AbsoluteURLMixin
+
+if VERSION.startswith("3."):
+    from utilities.utils import copy_safe_request
+else:
+    from utilities.request import copy_safe_request
 
 
 class ConfigCompliance(AbsoluteURLMixin, ChangeLoggingMixin, models.Model):

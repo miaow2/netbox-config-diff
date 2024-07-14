@@ -11,14 +11,19 @@ from django.conf import settings
 from django.db.models import Q
 from extras.scripts import MultiObjectVar, ObjectVar, TextVar
 from jinja2.exceptions import TemplateError
+from netbox.settings import VERSION
 from netutils.config.compliance import diff_network_config
 from utilities.exceptions import AbortScript
-from utilities.utils import render_jinja2
 
 from netbox_config_diff.models import ConplianceDeviceDataClass
 
 from .secrets import SecretsMixin
 from .utils import PLATFORM_MAPPING, CustomChoiceVar, exclude_lines, get_remediation_commands, get_unified_diff
+
+if VERSION.startswith("3."):
+    from utilities.utils import render_jinja2
+else:
+    from utilities.jinja2 import render_jinja2
 
 
 class ConfigDiffBase(SecretsMixin):

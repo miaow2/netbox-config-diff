@@ -3,15 +3,19 @@
 {% load perms %}
 
 {% block controls %}
+  {% if version|first == "3" %}
   <div class="controls">
     <div class="control-group">
+  {% else %}
+  <div class="btn-list justify-content-end mb-2">
+  {% endif %}
       {% if perms.extras.add_bookmark and object.bookmarks %}
         {% bookmark_button object %}
       {% endif %}
       {% if not object.finished %}
         <form action="{% url 'plugins:netbox_config_diff:configurationrequest_collectdiffs' pk=object.pk %}" method="post">
           {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-outline-dark">
+          <button type="submit" class="btn {% if version|first == '3' %}btn-sm{% endif %} btn-outline-dark">
             <i class="mdi mdi-shape-plus" aria-hidden="true"></i> Collect diffs
           </button>
         </form>
@@ -19,7 +23,7 @@
           {% if not object.approved_by %}
             <form action="{% url 'plugins:netbox_config_diff:configurationrequest_approve' pk=object.pk %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-teal">
+              <button type="submit" class="btn {% if version|first == '3' %}btn-sm{% endif %} btn-teal">
                 <i class="mdi mdi-check-circle" aria-hidden="true"></i> Approve
               </button>
             </form>
@@ -27,19 +31,19 @@
           {% if object.approved_by %}
             <form action="{% url 'plugins:netbox_config_diff:configurationrequest_approve' pk=object.pk %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-orange">
+              <button type="submit" class="btn {% if version|first == '3' %}btn-sm{% endif %} btn-orange">
                 <i class="mdi mdi-minus-circle" aria-hidden="true"></i> Unapprove
               </button>
             </form>
             {% if object.scheduled_by %}
               <form action="{% url 'plugins:netbox_config_diff:configurationrequest_unschedule' pk=object.pk %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-pink">
+                <button type="submit" class="btn {% if version|first == '3' %}btn-sm{% endif %} btn-pink">
                   <i class="mdi mdi-calendar-remove" aria-hidden="true"></i> Unschedule
                 </button>
               </form>
             {% else %}
-              <a href="{% url 'plugins:netbox_config_diff:configurationrequest_schedule' pk=object.pk %}" type="button" class="btn btn-sm btn-blue">
+              <a href="{% url 'plugins:netbox_config_diff:configurationrequest_schedule' pk=object.pk %}" type="button" class="btn {% if version|first == '3' %}btn-sm{% endif %} btn-blue">
                 <i class="mdi mdi-calendar"></i> Schedule
               </a>
             {% endif %}
@@ -52,6 +56,11 @@
       {% if request.user|can_delete:object %}
         {% delete_button object %}
       {% endif %}
+
+  {% if version|first == "3" %}
+      </div>
     </div>
+  {% else %}
   </div>
+  {% endif %}
 {% endblock controls %}

@@ -53,10 +53,12 @@ optional-dependencies.test = { file = ["requirements/test.txt"] }
 
 [tool.ruff]
 exclude = ["migrations", "__pycache__"]
-select = ["C", "E", "F", "I"]
-ignore = ["C901"]
 line-length = 120
 target-version = "py310"
+
+[tool.ruff.lint]
+select = ["C", "E", "F", "I"]
+ignore = ["C901"]
 
 [tool.pytest.ini_options]
 addopts = "-p no:warnings -vv --no-migrations"

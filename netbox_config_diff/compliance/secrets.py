@@ -2,10 +2,15 @@ import base64
 from typing import TYPE_CHECKING
 
 from dcim.models import Device
-from extras.plugins import get_installed_plugins, get_plugin_config
+from netbox.settings import VERSION
 
 if TYPE_CHECKING:
     from netbox_secrets.models import Secret
+
+if VERSION.startswith("3."):
+    from extras.plugins import get_installed_plugins, get_plugin_config
+else:
+    from netbox.plugins import get_installed_plugins, get_plugin_config
 
 
 class SecretsMixin:

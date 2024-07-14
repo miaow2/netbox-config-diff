@@ -1,6 +1,7 @@
 from dcim.models import Device
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
+from netbox.settings import VERSION
 from netbox.views import generic
 from utilities.views import ViewTab, register_model_view
 
@@ -14,7 +15,7 @@ from netbox_config_diff.forms import (
 from netbox_config_diff.models import ConfigCompliance, PlatformSetting
 from netbox_config_diff.tables import ConfigComplianceTable, PlatformSettingTable
 
-from .base import BaseConfigComplianceConfigView, BaseExportView, BaseObjectDeleteView, BaseObjectEditView
+from .base import BaseConfigComplianceConfigView, BaseObjectDeleteView, BaseObjectEditView
 
 
 @register_model_view(ConfigCompliance)
@@ -27,6 +28,7 @@ class ConfigComplianceView(generic.ObjectView):
         return {
             "instance": instance,
             "base_template": self.base_template,
+            "version": VERSION,
         }
 
 
@@ -54,61 +56,28 @@ class ConfigComplianceActualConfigView(BaseConfigComplianceConfigView):
     )
 
 
-@register_model_view(ConfigCompliance, "missing-extra")
-class ConfigComplianceMissingExtraConfigView(BaseExportView):
-    queryset = ConfigCompliance.objects.all()
-    template_name = "netbox_config_diff/configcompliance/missing_extra.html"
-    tab = ViewTab(
-        label=_("Missing/Extra"),
-        weight=520,
-    )
-
-    def get(self, request, **kwargs):
-        instance = self.get_object(**kwargs)
-        context = self.get_extra_context(request, instance)
-
-        if request.GET.get("export_missing"):
-            return self.export_parts(instance.device.name, instance.missing, "missing")
-
-        if request.GET.get("export_extra"):
-            return self.export_parts(instance.device.name, instance.extra, "extra")
-
-        return render(
-            request,
-            self.get_template_name(),
-            {
-                "object": instance,
-                "tab": self.tab,
-                **context,
-            },
-        )
-
-
 @register_model_view(ConfigCompliance, "patch")
-class ConfigCompliancePatchView(BaseExportView):
+class ConfigCompliancePatchView(BaseConfigComplianceConfigView):
     queryset = ConfigCompliance.objects.all()
-    template_name = "netbox_config_diff/configcompliance/patch.html"
+    template_name = "netbox_config_diff/configcompliance/config.html"
+    config_field = "patch"
+    template_header = "Patch"
     tab = ViewTab(
-        label=_("Patch"),
+        label=_(template_header),
         weight=515,
     )
 
-    def get(self, request, **kwargs):
-        instance = self.get_object(**kwargs)
-        context = self.get_extra_context(request, instance)
 
-        if request.GET.get("export_patch"):
-            return self.export_parts(instance.device.name, instance.patch, "patch")
-
-        return render(
-            request,
-            self.get_template_name(),
-            {
-                "object": instance,
-                "tab": self.tab,
-                **context,
-            },
-        )
+@register_model_view(ConfigCompliance, "missing-extra")
+class ConfigComplianceMissingExtraConfigView(BaseConfigComplianceConfigView):
+    queryset = ConfigCompliance.objects.all()
+    template_name = "netbox_config_diff/configcompliance/missing_extra.html"
+    config_field = "missing"
+    template_header = "Missing/Extra"
+    tab = ViewTab(
+        label=_(template_header),
+        weight=520,
+    )
 
 
 @register_model_view(Device, "config_compliance", "config-compliance")
@@ -163,6 +132,11 @@ class ConfigComplianceBulkDeleteView(generic.BulkDeleteView):
 @register_model_view(PlatformSetting)
 class PlatformSettingView(generic.ObjectView):
     queryset = PlatformSetting.objects.all()
+
+    def get_extra_context(self, request, instance):
+        return {
+            "version": VERSION,
+        }
 
 
 class PlatformSettingListView(generic.ObjectListView):
