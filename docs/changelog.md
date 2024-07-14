@@ -1,6 +1,12 @@
 # Changelog
 
 
+## 2.6.0 (2024-07-14)
+
+* [#62](https://github.com/miaow2/netbox-config-diff/issues/62) Add support for NetBox 4.0
+
+This release drops support for NetBox 3.5.
+
 ## 2.5.0 (2024-06-30)
 
 * [#67](https://github.com/miaow2/netbox-config-diff/issues/67) Add option `default_desired_privilege_level` to plugins variables (thanks to [@cknost](https://github.com/cknost))
