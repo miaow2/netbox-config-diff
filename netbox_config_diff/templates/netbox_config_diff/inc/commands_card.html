@@ -1,16 +1,30 @@
 <div class="card">
-  <div class="card-header">
-    <div class="float-end">
-      {% copy_content pre_id %}
-      <a href="?export_{{ pre_id }}=True" class="btn btn-sm btn-primary" role="button">
-        <i class="mdi mdi-download" aria-hidden="true"></i> Download
-      </a>
+  {% if version|first == "3" %}
+    <div class="card-header">
+      <div class="float-end">
+        {% copy_content pre_id %}
+        <a href="?export_{{ pre_id }}=True" class="btn btn-sm btn-primary" role="button">
+          <i class="mdi mdi-download" aria-hidden="true"></i> Download
+        </a>
+      </div>
+      <h5>{{ header }}</h5>
     </div>
-    <h5>{{ header }}</h5>
-  </div>
-  {% if data %}
-    <pre class="card-body" id="{{ pre_id }}">{{ data }}</pre>
   {% else %}
-    <div class="card-body text-muted">No commands</div>
+    <h5 class="card-header d-flex justify-content-between">
+      {{ header }}
+      <div>
+        {% copy_content pre_id %}
+        <a href="?export_{{ pre_id }}=True" class="btn btn-sm btn-primary" role="button">
+          <i class="mdi mdi-download" aria-hidden="true"></i> Download
+        </a>
+      </div>
+    </h5>
+  {% endif %}
+  {% if data %}
+    <div class="card-body">
+      <pre id="{{ pre_id }}">{{ data }}</pre>
+    </div>
+  {% else %}
+    <div class="card-body text-muted">None</div>
   {% endif %}
 </div>

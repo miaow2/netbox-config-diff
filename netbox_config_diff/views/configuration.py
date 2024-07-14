@@ -50,6 +50,7 @@ class ConfigurationRequestView(generic.ObjectView):
 
         return {
             "job": job,
+            "version": VERSION,
         }
 
 
@@ -317,6 +318,11 @@ class JobListView(generic.ObjectListView):
 @register_model_view(Substitute)
 class SubstituteView(generic.ObjectView):
     queryset = Substitute.objects.all()
+
+    def get_extra_context(self, request, instance):
+        return {
+            "version": VERSION,
+        }
 
 
 class SubstituteListView(generic.ObjectListView):

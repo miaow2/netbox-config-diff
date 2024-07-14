@@ -6,7 +6,7 @@
     <div class="col col-md-6">
       <div class="card">
         <h5 class="card-header">{{ instance|meta:"verbose_name"|bettertitle }}</h5>
-        <div class="card-body">
+        {% if version|first == "3" %}<div class="card-body">{% endif %}
           <table class="table table-hover attr-table">
             <tr>
               <th scope="row">Device</th>
@@ -17,16 +17,16 @@
               <td>{% badge instance.get_status_display bg_color=instance.get_status_color %}</td>
             </tr>
           </table>
-        </div>
+        {% if version|first == "3" %}</div>{% endif %}
       </div>
     </div>
     {% if instance.error %}
       <div class="col col-md-6">
         <div class="card">
           <h5 class="card-header">Error</h5>
-          <div class="card-body">
+          {% if version|first == "3" %}<div class="card-body">{% endif %}
             <pre class="block">{{ instance.error }}</pre>
-          </div>
+          {% if version|first == "3" %}</div>{% endif %}
         </div>
       </div>
     {% endif %}

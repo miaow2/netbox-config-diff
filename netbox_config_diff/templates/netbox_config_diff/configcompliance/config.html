@@ -5,22 +5,7 @@
 {% block content %}
   <div class="row">
     <div class="col">
-      <div class="card">
-        <div class="card-header">
-          <div class="float-end">
-            {% copy_content config_field %}
-            <a href="?export=True" class="btn btn-sm btn-primary" role="button">
-              <i class="mdi mdi-download" aria-hidden="true"></i> Download
-            </a>
-          </div>
-          <h5>{{ header }}</h5>
-        </div>
-        {% if config %}
-          <pre class="card-body" id="{{ config_field }}">{{ config }}</pre>
-        {% else %}
-          <div class="card-body text-muted">No configuration</div>
-        {% endif %}
-      </div>
+      {% include 'netbox_config_diff/inc/commands_card.html' with data=config header=header pre_id=config_field %}
     </div>
   </div>
 {% endblock %}
