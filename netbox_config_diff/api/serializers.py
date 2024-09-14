@@ -1,4 +1,4 @@
-from dcim.api.serializers import NestedDeviceSerializer, NestedPlatformSerializer
+from dcim.api.nested_serializers import NestedDeviceSerializer, NestedPlatformSerializer
 from dcim.models import Device
 from netbox.api.fields import ChoiceField, SerializedPKRelatedField
 from netbox.api.serializers import NetBoxModelSerializer
