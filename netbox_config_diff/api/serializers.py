@@ -5,15 +5,19 @@ from netbox.api.serializers import NetBoxModelSerializer
 from netbox.settings import VERSION
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
-from users.api.nested_serializers import NestedUserSerializer
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices, ConfigurationRequestStatusChoices
 from netbox_config_diff.constants import ACCEPTABLE_DRIVERS
 from netbox_config_diff.models import ConfigCompliance, ConfigurationRequest, PlatformSetting, Substitute
 
 if VERSION.startswith("3."):
+    from users.api.nested_serializers import NestedUserSerializer
     from utilities.utils import local_now
+elif VERSION.startswith("4.0"):
+    from users.api.nested_serializers import NestedUserSerializer
+    from utilities.datetime import local_now
 else:
+    from users.api.serializers_.nested import NestedUserSerializer
     from utilities.datetime import local_now
 
 
