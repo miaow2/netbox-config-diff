@@ -114,6 +114,7 @@ class ConfigurationRequestDiffsView(generic.ObjectView):
 
         return {
             "job": job,
+            "version": VERSION,
         }
 
 

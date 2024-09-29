@@ -21,11 +21,15 @@ if VERSION.startswith("3."):
     from utilities.utils import local_now
 else:
     from utilities.datetime import local_now
+    from utilities.forms.rendering import FieldSet
 
 
 class ConfigComplianceFilterForm(NetBoxModelFilterSetForm):
     model = ConfigCompliance
-    fieldsets = ((None, ("q", "device_id", "status")),)
+    if VERSION.startswith("3."):
+        fieldsets = ((None, ("q", "device_id", "status")),)
+    else:
+        fieldsets = (FieldSet("q", "device_id", "status"),)
     device_id = DynamicModelMultipleChoiceField(
         queryset=Device.objects.all(),
         required=False,
@@ -56,7 +60,10 @@ class PlatformSettingForm(NetBoxModelForm):
 
 class PlatformSettingFilterForm(NetBoxModelFilterSetForm):
     model = PlatformSetting
-    fieldsets = ((None, ("q", "platform_id", "tag")),)
+    if VERSION.startswith("3."):
+        fieldsets = ((None, ("q", "platform_id", "tag")),)
+    else:
+        fieldsets = (FieldSet("q", "filter_id", "tag"),)
     platform_id = DynamicModelMultipleChoiceField(
         queryset=Platform.objects.all(),
         required=False,
@@ -84,7 +91,10 @@ class PlatformSettingBulkEditForm(NetBoxModelBulkEditForm):
     )
 
     model = PlatformSetting
-    fieldsets = ((None, ("driver", "command", "description", "exclude_regex")),)
+    if VERSION.startswith("3."):
+        fieldsets = ((None, ("driver", "command", "description", "exclude_regex")),)
+    else:
+        fieldsets = (FieldSet("driver", "command", "description", "exclude_regex"),)
     nullable_fields = ("description", "exclude_regex")
 
 
@@ -135,7 +145,10 @@ class ConfigurationRequestForm(NetBoxModelForm):
 
 class ConfigurationRequestFilterForm(NetBoxModelFilterSetForm):
     model = ConfigurationRequest
-    fieldsets = ((None, ("q", "created_by_id", "approved_by_id", "scheduled_by_id", "device_id", "status", "tag")),)
+    if VERSION.startswith("3."):
+        fieldsets = ((None, ("q", "created_by_id", "approved_by_id", "scheduled_by_id", "device_id", "status", "tag")),)
+    else:
+        fieldsets = (FieldSet("q", "created_by_id", "approved_by_id", "scheduled_by_id", "device_id", "status", "tag"),)
     created_by_id = DynamicModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
         required=False,
@@ -201,6 +214,10 @@ class SubstituteForm(NetBoxModelForm):
 class SubstituteFilterForm(NetBoxModelFilterSetForm):
     model = Substitute
     fieldsets = ((None, ("q", "platform_setting_id", "tag")),)
+    if VERSION.startswith("3."):
+        fieldsets = ((None, ("q", "platform_setting_id", "tag")),)
+    else:
+        fieldsets = (FieldSet("q", "platform_setting_id", "tag"),)
     platform_setting_id = DynamicModelMultipleChoiceField(
         queryset=PlatformSetting.objects.all(),
         required=False,

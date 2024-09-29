@@ -177,11 +177,11 @@ class Configurator(SecretsMixin):
             conn = self.connections[device.name]
             response = await conn.load_config(config=device.rendered_config, replace=True)
             if response.failed:
-                await self.abort_config("load", conn, response, device.name)
+                await self.abort_config("load", conn, response, device)
                 return
             response = await conn.commit_config()
             if response.failed:
-                await self.abort_config("commit", conn, response, device.name)
+                await self.abort_config("commit", conn, response, device)
                 return
             self.unprocessed_devices.remove(device)
             self.processed_devices.add(device)

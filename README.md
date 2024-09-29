@@ -1,4 +1,4 @@
-[![NetBox version](https://img.shields.io/badge/NetBox-3.6|3.7|4.0-blue.svg)](https://github.com/netbox-community/netbox)
+[![NetBox version](https://img.shields.io/badge/NetBox-3.7|4.0|4.1-blue.svg)](https://github.com/netbox-community/netbox)
 [![Supported Versions](https://img.shields.io/pypi/pyversions/netbox-config-diff.svg)](https://pypi.org/project/netbox-config-diff/)
 [![PyPI version](https://badge.fury.io/py/netbox-config-diff.svg)](https://badge.fury.io/py/netbox-config-diff)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
@@ -9,8 +9,10 @@
 
 [NetBox](https://github.com/netbox-community/netbox) plugin for Config Diff.
 
-* Free software: Apache-2.0
-* Documentation: https://miaow2.github.io/netbox-config-diff/
+* Find diff between the rendered configuration for a device to its actual configuration, retrieved from the device itself, or stored in DataSource.
+* Push the rendered configuration from NetBox to a device and apply it.
+
+Documentation: https://miaow2.github.io/netbox-config-diff/
 
 <!--about-start-->
 ## About
@@ -45,7 +47,10 @@ This is possible thanks to the scrapli_cfg. Read [Scrapli](https://github.com/sc
 | NetBox Version | Plugin Version   |
 |----------------|------------------|
 |  3.5           | =>0.1.0, <=2.5.0 |
-|  3.6, 3.7, 4.0 |      =>0.1.0     |
+|  3.6           | =>0.1.0, <=2.6.0 |
+|  3.7           |      =>0.1.0     |
+|  4.0           |      =>2.6.0     |
+|  4.1           |      =>2.7.0     |
 
 <!--install-start-->
 ## Installing
