@@ -26,6 +26,7 @@ else:
 
 class ConfigComplianceFilterForm(NetBoxModelFilterSetForm):
     model = ConfigCompliance
+    if VERSION.startswith("3."):
         fieldsets = ((None, ("q", "device_id", "status")),)
     else:
         fieldsets = (FieldSet("q", "device_id", "status"),)
