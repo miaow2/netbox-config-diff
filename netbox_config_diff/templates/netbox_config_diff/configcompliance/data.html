@@ -35,7 +35,14 @@
     <div class="row mb-3">
       <div class="col col-md-12">
         <div class="card">
-          <h5 class="card-header">Diff</h5>
+          <h2 class="card-header">Diff
+            {% if version|first != "3" and statistics %}
+              <div class="card-actions">
+                <span style="color: #1a7f37;">{{ statistics.0 }}</span> line(s) missing,
+                <span style="color: #d1242f;">{{ statistics.1 }}</span> extra line(s)
+              </div>
+            {% endif %}
+          </h2>
           <div class="card-body" id="diffElement"></div>
         </div>
       </div>

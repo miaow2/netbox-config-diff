@@ -5,6 +5,7 @@ from netbox.settings import VERSION
 from netbox.views import generic
 from utilities.views import ViewTab, register_model_view
 
+from netbox_config_diff.compliance.utils import get_diff_statistics
 from netbox_config_diff.filtersets import ConfigComplianceFilterSet, PlatformSettingFilterSet
 from netbox_config_diff.forms import (
     ConfigComplianceFilterForm,
@@ -25,10 +26,14 @@ class ConfigComplianceView(generic.ObjectView):
     template_name = "netbox_config_diff/configcompliance/data.html"
 
     def get_extra_context(self, request, instance):
+        statistics = None
+        if instance.diff:
+            statistics = get_diff_statistics(instance.diff)
         return {
             "instance": instance,
             "base_template": self.base_template,
             "version": VERSION,
+            "statistics": statistics,
         }
 
 

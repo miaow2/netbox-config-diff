@@ -60,3 +60,16 @@ def get_remediation_commands(name: str, platform: str, actual_config: str, rende
     host.load_running_config(config_text=actual_config)
     host.load_generated_config(config_text=rendered_config)
     return host.remediation_config_filtered_text(include_tags={}, exclude_tags={})
+
+
+def get_diff_statistics(diff: str) -> tuple[int, int]:
+    lines_added = 0
+    lines_deleted = 0
+
+    for line in diff.splitlines():
+        if line.startswith("+") and not line.startswith("+++"):
+            lines_added += 1
+        elif line.startswith("-") and not line.startswith("---"):
+            lines_deleted += 1
+
+    return lines_added, lines_deleted
