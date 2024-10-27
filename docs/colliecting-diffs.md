@@ -42,6 +42,9 @@ If you have configs in NetBox DataSource, you can define it, the script instead 
 !!! note
     Only synced DataSources are acceptable
 
+!!! note
+    Diff replaces sequences of 3 or more empty lines with one empty line
+
 If in your DataSource config names are different from the hostnames of the devices, you can specify config name with Jinja2 template in `Name template` field.
  Reference device with `{{ object }}` variable.
 
