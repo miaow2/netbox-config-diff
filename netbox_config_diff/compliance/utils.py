@@ -40,8 +40,8 @@ class CustomChoiceVar(ScriptVariable):
 
 def get_unified_diff(rendered_config: str, actual_config: str, device: str) -> str:
     diff = unified_diff(
-        actual_config.splitlines(),
-        rendered_config.strip().splitlines(),
+        re.sub("\n{3,}", "\n", actual_config).splitlines(),
+        re.sub("\n{3,}", "\n", rendered_config).strip().splitlines(),
         fromfiledate=device,
         tofiledate=device,
         lineterm="",
