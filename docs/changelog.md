@@ -1,6 +1,18 @@
 # Changelog
 
 
+## 2.8.0 (2024-11-10)
+
+* [#76](https://github.com/miaow2/netbox-config-diff/issues/76) Add in NetBox 4.0 and higher some statistics for diff
+* [#81](https://github.com/miaow2/netbox-config-diff/issues/81) Fix error in rendering config with several substitutes
+* [#84](https://github.com/miaow2/netbox-config-diff/issues/84) Strip multiple empty lines in configs
+
+## 2.7.0 (2024-09-29)
+
+* [#79](https://github.com/miaow2/netbox-config-diff/issues/79) Add support for NetBox 4.1
+
+This release drops support for NetBox 3.6.
+
 ## 2.6.0 (2024-07-14)
 
 * [#62](https://github.com/miaow2/netbox-config-diff/issues/62) Add support for NetBox 4.0

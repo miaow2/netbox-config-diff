@@ -46,15 +46,15 @@ class CustomScrapliCfg:
 
         replace_sections = [(name, re.search(pattern=pattern, string=source_config)) for name, pattern in substitutes]
 
-        rendered_config = ""
+        rendered_config = config_template
         for name, replace_section in replace_sections:
             if not replace_section:
-                msg = f"substitution pattern {name} was unable to find a match in the target config" " source"
+                msg = f"substitution pattern {name} was unable to find a match in the target configsource"
                 self.logger.critical(msg)
                 raise TemplateError(msg)
 
             replace_group = replace_section.group()
-            rendered_config = config_template.replace(f"{{{{ {name} }}}}", replace_group)
+            rendered_config = rendered_config.replace(f"{{{{ {name} }}}}", replace_group)
 
         # remove any totally empty lines (from bad regex, or just device spitting out lines w/
         # nothing on it

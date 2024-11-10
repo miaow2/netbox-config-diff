@@ -137,12 +137,15 @@ class Configurator(SecretsMixin):
 
             device.diff = get_unified_diff(device.rendered_config, device.actual_config, device.name)
             self.logger.add_diff(device.name, diff=device.diff)
-            device.missing = diff_network_config(
-                device.rendered_config, device.actual_config, PLATFORM_MAPPING[device.platform]
-            )
-            device.extra = diff_network_config(
-                device.actual_config, device.rendered_config, PLATFORM_MAPPING[device.platform]
-            )
+            try:
+                device.missing = diff_network_config(
+                    device.rendered_config, device.actual_config, PLATFORM_MAPPING[device.platform]
+                )
+                device.extra = diff_network_config(
+                    device.actual_config, device.rendered_config, PLATFORM_MAPPING[device.platform]
+                )
+            except Exception as e:
+                self.logger.log_warning(f"Unable to get missing/extra commands for {device.name}: {e}")
             device.patch = get_remediation_commands(
                 device.name, device.platform, device.actual_config, device.rendered_config
             )

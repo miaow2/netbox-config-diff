@@ -8,7 +8,7 @@ else:
 
 __author__ = "Artem Kotik"
 __email__ = "miaow2@yandex.ru"
-__version__ = "2.7.0"
+__version__ = "2.8.0"
 
 
 class ConfigDiffConfig(PluginConfig):
