@@ -1,7 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
-from netbox.settings import VERSION
 from netbox.views.generic import ObjectDeleteView, ObjectEditView, ObjectView
 
 
@@ -60,5 +59,4 @@ class BaseConfigComplianceConfigView(ObjectView):
             "header": self.template_header,
             "config": getattr(instance, self.config_field),
             "config_field": self.config_field,
-            "version": VERSION,
         }

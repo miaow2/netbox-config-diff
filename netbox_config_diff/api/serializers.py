@@ -1,30 +1,20 @@
-from dcim.api.nested_serializers import NestedDeviceSerializer, NestedPlatformSerializer
+from dcim.api.serializers import DeviceSerializer, PlatformSerializer
 from dcim.models import Device
 from netbox.api.fields import ChoiceField, SerializedPKRelatedField
 from netbox.api.serializers import NetBoxModelSerializer
-from netbox.settings import VERSION
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
+from users.api.serializers import UserSerializer
+from utilities.datetime import local_now
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices, ConfigurationRequestStatusChoices
 from netbox_config_diff.constants import ACCEPTABLE_DRIVERS
 from netbox_config_diff.models import ConfigCompliance, ConfigurationRequest, PlatformSetting, Substitute
 
-if VERSION.startswith("3."):
-    from users.api.nested_serializers import NestedUserSerializer
-    from utilities.utils import local_now
-elif VERSION.startswith("4.0"):
-    from users.api.nested_serializers import NestedUserSerializer
-    from utilities.datetime import local_now
-else:
-    from users.api.serializers_.nested import NestedUserSerializer
-    from utilities.datetime import local_now
 
-
-# TODO: after droping support for NetBox 3.x, delete nested serializers and add brief_fields
 class ConfigComplianceSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="plugins-api:netbox_config_diff-api:configcompliance-detail")
-    device = NestedDeviceSerializer()
+    device = DeviceSerializer(nested=True)
     status = ChoiceField(choices=ConfigComplianceStatusChoices)
 
     class Meta:
@@ -49,7 +39,7 @@ class ConfigComplianceSerializer(NetBoxModelSerializer):
 
 class PlatformSettingSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="plugins-api:netbox_config_diff-api:platformsetting-detail")
-    platform = NestedPlatformSerializer()
+    platform = PlatformSerializer(nested=True)
 
     class Meta:
         model = PlatformSetting
@@ -67,14 +57,7 @@ class PlatformSettingSerializer(NetBoxModelSerializer):
             "created",
             "last_updated",
         )
-
-
-class NestedPlatformSettingSerializer(NetBoxModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="plugins-api:netbox_config_diff-api:platformsetting-detail")
-
-    class Meta:
-        model = PlatformSetting
-        fields = ("id", "url", "display", "driver")
+        brief_fields = ("id", "url", "display", "driver")
 
 
 class ConfigurationRequestSerializer(NetBoxModelSerializer):
@@ -83,13 +66,14 @@ class ConfigurationRequestSerializer(NetBoxModelSerializer):
     )
     devices = SerializedPKRelatedField(
         queryset=Device.objects.all(),
-        serializer=NestedDeviceSerializer,
+        serializer=DeviceSerializer,
+        nested=True,
         many=True,
     )
     status = ChoiceField(choices=ConfigurationRequestStatusChoices, read_only=True)
-    created_by = NestedUserSerializer(read_only=True)
-    approved_by = NestedUserSerializer(read_only=True)
-    scheduled_by = NestedUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True, nested=True)
+    approved_by = UserSerializer(read_only=True, nested=True)
+    scheduled_by = UserSerializer(read_only=True, nested=True)
 
     class Meta:
         model = ConfigurationRequest
@@ -113,6 +97,7 @@ class ConfigurationRequestSerializer(NetBoxModelSerializer):
             "last_updated",
         )
         read_only_fields = ["started", "scheduled", "completed"]
+        brief_fields = ("id", "url", "display", "status")
 
     def validate(self, data):
         if data.get("devices"):
@@ -136,18 +121,7 @@ class ConfigurationRequestSerializer(NetBoxModelSerializer):
 
 
 class ConfigurationRequestRWSerializer(ConfigurationRequestSerializer):
-    created_by = NestedUserSerializer()
-
-
-class NestedConfigurationRequestSerializer(NetBoxModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name="plugins-api:netbox_config_diff-api:configurationrequest-detail"
-    )
-    status = ChoiceField(choices=ConfigurationRequestStatusChoices)
-
-    class Meta:
-        model = ConfigurationRequest
-        fields = ("id", "url", "display", "status")
+    created_by = UserSerializer(nested=True)
 
 
 class ConfigurationRequestScheduleSerializer(serializers.Serializer):
@@ -161,7 +135,7 @@ class ConfigurationRequestScheduleSerializer(serializers.Serializer):
 
 class SubstituteSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="plugins-api:netbox_config_diff-api:substitute-detail")
-    platform_setting = NestedPlatformSettingSerializer()
+    platform_setting = PlatformSettingSerializer(nested=True)
 
     class Meta:
         model = Substitute

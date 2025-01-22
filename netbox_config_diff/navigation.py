@@ -1,12 +1,4 @@
-from netbox.settings import VERSION
-
-if VERSION.startswith("3."):
-    from extras.plugins import PluginMenu, PluginMenuButton, PluginMenuItem
-    from utilities.choices import ButtonColorChoices
-else:
-    # TODO: after droping support for NetBox 3.x, delete ButtonColorChoices
-    from netbox.choices import ButtonColorChoices
-    from netbox.plugins import PluginMenu, PluginMenuButton, PluginMenuItem
+from netbox.plugins import PluginMenu, PluginMenuButton, PluginMenuItem
 
 
 def get_add_button(model: str) -> PluginMenuButton:
@@ -14,7 +6,6 @@ def get_add_button(model: str) -> PluginMenuButton:
         link=f"plugins:netbox_config_diff:{model}_add",
         title="Add",
         icon_class="mdi mdi-plus-thick",
-        color=ButtonColorChoices.GREEN,
         permissions=[f"netbox_config_diff.add_{model}"],
     )
 

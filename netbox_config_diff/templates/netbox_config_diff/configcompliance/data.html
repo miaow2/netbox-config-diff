@@ -6,27 +6,23 @@
     <div class="col col-md-6">
       <div class="card">
         <h5 class="card-header">{{ instance|meta:"verbose_name"|bettertitle }}</h5>
-        {% if version|first == "3" %}<div class="card-body">{% endif %}
-          <table class="table table-hover attr-table">
-            <tr>
-              <th scope="row">Device</th>
-              <td>{{ instance.device|linkify }}</td>
-            </tr>
-            <tr>
-              <th scope="row">Status</th>
-              <td>{% badge instance.get_status_display bg_color=instance.get_status_color %}</td>
-            </tr>
-          </table>
-        {% if version|first == "3" %}</div>{% endif %}
+        <table class="table table-hover attr-table">
+          <tr>
+            <th scope="row">Device</th>
+            <td>{{ instance.device|linkify }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Status</th>
+            <td>{% badge instance.get_status_display bg_color=instance.get_status_color %}</td>
+          </tr>
+        </table>
       </div>
     </div>
     {% if instance.error %}
       <div class="col col-md-6">
         <div class="card">
           <h5 class="card-header">Error</h5>
-          {% if version|first == "3" %}<div class="card-body">{% endif %}
-            <pre class="block">{{ instance.error }}</pre>
-          {% if version|first == "3" %}</div>{% endif %}
+          <pre class="block">{{ instance.error }}</pre>
         </div>
       </div>
     {% endif %}
@@ -36,7 +32,7 @@
       <div class="col col-md-12">
         <div class="card">
           <h2 class="card-header">Diff
-            {% if version|first != "3" and statistics %}
+            {% if statistics %}
               <div class="card-actions">
                 <span style="color: #1a7f37;">{{ statistics.0 }}</span> line(s) missing,
                 <span style="color: #d1242f;">{{ statistics.1 }}</span> extra line(s)

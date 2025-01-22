@@ -6,9 +6,13 @@ from dcim.graphql.types import DeviceType, PlatformType
 from netbox.graphql.types import NetBoxObjectType, ObjectType
 from users.graphql.types import UserType
 
+from netbox_config_diff.graphql.filters import (
+    ConfigComplianceFilter,
+    ConfigurationRequestFilter,
+    PlatformSettingFilter,
+    SubstituteFilter,
+)
 from netbox_config_diff.models import ConfigCompliance, ConfigurationRequest, PlatformSetting, Substitute
-
-from .filters import ConfigComplianceFilter, ConfigurationRequestFilter, PlatformSettingFilter, SubstituteFilter
 
 
 @strawberry_django.type(ConfigCompliance, fields="__all__", filters=ConfigComplianceFilter)
@@ -49,7 +53,7 @@ class PlatformSettingType(NetBoxObjectType):
 
 @strawberry_django.type(Substitute, fields="__all__", filters=SubstituteFilter)
 class SubstituteType(NetBoxObjectType):
-    platform_setting: Annotated["PlatformSettingType", strawberry.lazy("netbox_config_diff.graphql.new.types")]
+    platform_setting: Annotated["PlatformSettingType", strawberry.lazy("netbox_config_diff.graphql.types")]
     name: str
     description: str
     regexp: str
