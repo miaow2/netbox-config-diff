@@ -2,12 +2,35 @@ from typing import Protocol, TypedDict
 from unittest.mock import Mock
 
 import pytest
+from django.db import connection
+from django.test.utils import setup_databases
 from faker import Faker
 from typing_extensions import Unpack
 
 from netbox_config_diff.compliance.base import ConfigDiffBase
 from netbox_config_diff.models import ConplianceDeviceDataClass
 from tests.factories import DataSourceFactory
+
+
+@pytest.fixture(scope="session")
+def django_db_setup(request, django_test_environment, django_db_blocker):
+    with django_db_blocker.unblock():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                DO $$
+                BEGIN
+                    CREATE COLLATION IF NOT EXISTS natural_sort (
+                        provider = icu,
+                        locale = 'und-u-kn-true',
+                        deterministic = true
+                    );
+                END $$;
+            """
+            )
+        setup_databases(verbosity=request.config.option.verbose, interactive=False, serialized_aliases=[])
+
+    yield
 
 
 class ScriptData(TypedDict, total=False):
