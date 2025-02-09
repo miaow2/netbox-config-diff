@@ -1,7 +1,6 @@
 from dcim.models import Device
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
-from netbox.settings import VERSION
 from netbox.views import generic
 from utilities.views import ViewTab, register_model_view
 
@@ -32,7 +31,6 @@ class ConfigComplianceView(generic.ObjectView):
         return {
             "instance": instance,
             "base_template": self.base_template,
-            "version": VERSION,
             "statistics": statistics,
         }
 
@@ -137,11 +135,6 @@ class ConfigComplianceBulkDeleteView(generic.BulkDeleteView):
 @register_model_view(PlatformSetting)
 class PlatformSettingView(generic.ObjectView):
     queryset = PlatformSetting.objects.all()
-
-    def get_extra_context(self, request, instance):
-        return {
-            "version": VERSION,
-        }
 
 
 class PlatformSettingListView(generic.ObjectListView):
