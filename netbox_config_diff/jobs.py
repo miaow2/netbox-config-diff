@@ -3,17 +3,11 @@ import traceback
 
 from core.choices import JobStatusChoices
 from core.models import Job
-from netbox.settings import VERSION
+from utilities.request import NetBoxFakeRequest
 
 from netbox_config_diff.choices import ConfigurationRequestStatusChoices
 from netbox_config_diff.configurator.base import Configurator
 from netbox_config_diff.models import ConfigurationRequest
-
-if VERSION.startswith("3."):
-    from utilities.utils import NetBoxFakeRequest
-else:
-    from utilities.request import NetBoxFakeRequest
-
 
 logger = logging.getLogger(__name__)
 

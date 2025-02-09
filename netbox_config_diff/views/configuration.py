@@ -9,11 +9,12 @@ from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from netbox.constants import RQ_QUEUE_DEFAULT
-from netbox.settings import VERSION
 from netbox.views import generic
 from netbox.views.generic.base import BaseObjectView
 from rq.exceptions import InvalidJobOperation
+from users.models import User
 from utilities.forms import restrict_form_fields
+from utilities.querydict import normalize_querydict
 from utilities.rqworker import get_workers_for_queue
 from utilities.views import ViewTab, register_model_view
 
@@ -31,13 +32,6 @@ from netbox_config_diff.tables import ConfigurationRequestTable, SubstituteTable
 
 from .base import BaseObjectDeleteView, BaseObjectEditView
 
-if VERSION.startswith("3."):
-    from django.contrib.auth.models import User
-    from utilities.utils import normalize_querydict
-else:
-    from users.models import User
-    from utilities.querydict import normalize_querydict
-
 
 @register_model_view(ConfigurationRequest)
 class ConfigurationRequestView(generic.ObjectView):
@@ -50,7 +44,6 @@ class ConfigurationRequestView(generic.ObjectView):
 
         return {
             "job": job,
-            "version": VERSION,
         }
 
 
@@ -114,7 +107,6 @@ class ConfigurationRequestDiffsView(generic.ObjectView):
 
         return {
             "job": job,
-            "version": VERSION,
         }
 
 
@@ -319,11 +311,6 @@ class JobListView(generic.ObjectListView):
 @register_model_view(Substitute)
 class SubstituteView(generic.ObjectView):
     queryset = Substitute.objects.all()
-
-    def get_extra_context(self, request, instance):
-        return {
-            "version": VERSION,
-        }
 
 
 class SubstituteListView(generic.ObjectListView):

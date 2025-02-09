@@ -8,45 +8,41 @@
       <div class="col col-md-6">
         <div class="card">
           <h5 class="card-header">Job</h5>
-          {% if version|first == "3" %}<div class="card-body">{% endif %}
-            <table class="table table-hover attr-table">
-              <tr>
-                <th scope="row">Name</th>
-                <td>
-                  <a href="{% url 'core:job' pk=job.pk%}">{{ job.name }}</a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">Status</th>
-                <td>{% badge job.get_status_display job.get_status_color %}</td>
-              </tr>
-              <tr>
-                <th scope="row">Created By</th>
-                <td>{{ job.user|placeholder }}</td>
-              </tr>
-            </table>
-          {% if version|first == "3" %}</div>{% endif %}
+          <table class="table table-hover attr-table">
+            <tr>
+              <th scope="row">Name</th>
+              <td>
+                <a href="{% url 'core:job' pk=job.pk%}">{{ job.name }}</a>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Status</th>
+              <td>{% badge job.get_status_display job.get_status_color %}</td>
+            </tr>
+            <tr>
+              <th scope="row">Created By</th>
+              <td>{{ job.user|placeholder }}</td>
+            </tr>
+          </table>
         </div>
       </div>
       <div class="col col-md-6">
         <div class="card">
           <h5 class="card-header">Time</h5>
-          {% if version|first == "3" %}<div class="card-body">{% endif %}
-            <table class="table table-hover attr-table">
-              <tr>
-                <th scope="row">Created</th>
-                <td>{{ job.created }}</td>
-              </tr>
-              <tr>
-                <th scope="row">Started</th>
-                <td>{{ job.started|placeholder }}</td>
-              </tr>
-              <tr>
-                <th scope="row">Completed</th>
-                <td>{{ job.completed|placeholder }}</td>
-              </tr>
-            </table>
-          {% if version|first == "3" %}</div>{% endif %}
+          <table class="table table-hover attr-table">
+            <tr>
+              <th scope="row">Created</th>
+              <td>{{ job.created }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Started</th>
+              <td>{{ job.started|placeholder }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Completed</th>
+              <td>{{ job.completed|placeholder }}</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>

@@ -3,33 +3,23 @@ from dcim.models import Device, Platform
 from django import forms
 from django.contrib.auth import get_user_model
 from netbox.forms import NetBoxModelBulkEditForm, NetBoxModelFilterSetForm, NetBoxModelForm
-from netbox.settings import VERSION
+from utilities.datetime import local_now
 from utilities.forms.fields import (
     DynamicModelChoiceField,
     DynamicModelMultipleChoiceField,
     TagFilterField,
 )
+from utilities.forms.rendering import FieldSet
 from utilities.forms.widgets import DateTimePicker
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices, ConfigurationRequestStatusChoices
 from netbox_config_diff.constants import ACCEPTABLE_DRIVERS
 from netbox_config_diff.models import ConfigCompliance, ConfigurationRequest, PlatformSetting, Substitute
 
-from .base import CustomForm
-
-if VERSION.startswith("3."):
-    from utilities.utils import local_now
-else:
-    from utilities.datetime import local_now
-    from utilities.forms.rendering import FieldSet
-
 
 class ConfigComplianceFilterForm(NetBoxModelFilterSetForm):
     model = ConfigCompliance
-    if VERSION.startswith("3."):
-        fieldsets = ((None, ("q", "device_id", "status")),)
-    else:
-        fieldsets = (FieldSet("q", "device_id", "status"),)
+    fieldsets = (FieldSet("q", "device_id", "status"),)
     device_id = DynamicModelMultipleChoiceField(
         queryset=Device.objects.all(),
         required=False,
@@ -60,10 +50,7 @@ class PlatformSettingForm(NetBoxModelForm):
 
 class PlatformSettingFilterForm(NetBoxModelFilterSetForm):
     model = PlatformSetting
-    if VERSION.startswith("3."):
-        fieldsets = ((None, ("q", "platform_id", "tag")),)
-    else:
-        fieldsets = (FieldSet("q", "filter_id", "tag"),)
+    fieldsets = (FieldSet("q", "filter_id", "tag"),)
     platform_id = DynamicModelMultipleChoiceField(
         queryset=Platform.objects.all(),
         required=False,
@@ -91,10 +78,7 @@ class PlatformSettingBulkEditForm(NetBoxModelBulkEditForm):
     )
 
     model = PlatformSetting
-    if VERSION.startswith("3."):
-        fieldsets = ((None, ("driver", "command", "description", "exclude_regex")),)
-    else:
-        fieldsets = (FieldSet("driver", "command", "description", "exclude_regex"),)
+    fieldsets = (FieldSet("driver", "command", "description", "exclude_regex"),)
     nullable_fields = ("description", "exclude_regex")
 
 
@@ -145,10 +129,7 @@ class ConfigurationRequestForm(NetBoxModelForm):
 
 class ConfigurationRequestFilterForm(NetBoxModelFilterSetForm):
     model = ConfigurationRequest
-    if VERSION.startswith("3."):
-        fieldsets = ((None, ("q", "created_by_id", "approved_by_id", "scheduled_by_id", "device_id", "status", "tag")),)
-    else:
-        fieldsets = (FieldSet("q", "created_by_id", "approved_by_id", "scheduled_by_id", "device_id", "status", "tag"),)
+    fieldsets = (FieldSet("q", "created_by_id", "approved_by_id", "scheduled_by_id", "device_id", "status", "tag"),)
     created_by_id = DynamicModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
         required=False,
@@ -176,7 +157,7 @@ class ConfigurationRequestFilterForm(NetBoxModelFilterSetForm):
     tag = TagFilterField(model)
 
 
-class ConfigurationRequestScheduleForm(CustomForm):
+class ConfigurationRequestScheduleForm(forms.ModelForm):
     scheduled = forms.DateTimeField(
         widget=DateTimePicker(),
         label="Schedule at",
@@ -214,10 +195,7 @@ class SubstituteForm(NetBoxModelForm):
 class SubstituteFilterForm(NetBoxModelFilterSetForm):
     model = Substitute
     fieldsets = ((None, ("q", "platform_setting_id", "tag")),)
-    if VERSION.startswith("3."):
-        fieldsets = ((None, ("q", "platform_setting_id", "tag")),)
-    else:
-        fieldsets = (FieldSet("q", "platform_setting_id", "tag"),)
+    fieldsets = (FieldSet("q", "platform_setting_id", "tag"),)
     platform_setting_id = DynamicModelMultipleChoiceField(
         queryset=PlatformSetting.objects.all(),
         required=False,

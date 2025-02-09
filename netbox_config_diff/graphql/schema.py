@@ -1,9 +1,13 @@
 import strawberry
 import strawberry_django
 
+from netbox_config_diff.graphql.types import (
+    ConfigComplianceType,
+    ConfigurationRequestType,
+    PlatformSettingType,
+    SubstituteType,
+)
 from netbox_config_diff.models import ConfigCompliance, ConfigurationRequest, PlatformSetting, Substitute
-
-from .types import ConfigComplianceType, ConfigurationRequestType, PlatformSettingType, SubstituteType
 
 
 @strawberry.type

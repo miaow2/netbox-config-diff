@@ -1,8 +1,11 @@
+import logging
 import os
 
 from django.conf import settings
 from django.db import migrations
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 SCRIPT_NAME = "config_diff.py"
 
@@ -10,8 +13,11 @@ SCRIPT_NAME = "config_diff.py"
 def forward_func(apps, schema_editor):
     script_path = Path(__file__).parent.parent.joinpath("scripts", SCRIPT_NAME)
     new_path = os.path.join(settings.SCRIPTS_ROOT, SCRIPT_NAME)
-    with open(script_path, "r") as script_file, open(new_path, "w") as new_file:
-        new_file.write(script_file.read())
+    try:
+        with open(script_path, "r") as script_file, open(new_path, "w") as new_file:
+            new_file.write(script_file.read())
+    except FileNotFoundError:
+        logger.warning(f"Failed to open: {script_path} or {new_path}")
 
 
 def reverse_func(apps, schema_editor):
