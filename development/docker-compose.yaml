@@ -6,7 +6,7 @@ services:
       context: ../
       dockerfile: ./development/Dockerfile
       args:
-        NETBOX_VERSION: ${NETBOX_VERSION-develop}
+        NETBOX_VERSION: ${NETBOX_VERSION-main}
     command: sh -c "python manage.py rqworker"
     depends_on:
       - postgres
