@@ -2,7 +2,7 @@ from netbox.plugins import PluginConfig
 
 __author__ = "Artem Kotik"
 __email__ = "miaow2@yandex.ru"
-__version__ = "2.9.0"
+__version__ = "2.10.0"
 
 
 class ConfigDiffConfig(PluginConfig):
@@ -14,7 +14,7 @@ class ConfigDiffConfig(PluginConfig):
     version = __version__
     base_url = "config-diff"
     required_settings = ["USERNAME", "PASSWORD"]
-    min_version = "4.0.0"
+    min_version = "4.1.0"
     default_settings = {
         "USER_SECRET_ROLE": "Username",
         "PASSWORD_SECRET_ROLE": "Password",
