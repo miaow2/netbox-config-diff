@@ -4,10 +4,11 @@ import traceback
 from typing import Iterable, Iterator
 
 from core.choices import DataSourceStatusChoices
-from core.models import DataFile, DataSource
+from core.models import DataFile, DataSource, ObjectType
 from dcim.choices import DeviceStatusChoices
 from dcim.models import Device, DeviceRole, Site
 from django.db.models import Q
+from extras.models import CustomField
 from extras.scripts import MultiObjectVar, ObjectVar, TextVar
 from jinja2.exceptions import TemplateError
 from netutils.config.compliance import diff_network_config
@@ -19,6 +20,10 @@ from netbox_config_diff.models import ConplianceDeviceDataClass
 from .secrets import SecretsMixin
 from .utils import PLATFORM_MAPPING, CustomChoiceVar, exclude_lines, get_remediation_commands, get_unified_diff
 
+
+
+def _get_device_object_type_id() -> list[int]:
+    return list(ObjectType.objects.filter(app_label='dcim', model='device').values_list("id", flat=True))
 
 class ConfigDiffBase(SecretsMixin):
     site = ObjectVar(
@@ -51,6 +56,15 @@ class ConfigDiffBase(SecretsMixin):
             "status": DataSourceStatusChoices.COMPLETED,
         },
         description="Define synced DataSource, if you want compare configs stored in it wihout connecting to devices",
+    )
+    custom_field = ObjectVar(
+        model=CustomField,
+        required=False,
+        query_params={
+            "type": ["longtext", "text"],
+            "object_type_id": _get_device_object_type_id(),
+        },
+        description="Define custom field which stores actual configuration of devices",
     )
     name_template = TextVar(
         required=False,
@@ -164,6 +178,10 @@ class ConfigDiffBase(SecretsMixin):
                 device=device,
             )
 
+    def get_config_from_customfield(self, devices: list[ConplianceDeviceDataClass]) -> None:
+        for device in devices:
+            device.actual_config = device.device.cf[self.data["custom_field"].name]
+
     def get_config_from_datasource(self, devices: list[ConplianceDeviceDataClass]) -> None:
         for device in devices:
             if self.data["name_template"]:
@@ -185,6 +203,8 @@ class ConfigDiffBase(SecretsMixin):
     def get_actual_configs(self, devices: list[ConplianceDeviceDataClass]) -> None:
         if self.data["data_source"]:
             self.get_config_from_datasource(devices)
+        elif self.data["custom_field"]:
+            self.get_config_from_customfield(devices)
         else:
             loop = asyncio.get_event_loop()
             loop.run_until_complete(asyncio.gather(*(d.get_actual_config() for d in devices)))

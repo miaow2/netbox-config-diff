@@ -56,6 +56,8 @@ You can define Jinja2 template with logic to use virtual chassis name if device 
 {% if object.virtual_chassis %}{{ object.virtual_chassis.name }}-config{% else %}{{ object.name }}{% endif %}
 ```
 
+Also you can define custom field which stores actual configuration of devices.
+
 ![Screenshot of the script](media/screenshots/script.png)
 
 ## Results
