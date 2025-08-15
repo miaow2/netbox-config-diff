@@ -22,8 +22,8 @@ from .utils import PLATFORM_MAPPING, CustomChoiceVar, exclude_lines, get_remedia
 
 
 
-def _get_device_object_type_id() -> list[int]:
-    return list(ObjectType.objects.filter(app_label='dcim', model='device').values_list("id", flat=True))
+# def _get_device_object_type_id() -> list[int]:
+#     return list(ObjectType.objects.filter(app_label='dcim', model='device').values_list("id", flat=True))
 
 class ConfigDiffBase(SecretsMixin):
     site = ObjectVar(
@@ -62,7 +62,7 @@ class ConfigDiffBase(SecretsMixin):
         required=False,
         query_params={
             "type": ["longtext", "text"],
-            "object_type_id": _get_device_object_type_id(),
+            "object_type_id": None,
         },
         description="Define custom field which stores actual configuration of devices",
     )
@@ -71,6 +71,13 @@ class ConfigDiffBase(SecretsMixin):
         description="Jinja2 template code for the device name in Data source. "
         "Reference the object as <code>{{ object }}</code>.",
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.custom_field.query_params["object_type_id"] = self._get_device_object_type_id()
+
+    def _get_device_object_type_id(self) -> list[int]:
+        return list(ObjectType.objects.filter(app_label='dcim', model='device').values_list("id", flat=True))
 
     def run_script(self, data: dict) -> None:
         devices = self.validate_data(data)
