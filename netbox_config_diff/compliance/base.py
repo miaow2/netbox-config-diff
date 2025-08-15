@@ -21,10 +21,6 @@ from .secrets import SecretsMixin
 from .utils import PLATFORM_MAPPING, CustomChoiceVar, exclude_lines, get_remediation_commands, get_unified_diff
 
 
-
-# def _get_device_object_type_id() -> list[int]:
-#     return list(ObjectType.objects.filter(app_label='dcim', model='device').values_list("id", flat=True))
-
 class ConfigDiffBase(SecretsMixin):
     site = ObjectVar(
         model=Site,
@@ -77,7 +73,7 @@ class ConfigDiffBase(SecretsMixin):
         self.custom_field.query_params["object_type_id"] = self._get_device_object_type_id()
 
     def _get_device_object_type_id(self) -> list[int]:
-        return list(ObjectType.objects.filter(app_label='dcim', model='device').values_list("id", flat=True))
+        return list(ObjectType.objects.filter(app_label="dcim", model="device").values_list("id", flat=True))
 
     def run_script(self, data: dict) -> None:
         devices = self.validate_data(data)
