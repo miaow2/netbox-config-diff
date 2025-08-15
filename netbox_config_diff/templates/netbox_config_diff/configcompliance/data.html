@@ -1,5 +1,6 @@
 {% extends base_template %}
 {% load static %}
+{% load string_filters %}
 
 {% block content %}
   <div class="row mb-3">
@@ -73,7 +74,7 @@
           stickyFileHeaders: false,
           drawFileList: false,
       };
-      const jsonDiff = `{{ instance.diff|escapejs|safe }}`;
+      const jsonDiff = `{{ instance.diff|escapejs|safe|replace:'${,\${' }}`;
       var targetElement = document.getElementById('diffElement');
       var diff2htmlUi = new Diff2HtmlUI(targetElement, jsonDiff, configuration);
       diff2htmlUi.draw();
