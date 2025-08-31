@@ -1,14 +1,16 @@
 import asyncio
+import inspect
 import re
 import traceback
 from typing import Iterable, Iterator
 
 from core.choices import DataSourceStatusChoices
-from core.models import DataFile, DataSource
+from core.models import DataFile, DataSource, ObjectType
 from dcim.choices import DeviceStatusChoices
 from dcim.models import Device, DeviceRole, Site
 from django.db.models import Q
-from extras.scripts import MultiObjectVar, ObjectVar, TextVar
+from extras.models import CustomField
+from extras.scripts import MultiObjectVar, ObjectVar, ScriptVariable, TextVar
 from jinja2.exceptions import TemplateError
 from netutils.config.compliance import diff_network_config
 from utilities.exceptions import AbortScript
@@ -52,11 +54,49 @@ class ConfigDiffBase(SecretsMixin):
         },
         description="Define synced DataSource, if you want compare configs stored in it wihout connecting to devices",
     )
+    custom_field = ObjectVar(
+        model=CustomField,
+        required=False,
+        query_params={
+            "type": ["longtext", "text"],
+            "object_type_id": None,
+        },
+        description="Define custom field which stores actual configuration of devices",
+    )
     name_template = TextVar(
         required=False,
         description="Jinja2 template code for the device name in Data source. "
         "Reference the object as <code>{{ object }}</code>.",
     )
+
+    @classmethod
+    def _get_device_object_type_id(cls) -> list[int]:
+        return list(ObjectType.objects.filter(app_label="dcim", model="device").values_list("id", flat=True))
+
+    @classmethod
+    def _get_vars(cls):
+        vars = {}
+        device_id = cls._get_device_object_type_id()
+
+        # Iterate all base classes looking for ScriptVariables
+        for base_class in inspect.getmro(cls):
+            # When object is reached there's no reason to continue
+            if base_class is object:
+                break
+
+            for name, attr in base_class.__dict__.items():
+                if name not in vars and issubclass(attr.__class__, ScriptVariable):
+                    if name == "custom_field":
+                        attr.field_attrs["query_params"]["object_type_id"] = device_id
+                    vars[name] = attr
+
+        # Order variables according to field_order
+        if not cls.field_order:
+            return vars
+        ordered_vars = {field: vars.pop(field) for field in cls.field_order if field in vars}
+        ordered_vars.update(vars)
+
+        return ordered_vars
 
     def run_script(self, data: dict) -> None:
         devices = self.validate_data(data)
@@ -164,6 +204,10 @@ class ConfigDiffBase(SecretsMixin):
                 device=device,
             )
 
+    def get_config_from_customfield(self, devices: list[ConplianceDeviceDataClass]) -> None:
+        for device in devices:
+            device.actual_config = device.device.cf[self.data["custom_field"].name]
+
     def get_config_from_datasource(self, devices: list[ConplianceDeviceDataClass]) -> None:
         for device in devices:
             if self.data["name_template"]:
@@ -185,6 +229,8 @@ class ConfigDiffBase(SecretsMixin):
     def get_actual_configs(self, devices: list[ConplianceDeviceDataClass]) -> None:
         if self.data["data_source"]:
             self.get_config_from_datasource(devices)
+        elif self.data["custom_field"]:
+            self.get_config_from_customfield(devices)
         else:
             loop = asyncio.get_event_loop()
             loop.run_until_complete(asyncio.gather(*(d.get_actual_config() for d in devices)))
