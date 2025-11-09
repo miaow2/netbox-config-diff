@@ -2,7 +2,7 @@ from netbox.plugins import PluginConfig
 
 __author__ = "Artem Kotik"
 __email__ = "miaow2@yandex.ru"
-__version__ = "2.11.0"
+__version__ = "2.12.0"
 
 
 class ConfigDiffConfig(PluginConfig):
@@ -19,6 +19,7 @@ class ConfigDiffConfig(PluginConfig):
         "USER_SECRET_ROLE": "Username",
         "PASSWORD_SECRET_ROLE": "Password",
         "SECOND_AUTH_SECRET_ROLE": "Second Auth",
+        "PATH_TO_SSH_CONFIG_FILE": "",
     }
 
 

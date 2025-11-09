@@ -87,6 +87,7 @@ PLUGINS_CONFIG = {
         "USERNAME": "foo",
         "PASSWORD": "bar",
         "AUTH_SECONDARY": "foobar",  # define here password for accessing Privileged EXEC mode, this variable is optional
+        "PATH_TO_SSH_CONFIG_FILE": "/home/.ssh/config",  # define here PATH to SSH config file, it will be used for device connections, this variable is optional
     },
 }
 ```

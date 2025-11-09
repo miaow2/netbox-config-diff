@@ -2,7 +2,7 @@ import traceback
 from dataclasses import dataclass
 
 from dcim.models import Device
-from scrapli import AsyncScrapli
+from netbox.plugins import get_plugin_config
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices
 
@@ -35,7 +35,7 @@ class BaseDeviceDataClass:
         return self.name
 
     def to_scrapli(self) -> dict:
-        return {
+        sccrapli_dict = {
             "host": self.mgmt_ip,
             "auth_username": self.username,
             "auth_password": self.password,
@@ -81,6 +81,12 @@ class BaseDeviceDataClass:
                 },
             },
         }
+
+        ssh_config = get_plugin_config("netbox_config_diff", "PATH_TO_SSH_CONFIG_FILE")
+        if ssh_config:
+            sccrapli_dict["ssh_config_file"] = ssh_config
+
+        return sccrapli_dict
 
     def get_status(self) -> str:
         if self.error:
