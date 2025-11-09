@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from dcim.models import Device
 from netbox.plugins import get_plugin_config
+from scrapli import AsyncScrapli
 
 from netbox_config_diff.choices import ConfigComplianceStatusChoices
 
