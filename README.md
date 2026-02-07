@@ -1,4 +1,4 @@
-[![NetBox version](https://img.shields.io/badge/NetBox-4.1|4.2|4.3|4.4-blue.svg)](https://github.com/netbox-community/netbox)
+[![NetBox version](https://img.shields.io/badge/NetBox-4.4|4.5-blue.svg)](https://github.com/netbox-community/netbox)
 [![Supported Versions](https://img.shields.io/pypi/pyversions/netbox-config-diff.svg)](https://pypi.org/project/netbox-config-diff/)
 [![PyPI version](https://badge.fury.io/py/netbox-config-diff.svg)](https://badge.fury.io/py/netbox-config-diff)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
@@ -44,16 +44,17 @@ This is possible thanks to the scrapli_cfg. Read [Scrapli](https://github.com/sc
 
 ## Compatibility
 
-| NetBox Version | Plugin Version   |
-|----------------|------------------|
-|  3.5           | =>0.1.0, <=2.5.0 |
-|  3.6           | =>0.1.0, <=2.6.0 |
-|  3.7           | =>0.1.0, <=2.8.0 |
-|  4.0           | =>2.6.0, <=2.9.0 |
-|  4.1           |      =>2.7.0     |
-|  4.2           |      =>2.9.0     |
-|  4.3           |      =>2.10.0    |
-|  4.4           |      =>2.11.0    |
+| NetBox Version | Plugin Version     |
+|----------------|--------------------|
+|  3.5           | =>0.1.0, <=2.5.0   |
+|  3.6           | =>0.1.0, <=2.6.0   |
+|  3.7           | =>0.1.0, <=2.8.0   |
+|  4.0           | =>2.6.0, <=2.9.0   |
+|  4.1           | =>2.7.0, <=2.12.0  |
+|  4.2           | =>2.9.0, <=2.12.0  |
+|  4.3           | =>2.10.0, <=2.12.0 |
+|  4.4           |      =>2.11.0      |
+|  4.5           |      =>2.13.0      |
 
 <!--install-start-->
 ## Installing

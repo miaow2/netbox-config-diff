@@ -1,6 +1,7 @@
 from dcim.models import Device
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
+from netbox.object_actions import AddObject, BulkDelete, BulkEdit, BulkExport
 from netbox.views import generic
 from utilities.views import ViewTab, register_model_view
 
@@ -114,11 +115,13 @@ class ConfigComplianceDeviceView(generic.ObjectView):
         )
 
 
+@register_model_view(ConfigCompliance, "list", path="", detail=False)
 class ConfigComplianceListView(generic.ObjectListView):
     queryset = ConfigCompliance.objects.prefetch_related("device")
     filterset = ConfigComplianceFilterSet
     filterset_form = ConfigComplianceFilterForm
     table = ConfigComplianceTable
+    actions = (BulkDelete, BulkExport)
 
 
 @register_model_view(ConfigCompliance, "delete")
@@ -126,6 +129,7 @@ class ConfigComplianceDeleteView(BaseObjectDeleteView):
     queryset = ConfigCompliance.objects.all()
 
 
+@register_model_view(ConfigCompliance, "bulk_delete", path="delete", detail=False)
 class ConfigComplianceBulkDeleteView(generic.BulkDeleteView):
     queryset = ConfigCompliance.objects.all()
     filterset = ConfigComplianceFilterSet
@@ -137,13 +141,16 @@ class PlatformSettingView(generic.ObjectView):
     queryset = PlatformSetting.objects.all()
 
 
+@register_model_view(PlatformSetting, "list", path="", detail=False)
 class PlatformSettingListView(generic.ObjectListView):
     queryset = PlatformSetting.objects.prefetch_related("platform", "tags")
     filterset = PlatformSettingFilterSet
     filterset_form = PlatformSettingFilterForm
     table = PlatformSettingTable
+    actions = (AddObject, BulkDelete, BulkEdit, BulkExport)
 
 
+@register_model_view(PlatformSetting, "add", detail=False)
 @register_model_view(PlatformSetting, "edit")
 class PlatformSettingEditView(BaseObjectEditView):
     queryset = PlatformSetting.objects.all()
@@ -155,6 +162,7 @@ class PlatformSettingDeleteView(BaseObjectDeleteView):
     queryset = PlatformSetting.objects.all()
 
 
+@register_model_view(PlatformSetting, "bulk_edit", path="edit", detail=False)
 class PlatformSettingBulkEditView(generic.BulkEditView):
     queryset = PlatformSetting.objects.all()
     filterset = PlatformSettingFilterSet
@@ -162,6 +170,7 @@ class PlatformSettingBulkEditView(generic.BulkEditView):
     form = PlatformSettingBulkEditForm
 
 
+@register_model_view(PlatformSetting, "bulk_delete", path="delete", detail=False)
 class PlatformSettingBulkDeleteView(generic.BulkDeleteView):
     queryset = PlatformSetting.objects.all()
     filterset = PlatformSettingFilterSet
