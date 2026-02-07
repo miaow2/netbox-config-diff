@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from netbox.constants import RQ_QUEUE_DEFAULT
+from netbox.object_actions import AddObject, BulkExport
 from netbox.views import generic
 from netbox.views.generic.base import BaseObjectView
 from rq.exceptions import InvalidJobOperation
@@ -47,6 +48,7 @@ class ConfigurationRequestView(generic.ObjectView):
         }
 
 
+@register_model_view(ConfigurationRequest, "list", path="", detail=False)
 class ConfigurationRequestListView(generic.ObjectListView):
     queryset = ConfigurationRequest.objects.prefetch_related(
         "devices", "created_by", "approved_by", "scheduled_by", "tags"
@@ -54,8 +56,10 @@ class ConfigurationRequestListView(generic.ObjectListView):
     filterset = ConfigurationRequestFilterSet
     filterset_form = ConfigurationRequestFilterForm
     table = ConfigurationRequestTable
+    actions = (AddObject, BulkExport)
 
 
+@register_model_view(ConfigurationRequest, "add", detail=False)
 @register_model_view(ConfigurationRequest, "edit")
 class ConfigurationRequestEditView(BaseObjectEditView):
     queryset = ConfigurationRequest.objects.all()
@@ -306,6 +310,7 @@ class JobListView(generic.ObjectListView):
     filterset = JobFilterSet
     filterset_form = JobFilterForm
     table = JobTable
+    actions = (BulkExport,)
 
 
 @register_model_view(Substitute)
@@ -313,13 +318,16 @@ class SubstituteView(generic.ObjectView):
     queryset = Substitute.objects.all()
 
 
+@register_model_view(Substitute, "list", path="", detail=False)
 class SubstituteListView(generic.ObjectListView):
     queryset = Substitute.objects.prefetch_related("platform_setting", "tags")
     filterset = SubstituteFilterSet
     filterset_form = SubstituteFilterForm
     table = SubstituteTable
+    actions = (AddObject, BulkExport)
 
 
+@register_model_view(Substitute, "add", detail=False)
 @register_model_view(Substitute, "edit")
 class SubstituteEditView(BaseObjectEditView):
     queryset = Substitute.objects.all()

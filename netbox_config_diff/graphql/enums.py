@@ -1,11 +1,11 @@
-# import strawberry
+import strawberry
 
-# from netbox_config_diff.choices import ConfigComplianceStatusChoices, ConfigurationRequestStatusChoices
+from netbox_config_diff.choices import ConfigComplianceStatusChoices, ConfigurationRequestStatusChoices
 
-# __all__ = (
-#     "ConfigComplianceStatusEnum",
-#     "ConfigurationRequestStatusEnum",
-# )
+__all__ = (
+    "ConfigComplianceStatusEnum",
+    "ConfigurationRequestStatusEnum",
+)
 
-# ConfigComplianceStatusEnum = strawberry.enum(ConfigComplianceStatusChoices.as_enum())
-# ConfigurationRequestStatusEnum = strawberry.enum(ConfigurationRequestStatusChoices.as_enum())
+ConfigComplianceStatusEnum = strawberry.enum(ConfigComplianceStatusChoices.as_enum())
+ConfigurationRequestStatusEnum = strawberry.enum(ConfigurationRequestStatusChoices.as_enum())
