@@ -1,0 +1,88 @@
+# TiMOS-B-24.7.R1 both/x86_64 Nokia 7750 SR
+# Generated WED JAN 15 10:30:00 2025 UTC
+configure {
+    system {
+        name "pe-router-01"
+        dns {
+            address-pref ipv4-only
+        }
+        management-interface {
+            yang-modules {
+                nmda {
+                    nmda-support true
+                }
+            }
+        }
+    }
+    router "Base" {
+        autonomous-system 65000
+        bgp {
+            admin-state enable
+            connect-retry 90
+            group "external" {
+                peer-as 65001
+                description "Transit Provider B"
+                local-address 10.0.0.1
+            }
+            neighbor "192.168.1.1" {
+                group "external"
+                description "PE to Transit-B"
+            }
+            neighbor "192.168.2.1" {
+                group "external"
+                description "PE to Transit-B backup"
+            }
+        }
+        interface "system" {
+            ipv4 {
+                primary {
+                    address 10.255.0.1
+                    prefix-length 32
+                }
+            }
+        }
+        interface "to-core-2" {
+            admin-state enable
+            port 1/1/2
+            ipv4 {
+                primary {
+                    address 10.0.0.5
+                    prefix-length 30
+                }
+            }
+        }
+        ospf 0 {
+            area 0.0.0.0 {
+                interface "system" {
+                    passive true
+                }
+                interface "to-core-2" {
+                    interface-type point-to-point
+                }
+            }
+        }
+    }
+    service {
+        vprn "customer-a" {
+            service-id 100
+            customer "1"
+            autonomous-system 65100
+            interface "to-ce-1" {
+                sap 1/1/3:100 {
+                    ingress {
+                        qos 20
+                    }
+                    egress {
+                        qos 20
+                    }
+                }
+                ipv4 {
+                    primary {
+                        address 172.16.0.1
+                        prefix-length 30
+                    }
+                }
+            }
+        }
+    }
+}

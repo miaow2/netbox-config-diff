@@ -26,6 +26,7 @@ REMEDIATION_MAPPING = {
     "cisco_iosxr": "iosxr",
     "cisco_nxos": "nxos",
     "juniper_junos": "junos",
+    "nokia_sros": "sros",
     "vyos_vyos": "vyos",
 }
 
@@ -56,6 +57,11 @@ def exclude_lines(text: str, regexs: list) -> str:
 
 
 def get_remediation_commands(name: str, platform: str, actual_config: str, rendered_config: str) -> str:
+    if platform == "nokia_sros":
+        from netbox_config_diff.compliance.sros import get_sros_remediation
+
+        return get_sros_remediation(name, actual_config, rendered_config)
+
     host = Host(hostname=name, os=REMEDIATION_MAPPING.get(platform, "ios"))
     host.load_running_config(config_text=actual_config)
     host.load_generated_config(config_text=rendered_config)

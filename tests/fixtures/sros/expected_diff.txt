@@ -1,0 +1,63 @@
+--- 	pe-router-01
++++ 	pe-router-01
+@@ -18,15 +18,19 @@
+         autonomous-system 65000
+         bgp {
+             admin-state enable
+-            connect-retry 120
++            connect-retry 90
+             group "external" {
+                 peer-as 65001
+-                description "Transit Provider A"
++                description "Transit Provider B"
+                 local-address 10.0.0.1
+             }
+             neighbor "192.168.1.1" {
+                 group "external"
+-                description "PE to Transit-A"
++                description "PE to Transit-B"
++            }
++            neighbor "192.168.2.1" {
++                group "external"
++                description "PE to Transit-B backup"
+             }
+         }
+         interface "system" {
+@@ -37,12 +41,12 @@
+                 }
+             }
+         }
+-        interface "to-core-1" {
++        interface "to-core-2" {
+             admin-state enable
+-            port 1/1/1
++            port 1/1/2
+             ipv4 {
+                 primary {
+-                    address 10.0.0.1
++                    address 10.0.0.5
+                     prefix-length 30
+                 }
+             }
+@@ -52,7 +56,7 @@
+                 interface "system" {
+                     passive true
+                 }
+-                interface "to-core-1" {
++                interface "to-core-2" {
+                     interface-type point-to-point
+                 }
+             }
+@@ -66,10 +70,10 @@
+             interface "to-ce-1" {
+                 sap 1/1/3:100 {
+                     ingress {
+-                        qos 10
++                        qos 20
+                     }
+                     egress {
+-                        qos 10
++                        qos 20
+                     }
+                 }
+                 ipv4 {

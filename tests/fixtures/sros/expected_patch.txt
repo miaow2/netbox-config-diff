@@ -1,0 +1,55 @@
+configure {
+    router "Base" {
+        bgp {
+            connect-retry 90
+            group "external" {
+                description "Transit Provider B"
+                delete description "Transit Provider A"
+            }
+            neighbor "192.168.1.1" {
+                description "PE to Transit-B"
+                delete description "PE to Transit-A"
+            }
+            neighbor "192.168.2.1" {
+                group "external"
+                description "PE to Transit-B backup"
+            }
+            delete connect-retry 120
+        }
+        interface "to-core-2" {
+            admin-state enable
+            port 1/1/2
+            ipv4 {
+                primary {
+                    address 10.0.0.5
+                    prefix-length 30
+                }
+            }
+        }
+        ospf 0 {
+            area 0.0.0.0 {
+                interface "to-core-2" {
+                    interface-type point-to-point
+                }
+                delete interface "to-core-1"
+            }
+        }
+        delete interface "to-core-1"
+    }
+    service {
+        vprn "customer-a" {
+            interface "to-ce-1" {
+                sap 1/1/3:100 {
+                    ingress {
+                        qos 20
+                        delete qos 10
+                    }
+                    egress {
+                        qos 20
+                        delete qos 10
+                    }
+                }
+            }
+        }
+    }
+}
