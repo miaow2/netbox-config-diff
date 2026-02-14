@@ -3,12 +3,11 @@ from typing import TYPE_CHECKING, Annotated
 
 import strawberry
 import strawberry_django
+from netbox.graphql.filters import ChangeLoggedModelFilter, NetBoxModelFilter, PrimaryModelFilter
 from strawberry.scalars import ID
 from strawberry_django import DatetimeFilterLookup
 
 from netbox_config_diff.models import ConfigCompliance, ConfigurationRequest, PlatformSetting, Substitute
-
-from .base_filters import ChangeLoggedGraphQLFilter, NetBoxGraphQLFilter, PrimaryNetBoxGraphQLFilter
 
 if TYPE_CHECKING:
     from dcim.graphql.filters import DeviceFilter, PlatformFilter
@@ -18,7 +17,7 @@ if TYPE_CHECKING:
 
 
 @strawberry_django.filter_type(ConfigCompliance, lookups=True)
-class ConfigComplianceFilter(ChangeLoggedGraphQLFilter):
+class ConfigComplianceFilter(ChangeLoggedModelFilter):
     device: Annotated["DeviceFilter", strawberry.lazy("dcim.graphql.filters")] | None = strawberry_django.filter_field()
     device_id: ID | None = strawberry_django.filter_field()
     status: Annotated["ConfigComplianceStatusEnum", strawberry.lazy("netbox_config_diff.graphql.enums")] | None = (
@@ -34,7 +33,7 @@ class ConfigComplianceFilter(ChangeLoggedGraphQLFilter):
 
 
 @strawberry_django.filter(ConfigurationRequest, lookups=True)
-class ConfigurationRequestFilter(PrimaryNetBoxGraphQLFilter):
+class ConfigurationRequestFilter(PrimaryModelFilter):
     description: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
     status: Annotated["ConfigurationRequestStatusEnum", strawberry.lazy("netbox_config_diff.graphql.enums")] | None = (
         strawberry_django.filter_field()
@@ -60,7 +59,7 @@ class ConfigurationRequestFilter(PrimaryNetBoxGraphQLFilter):
 
 
 @strawberry_django.filter(PlatformSetting, lookups=True)
-class PlatformSettingFilter(NetBoxGraphQLFilter):
+class PlatformSettingFilter(NetBoxModelFilter):
     platform: Annotated["PlatformFilter", strawberry.lazy("dcim.graphql.filters")] | None = (
         strawberry_django.filter_field()
     )
@@ -72,7 +71,7 @@ class PlatformSettingFilter(NetBoxGraphQLFilter):
 
 
 @strawberry_django.filter(Substitute, lookups=True)
-class SubstituteFilter(NetBoxGraphQLFilter):
+class SubstituteFilter(NetBoxModelFilter):
     platform_setting: (
         Annotated["PlatformSettingFilter", strawberry.lazy("netbox_config_diff.graphql.filters")] | None
     ) = strawberry_django.filter_field()
