@@ -2,7 +2,7 @@ from netbox.plugins import PluginConfig
 
 __author__ = "Artem Kotik"
 __email__ = "miaow2@yandex.ru"
-__version__ = "2.13.0"
+__version__ = "2.13.1"
 
 
 class ConfigDiffConfig(PluginConfig):
