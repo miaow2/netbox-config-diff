@@ -5,6 +5,7 @@ import pytest
 from django.db import connection
 from django.test.utils import setup_databases
 from faker import Faker
+from rest_framework.test import APIClient
 from typing_extensions import Unpack
 
 from netbox_config_diff.compliance.base import ConfigDiffBase
@@ -125,3 +126,16 @@ def devicedataclass_factory() -> "DeviceDataClassDataFactory":
 def devicedataclass_data(devicedataclass_factory: "DeviceDataClassDataFactory") -> ConplianceDeviceDataClass:
     data = devicedataclass_factory()
     return ConplianceDeviceDataClass(**data)
+
+
+@pytest.fixture
+def api_client():
+    """Basic API client fixture."""
+    return APIClient()
+
+
+@pytest.fixture
+def authenticated_api_client(api_client, admin_user):
+    """Authenticated API client fixture using admin user."""
+    api_client.force_authenticate(user=admin_user)
+    return api_client
