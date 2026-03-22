@@ -94,6 +94,19 @@ class ConfigComplianceFactory(DjangoModelFactory):
         model = ConfigCompliance
 
 
+class ConfigurationRequestFactory(DjangoModelFactory):
+    class Meta:
+        model = "netbox_config_diff.ConfigurationRequest"
+
+    @factory.post_generation
+    def devices(obj, create, extracted, **kwargs):
+        if not create:
+            return
+        if extracted:
+            for device in extracted:
+                obj.devices.add(device)
+
+
 class DataSourceFactory(DjangoModelFactory):
     name = factory.Sequence(lambda n: f"datasource-{n}")
     source_url = factory.Sequence(lambda n: f"/tmp/{n}")

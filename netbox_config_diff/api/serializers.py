@@ -101,21 +101,24 @@ class ConfigurationRequestSerializer(NetBoxModelSerializer):
 
     def validate(self, data):
         if data.get("devices"):
-            if devices := data["devices"].filter(platform__platform_setting__isnull=True):
+            if devices := Device.objects.filter(id__in=[d.id for d in data["devices"]]).filter(
+                platform__platform_setting__isnull=True
+            ):
                 platforms = {d.platform.name for d in devices}
                 raise ValidationError({"devices": f"Assign PlatformSetting for platform(s): {', '.join(platforms)}"})
 
-            if drivers := {
-                device.platform.platform_setting.driver
-                for device in data["devices"]
-                if device.platform.platform_setting.driver not in ACCEPTABLE_DRIVERS
-            }:
-                raise ValidationError({"devices": f"Driver(s) not supported: {', '.join(drivers)}"})
+            unsupported_drivers = {
+                d.platform.platform_setting.driver
+                for d in data["devices"]
+                if d.platform.platform_setting.driver not in ACCEPTABLE_DRIVERS
+            }
+            if unsupported_drivers:
+                raise ValidationError({"devices": f"Driver(s) not supported: {', '.join(unsupported_drivers)}"})
 
-            if devices := list(filter(lambda x: x.get_config_template() is None, data["devices"])):
-                raise ValidationError(
-                    {"devices": f"Define config template for device(s): {', '.join(d.name for d in devices)}"}
-                )
+            devices_without_template = [d for d in data["devices"] if d.get_config_template() is None]
+            if devices_without_template:
+                names = ", ".join(d.name for d in devices_without_template)
+                raise ValidationError({"devices": f"Define config template for device(s): {names}"})
 
         return super().validate(data)
 
