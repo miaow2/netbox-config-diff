@@ -23,18 +23,18 @@ class ConfigComplianceFilter(ChangeLoggedModelFilter):
     status: Annotated["ConfigComplianceStatusEnum", strawberry.lazy("netbox_config_diff.graphql.enums")] | None = (
         strawberry_django.filter_field()
     )
-    diff: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
-    error: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
-    actual_config: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
-    rendered_config: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
-    missing: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
-    extra: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
-    patch: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
+    diff: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
+    error: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
+    actual_config: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
+    rendered_config: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
+    missing: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
+    extra: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
+    patch: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
 
 
 @strawberry_django.filter(ConfigurationRequest, lookups=True)
 class ConfigurationRequestFilter(PrimaryModelFilter):
-    description: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
+    description: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
     status: Annotated["ConfigurationRequestStatusEnum", strawberry.lazy("netbox_config_diff.graphql.enums")] | None = (
         strawberry_django.filter_field()
     )
@@ -64,10 +64,10 @@ class PlatformSettingFilter(NetBoxModelFilter):
         strawberry_django.filter_field()
     )
     platform_id: ID | None = strawberry_django.filter_field()
-    driver: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
-    description: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
-    command: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
-    exclude_regex: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
+    driver: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
+    description: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
+    command: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
+    exclude_regex: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
 
 
 @strawberry_django.filter(Substitute, lookups=True)
@@ -76,6 +76,6 @@ class SubstituteFilter(NetBoxModelFilter):
         Annotated["PlatformSettingFilter", strawberry.lazy("netbox_config_diff.graphql.filters")] | None
     ) = strawberry_django.filter_field()
     platform_setting_id: ID | None = strawberry_django.filter_field()
-    name: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
-    description: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
-    regexp: strawberry_django.FilterLookup[str] | None = strawberry_django.filter_field()
+    name: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
+    description: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
+    regexp: strawberry_django.StrFilterLookup | None = strawberry_django.filter_field()
