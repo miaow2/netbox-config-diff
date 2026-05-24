@@ -21,6 +21,7 @@ class ConfigDiffConfig(PluginConfig):
         "PASSWORD_SECRET_ROLE": "Password",
         "SECOND_AUTH_SECRET_ROLE": "Second Auth",
         "PATH_TO_SSH_CONFIG_FILE": "",
+        "SECRETS_PRECEDENCE": ["device", "role", "platform"],
     }
 
 
