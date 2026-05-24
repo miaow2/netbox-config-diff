@@ -1,4 +1,5 @@
 import base64
+from operator import attrgetter
 from typing import TYPE_CHECKING
 
 from dcim.models import Device
@@ -49,28 +50,42 @@ class SecretsMixin:
             return None
         return secret.plaintext
 
+    def get_secret_value(self, objects: tuple[object | None, ...], role_name: str) -> str | None:
+        for obj in objects:
+            if not obj:
+                continue
+
+            secrets = getattr(obj, "secrets", None)
+            if not secrets:
+                continue
+
+            if secret := secrets.filter(role__name=role_name).first():
+                if value := self.get_secret(secret):
+                    return value
+
+        return None
+
     def get_credentials(self, device: Device) -> tuple[str, str, str, str]:
-        if not self.netbox_secrets_installed:
+        if not self.netbox_secrets_installed or not self.secrets_precedence:
             return self.username, self.password, self.auth_secondary, self.default_desired_privilege_level
 
-        if secret := device.secrets.filter(role__name=self.user_role).first():
-            username = value if (value := self.get_secret(secret)) else self.username
-        else:
-            username = self.username
-        if secret := device.secrets.filter(role__name=self.password_role).first():
-            password = value if (value := self.get_secret(secret)) else self.password
-        else:
-            password = self.password
-        if secret := device.secrets.filter(role__name=self.auth_secondary_role).first():
-            auth_secondary = value if (value := self.get_secret(secret)) else self.auth_secondary
-        else:
-            auth_secondary = self.auth_secondary
-        if secret := device.secrets.filter(role__name=self.default_desired_privilege_level_role).first():
-            default_desired_privilege_level = (
-                value if (value := self.get_secret(secret)) else self.default_desired_privilege_level
-            )
-        else:
-            default_desired_privilege_level = self.default_desired_privilege_level
+        secret_objects: list[object] = []
+        for entry in self.secrets_precedence:
+            if entry == "device":
+                secret_objects.append(device)
+                continue
+            try:
+                secret_objects.append(attrgetter(entry)(device))
+            except AttributeError:
+                    pass
+
+        username = self.get_secret_value(secret_objects, self.user_role) or self.username
+        password = self.get_secret_value(secret_objects, self.password_role) or self.password
+        auth_secondary = self.get_secret_value(secret_objects, self.auth_secondary_role) or self.auth_secondary
+        default_desired_privilege_level = (
+            self.get_secret_value(secret_objects, self.default_desired_privilege_level_role)
+            or self.default_desired_privilege_level
+        )
 
         return username, password, auth_secondary, default_desired_privilege_level
 
@@ -83,6 +98,7 @@ class SecretsMixin:
             self.default_desired_privilege_level_role = get_plugin_config(
                 "netbox_config_diff", "DEFAULT_DESIRED_PRIVILEGE_LEVEL_ROLE"
             )
+            self.secrets_precedence = get_plugin_config("netbox_config_diff", "SECRETS_PRECEDENCE")
             self.netbox_secrets_installed = True
 
         self.username = get_plugin_config("netbox_config_diff", "USERNAME")
