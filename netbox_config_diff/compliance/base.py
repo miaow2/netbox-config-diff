@@ -232,8 +232,10 @@ class ConfigDiffBase(SecretsMixin):
         elif self.data["custom_field"]:
             self.get_config_from_customfield(devices)
         else:
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(asyncio.gather(*(d.get_actual_config() for d in devices)))
+            asyncio.run(self._get_actual_configs(devices))
+
+    async def _get_actual_configs(self, devices: list[ConplianceDeviceDataClass]) -> None:
+        await asyncio.gather(*(d.get_actual_config() for d in devices))
 
     def get_diff(self, devices: list[ConplianceDeviceDataClass]) -> None:
         for device in devices:
