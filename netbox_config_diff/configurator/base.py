@@ -104,12 +104,7 @@ class Configurator(SecretsMixin):
             await asyncio.gather(*(conn.__aexit__(None, None, None) for conn in connections))
 
     def collect_diffs(self) -> None:
-        try:
-            loop = asyncio.get_event_loop()
-        except RuntimeError:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-        loop.run_until_complete(self._collect_diffs())
+        asyncio.run(self._collect_diffs())
 
     @sync_to_async
     def update_diffs(self) -> None:
@@ -156,8 +151,7 @@ class Configurator(SecretsMixin):
             self.logger.add_diff(device.name, error=error)
 
     def push_configs(self):
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self._push_configs())
+        asyncio.run(self._push_configs())
 
     async def _push_configs(self) -> None:
         async with self.connection():

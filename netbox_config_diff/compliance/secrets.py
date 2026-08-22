@@ -77,7 +77,7 @@ class SecretsMixin:
             try:
                 secret_objects.append(attrgetter(entry)(device))
             except AttributeError:
-                    pass
+                pass
 
         username = self.get_secret_value(secret_objects, self.user_role) or self.username
         password = self.get_secret_value(secret_objects, self.password_role) or self.password
