@@ -108,3 +108,6 @@ ENV/
 
 # ruff
 .ruff_cache
+
+# local issue tracker (see docs/agents/issue-tracker.md)
+.scratch/
