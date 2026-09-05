@@ -46,7 +46,6 @@ class ScriptDataFactory(Protocol):
 
 
 @pytest.fixture()
-@pytest.mark.django_db
 def mock_config_diff() -> ConfigDiffBase:
     mock_object = ConfigDiffBase
     mock_object.log_warning = Mock()

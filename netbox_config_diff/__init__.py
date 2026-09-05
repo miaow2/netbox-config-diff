@@ -15,7 +15,7 @@ class ConfigDiffConfig(PluginConfig):
     base_url = "config-diff"
     required_settings = ["USERNAME", "PASSWORD"]
     min_version = "4.5.0"
-    max_version = "4.6.99"
+    max_version = "4.7.99"
     default_settings = {
         "USER_SECRET_ROLE": "Username",
         "PASSWORD_SECRET_ROLE": "Password",
