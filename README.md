@@ -1,4 +1,4 @@
-[![NetBox version](https://img.shields.io/badge/NetBox-4.5|4.6-blue.svg)](https://github.com/netbox-community/netbox)
+[![NetBox version](https://img.shields.io/badge/NetBox-4.5|4.6|4.7-blue.svg)](https://github.com/netbox-community/netbox)
 [![Supported Versions](https://img.shields.io/pypi/pyversions/netbox-config-diff.svg)](https://pypi.org/project/netbox-config-diff/)
 [![PyPI version](https://badge.fury.io/py/netbox-config-diff.svg)](https://badge.fury.io/py/netbox-config-diff)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
