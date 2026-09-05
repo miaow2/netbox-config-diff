@@ -56,6 +56,7 @@ This is possible thanks to the scrapli_cfg. Read [Scrapli](https://github.com/sc
 |  4.4           | =>2.11.0, <=2.13.0 |
 |  4.5           |      =>2.14.0      |
 |  4.6           |      =>2.15.0      |
+|  4.7           |      =>2.16.0      |
 
 <!--install-start-->
 ## Installing
